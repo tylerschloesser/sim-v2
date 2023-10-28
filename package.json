@@ -1,0 +1,9 @@
+{
+  "name": "@sim-v2/root",
+  "workspaces": [
+    "packages/web",
+    "packages/worker",
+    "packages/api",
+    "packages/common"
+  ]
+}
