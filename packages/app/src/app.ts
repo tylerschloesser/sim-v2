@@ -28,11 +28,23 @@ export class App {
 
     this.worker = new AppToWorkerApi(worker)
 
+    let prev: PointerEvent | null = null
+
     this.canvas.addEventListener('pointermove', (e) => {
       if (e.buttons === 1) {
-        const delta = new Vec2(e.movementX, e.movementY)
-        this.worker.move(delta)
+        if (prev) {
+          const delta = new Vec2(
+            e.clientX - prev.clientX,
+            e.clientY - prev.clientY,
+          )
+          this.worker.move(delta)
+        }
+        prev = e
       }
+    })
+
+    this.canvas.addEventListener('pointerup', () => {
+      prev = null
     })
 
     // this.canvas.addEventListener(
