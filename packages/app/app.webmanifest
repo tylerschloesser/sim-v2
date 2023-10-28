@@ -1,0 +1,8 @@
+{
+  "short_name": "sim-v2",
+  "icons": [],
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "black",
+  "theme_color": "black"
+}

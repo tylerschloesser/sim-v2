@@ -1,4 +1,28 @@
 {
   "name": "@sim-v2/app",
-  "type": "module"
+  "type": "module",
+  "scripts": {
+    "build": "NODE_NO_WARNINGS=1 NODE_OPTIONS=\"--loader ts-node/esm\" webpack",
+    "start": "NODE_NO_WARNINGS=1 NODE_OPTIONS=\"--loader ts-node/esm\" webpack serve --mode=development",
+    "analyze": "NODE_NO_WARNINGS=1 NODE_OPTIONS=\"--loader ts-node/esm\" webpack --env analyze"
+  },
+  "dependencies": {
+    "copy-webpack-plugin": "^11.0.0",
+    "css-loader": "^6.8.1",
+    "html-webpack-plugin": "^5.5.3",
+    "mini-css-extract-plugin": "^2.7.6",
+    "postcss-loader": "^7.3.3",
+    "postcss-preset-env": "^9.2.0",
+    "sass": "^1.69.5",
+    "sass-loader": "^13.3.2",
+    "ts-loader": "^9.5.0",
+    "webpack": "^5.89.0",
+    "webpack-bundle-analyzer": "^4.9.1",
+    "webpack-cli": "^5.1.4",
+    "webpack-manifest-plugin": "^5.0.0"
+  },
+  "devDependencies": {
+    "@types/webpack-bundle-analyzer": "^4.6.2",
+    "webpack-dev-server": "^4.15.1"
+  }
 }
