@@ -25,6 +25,14 @@ class Worker {
           self.postMessage(response)
           break
         }
+        case AppToWorkerMessageType.Move: {
+          invariant(this.connected)
+          invariant(this.canvas)
+
+          console.log('delta', message.delta)
+
+          break
+        }
         case AppToWorkerMessageType.CreateWorld: {
           invariant(this.connected)
           invariant(this.canvas)

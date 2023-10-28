@@ -3,6 +3,7 @@ import invariant from 'tiny-invariant'
 
 export enum AppToWorkerMessageType {
   Connect = 'connect',
+  Move = 'move',
   CreateWorld = 'create-world',
 }
 
@@ -11,12 +12,18 @@ export interface ConnectAppToWorkerMessage {
   canvas: OffscreenCanvas
 }
 
+export interface MoveAppToWorkerMessage {
+  type: AppToWorkerMessageType.Move
+  delta: Vec2
+}
+
 export interface CreateWorldAppToWorkerMessage {
   type: AppToWorkerMessageType.CreateWorld
 }
 
 export type AppToWorkerMessage =
   | ConnectAppToWorkerMessage
+  | MoveAppToWorkerMessage
   | CreateWorldAppToWorkerMessage
 
 export enum WorkerToAppMessageType {
@@ -75,6 +82,14 @@ export class AppToWorkerApi {
     })
 
     this.connected = true
+  }
+
+  async move(delta: Vec2) {
+    const message: MoveAppToWorkerMessage = {
+      type: AppToWorkerMessageType.Move,
+      delta,
+    }
+    this.worker.postMessage(message)
   }
 
   async createWorld() {
