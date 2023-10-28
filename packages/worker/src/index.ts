@@ -53,12 +53,21 @@ class Worker {
           this.world = true
 
           const context = this.canvas.getContext('2d')
+          invariant(context)
+          invariant(this.viewport)
+          context.scale(
+            this.viewport.scale,
+            this.viewport.scale,
+          )
+
           const worker = this
 
           function render(time: number) {
             invariant(context)
             invariant(worker.canvas)
             invariant(worker.viewport)
+
+            context.save()
 
             context.clearRect(
               0,
@@ -77,7 +86,8 @@ class Worker {
             context.translate(-size.x / 2, -size.y / 2)
             context.fillStyle = 'blue'
             context.fillRect(0, 0, size.x, size.y)
-            context.resetTransform()
+
+            context.restore()
 
             requestAnimationFrame(render)
           }
