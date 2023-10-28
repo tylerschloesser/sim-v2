@@ -15,6 +15,7 @@ class Worker {
     size: Vec2
     scale: number
   } | null = null
+  private position: Vec2 = new Vec2(100, 100)
 
   constructor() {
     self.addEventListener('message', (ev) => {
@@ -67,8 +68,10 @@ class Worker {
             )
 
             const size = new Vec2(100, 100)
-            const position = new Vec2(100, 100)
-            context.translate(position.x, position.y)
+            context.translate(
+              worker.position.x,
+              worker.position.y,
+            )
             context.translate(size.x / 2, size.y / 2)
             context.rotate(time / 1000)
             context.translate(-size.x / 2, -size.y / 2)
