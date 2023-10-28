@@ -5,6 +5,11 @@ export class App {
   private readonly canvas: HTMLCanvasElement
   private readonly worker: AppToWorkerApi
 
+  private readonly viewport: {
+    size: Vec2
+    scale: number
+  }
+
   constructor(worker: Worker) {
     this.canvas = document.createElement('canvas')
     document.body.appendChild(this.canvas)
@@ -15,6 +20,11 @@ export class App {
 
     this.canvas.width = rect.width * dpr
     this.canvas.height = rect.height * dpr
+
+    this.viewport = {
+      size: new Vec2(rect.width, rect.height),
+      scale: dpr,
+    }
 
     this.worker = new AppToWorkerApi(worker)
 
@@ -37,7 +47,7 @@ export class App {
   async connect() {
     await this.worker.connect({
       canvas: this.canvas.transferControlToOffscreen(),
-      viewport: new Vec2(0, 0),
+      viewport: this.viewport,
     })
   }
 

@@ -4,11 +4,17 @@ import {
   ConnectSuccessWorkerToAppMessage,
   WorkerToAppMessageType,
 } from '@sim-v2/api'
+import { Vec2 } from '@sim-v2/math'
 import invariant from 'tiny-invariant'
 
 class Worker {
   private connected: boolean = false
   private canvas: OffscreenCanvas | null = null
+  private world: true | null = null
+  private viewport: {
+    size: Vec2
+    scale: number
+  } | null = null
 
   constructor() {
     self.addEventListener('message', (ev) => {
@@ -18,6 +24,10 @@ class Worker {
         case AppToWorkerMessageType.Connect: {
           this.connected = true
           this.canvas = message.canvas
+          this.viewport = {
+            size: new Vec2(message.viewport.size),
+            scale: message.viewport.scale,
+          }
           const response: ConnectSuccessWorkerToAppMessage =
             {
               type: WorkerToAppMessageType.ConnectSuccess,
@@ -34,9 +44,12 @@ class Worker {
           break
         }
         case AppToWorkerMessageType.CreateWorld: {
+          invariant(this.world === null)
           invariant(this.connected)
           invariant(this.canvas)
           console.log('todo create world')
+
+          this.world = true
 
           const context = this.canvas.getContext('2d')
           const worker = this
@@ -44,19 +57,23 @@ class Worker {
           function render(time: number) {
             invariant(context)
             invariant(worker.canvas)
+            invariant(worker.viewport)
 
             context.clearRect(
               0,
               0,
-              worker.canvas.width,
-              worker.canvas.height,
+              worker.viewport.size.x,
+              worker.viewport.size.y,
             )
 
-            context.translate(50, 50)
+            const size = new Vec2(100, 100)
+            const position = new Vec2(100, 100)
+            context.translate(position.x, position.y)
+            context.translate(size.x / 2, size.y / 2)
             context.rotate(time / 1000)
-            context.translate(-50, -50)
+            context.translate(-size.x / 2, -size.y / 2)
             context.fillStyle = 'blue'
-            context.fillRect(0, 0, 100, 100)
+            context.fillRect(0, 0, size.x, size.y)
             context.resetTransform()
 
             requestAnimationFrame(render)

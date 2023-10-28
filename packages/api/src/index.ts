@@ -10,6 +10,10 @@ export enum AppToWorkerMessageType {
 export interface ConnectAppToWorkerMessage {
   type: AppToWorkerMessageType.Connect
   canvas: OffscreenCanvas
+  viewport: {
+    size: SimpleVec2
+    scale: number
+  }
 }
 
 export interface MoveAppToWorkerMessage {
@@ -47,9 +51,13 @@ export class AppToWorkerApi {
   }
 
   async connect({
+    viewport,
     canvas,
   }: {
-    viewport: SimpleVec2
+    viewport: {
+      size: Vec2
+      scale: number
+    }
     canvas: OffscreenCanvas
   }) {
     invariant(this.connected === false)
@@ -57,6 +65,7 @@ export class AppToWorkerApi {
     const message: ConnectAppToWorkerMessage = {
       type: AppToWorkerMessageType.Connect,
       canvas,
+      viewport,
     }
 
     await new Promise<void>((resolve, reject) => {
