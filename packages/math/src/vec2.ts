@@ -1,8 +1,8 @@
 import invariant from 'tiny-invariant'
 
 export class Vec2 {
-  readonly x: number
-  readonly y: number
+  x: number
+  y: number
 
   constructor(x: number | SimpleVec2 = 0, y?: number) {
     if (typeof x === 'number') {
@@ -19,6 +19,19 @@ export class Vec2 {
 
     invariant(typeof this.x === 'number')
     invariant(typeof this.y === 'number')
+  }
+
+  madd(v: Vec2 | SimpleVec2): void {
+    if (Array.isArray(v)) {
+      invariant(v.length === 2)
+      invariant(typeof v[0] === 'number')
+      invariant(typeof v[1] === 'number')
+      this.x += v[0]
+      this.x += v[1]
+    } else {
+      this.x += v.x
+      this.y += v.y
+    }
   }
 
   len(): number {

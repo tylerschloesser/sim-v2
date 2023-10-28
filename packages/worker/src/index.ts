@@ -40,7 +40,7 @@ class Worker {
           invariant(this.connected)
           invariant(this.canvas)
 
-          console.log('delta', message.delta)
+          this.position.madd(message.delta)
 
           break
         }
