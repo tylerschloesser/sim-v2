@@ -6,7 +6,7 @@
     "prepare": "husky install"
   },
   "workspaces": [
-    "packages/web",
+    "packages/app",
     "packages/worker",
     "packages/api",
     "packages/common"
