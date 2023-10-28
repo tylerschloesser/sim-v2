@@ -1,4 +1,4 @@
-import { Vec2 } from '@sim-v2/math'
+import { SimpleVec2, Vec2 } from '@sim-v2/math'
 import invariant from 'tiny-invariant'
 
 export enum AppToWorkerMessageType {
@@ -14,7 +14,7 @@ export interface ConnectAppToWorkerMessage {
 
 export interface MoveAppToWorkerMessage {
   type: AppToWorkerMessageType.Move
-  delta: Vec2
+  delta: SimpleVec2
 }
 
 export interface CreateWorldAppToWorkerMessage {
@@ -49,7 +49,7 @@ export class AppToWorkerApi {
   async connect({
     canvas,
   }: {
-    viewport: Vec2
+    viewport: SimpleVec2
     canvas: OffscreenCanvas
   }) {
     invariant(this.connected === false)
