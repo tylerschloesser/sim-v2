@@ -1,3 +1,4 @@
 {
-  "name": "@sim-v2/common"
+  "name": "@sim-v2/common",
+  "type": "module"
 }

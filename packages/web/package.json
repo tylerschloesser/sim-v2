@@ -1,3 +1,4 @@
 {
-  "name": "@sim-v2/web"
+  "name": "@sim-v2/web",
+  "type": "module"
 }

@@ -1,3 +1,4 @@
 {
-  "name": "@sim-v2/worker"
+  "name": "@sim-v2/worker",
+  "type": "module"
 }
