@@ -1,0 +1,5 @@
+{
+  "name": "@sim-v2/math",
+  "type": "module",
+  "exports": "./src/index.ts"
+}

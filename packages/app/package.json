@@ -7,6 +7,7 @@
     "analyze": "NODE_NO_WARNINGS=1 NODE_OPTIONS=\"--loader ts-node/esm\" webpack --env analyze"
   },
   "dependencies": {
+    "@sim-v2/api": "*",
     "copy-webpack-plugin": "^11.0.0",
     "css-loader": "^6.8.1",
     "html-webpack-plugin": "^5.5.3",

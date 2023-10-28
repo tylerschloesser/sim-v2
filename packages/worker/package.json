@@ -1,4 +1,5 @@
 {
   "name": "@sim-v2/worker",
-  "type": "module"
+  "type": "module",
+  "sideEffects": false
 }

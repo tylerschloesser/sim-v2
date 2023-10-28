@@ -1,4 +1,8 @@
 {
   "name": "@sim-v2/api",
-  "type": "module"
+  "type": "module",
+  "exports": "./src/index.ts",
+  "dependencies": {
+    "@sim-v2/math": "*"
+  }
 }
