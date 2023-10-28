@@ -16,7 +16,10 @@ export class App {
 
     const rect = document.body.getBoundingClientRect()
 
-    const dpr = window.devicePixelRatio
+    // TODO figure out size for iOS
+    // https://pqina.nl/blog/canvas-area-exceeds-the-maximum-limit/
+    //
+    const dpr = Math.min(1, window.devicePixelRatio)
 
     this.canvas.width = rect.width * dpr
     this.canvas.height = rect.height * dpr
@@ -47,13 +50,17 @@ export class App {
       prev = null
     })
 
-    // this.canvas.addEventListener(
-    //   'wheel',
-    //   (e) => {
-    //     e.preventDefault()
-    //   },
-    //   { passive: false },
-    // )
+    this.canvas.addEventListener('touchstart', (e) => {
+      e.preventDefault()
+    })
+
+    this.canvas.addEventListener(
+      'wheel',
+      (e) => {
+        e.preventDefault()
+      },
+      { passive: false },
+    )
   }
 
   async connect() {
