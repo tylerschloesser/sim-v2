@@ -2,5 +2,8 @@
   "name": "@sim-v2/worker",
   "type": "module",
   "exports": "./src/index.ts",
-  "sideEffects": false
+  "sideEffects": false,
+  "dependencies": {
+    "@sim-v2/api": "*"
+  }
 }
