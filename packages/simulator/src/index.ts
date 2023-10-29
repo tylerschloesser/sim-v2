@@ -2,32 +2,24 @@ import { Vec2 } from '@sim-v2/math'
 import { Viewport } from '@sim-v2/types'
 import { getContext } from './util.js'
 
-interface InitArgs {
+export interface InitArgs {
   canvas: OffscreenCanvas | HTMLCanvasElement
   viewport: Viewport
 }
 
-export interface Simulator {
-  init(args: InitArgs): Promise<Simulator>
+export interface ISimulator {
   start(): void
+  move(args: { delta: Vec2 }): void
 }
 
-export class Simulator implements Simulator {
+export class Simulator implements ISimulator {
   private canvas: OffscreenCanvas | HTMLCanvasElement
   private viewport: Viewport
-
   private position: Vec2 = new Vec2(100, 100)
 
-  private constructor({ canvas, viewport }: InitArgs) {
+  constructor({ canvas, viewport }: InitArgs) {
     this.canvas = canvas
     this.viewport = viewport
-  }
-
-  static async init({
-    canvas,
-    viewport,
-  }: InitArgs): Promise<Simulator> {
-    return new Simulator({ canvas, viewport })
   }
 
   start(): void {

@@ -8,7 +8,6 @@
   "workspaces": [
     "packages/app",
     "packages/simulator",
-    "packages/api",
     "packages/common",
     "packages/math",
     "packages/types"

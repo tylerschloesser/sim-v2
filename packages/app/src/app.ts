@@ -19,10 +19,7 @@ export class App {
       scale: dpr,
     }
 
-    const simulator = await Simulator.init({
-      canvas,
-      viewport,
-    })
+    const simulator = new Simulator({ canvas, viewport })
 
     let prev: PointerEvent | null = null
 
