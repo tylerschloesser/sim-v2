@@ -1,5 +1,5 @@
 {
-  "name": "@sim-v2/engine",
+  "name": "@sim-v2/simulator",
   "type": "module",
   "exports": "./src/index.ts",
   "sideEffects": false,

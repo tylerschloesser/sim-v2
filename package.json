@@ -7,7 +7,7 @@
   },
   "workspaces": [
     "packages/app",
-    "packages/engine",
+    "packages/simulator",
     "packages/api",
     "packages/common",
     "packages/math",

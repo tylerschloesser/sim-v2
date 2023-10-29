@@ -2,5 +2,8 @@
   "name": "@sim-v2/types",
   "exports": "./src/index.ts",
   "type": "module",
-  "sideEffects": false
+  "sideEffects": false,
+  "dependencies": {
+    "@sim-v2/math": "*"
+  }
 }
