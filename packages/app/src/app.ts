@@ -1,5 +1,6 @@
 import { Vec2 } from '@sim-v2/math'
 import { Simulator } from '@sim-v2/simulator'
+import { getDevicePixelRatio } from './util.js'
 
 export class App {
   static async init(): Promise<App> {
@@ -8,10 +9,7 @@ export class App {
 
     const rect = document.body.getBoundingClientRect()
 
-    // TODO figure out size for iOS
-    // https://pqina.nl/blog/canvas-area-exceeds-the-maximum-limit/
-    //
-    const dpr = Math.min(1, window.devicePixelRatio)
+    const dpr = getDevicePixelRatio()
 
     canvas.width = rect.width * dpr
     canvas.height = rect.height * dpr
