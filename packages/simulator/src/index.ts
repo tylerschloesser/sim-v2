@@ -74,45 +74,4 @@ export class Simulator implements ISimulator {
   move({ delta }: { delta: Vec2 }): void {
     this.position.madd(delta)
   }
-
-  // constructor() {
-  //   self.addEventListener('message', (ev) => {
-  //     const message = ev.data as AppToEngineMessage
-
-  //     switch (message.type) {
-  //       case AppToEngineMessageType.Connect: {
-  //         this.connected = true
-  //         this.canvas = message.canvas
-  //         this.viewport = {
-  //           size: new Vec2(message.viewport.size),
-  //           scale: message.viewport.scale,
-  //         }
-  //         const response: ConnectSuccessEngineToAppMessage =
-  //           {
-  //             type: EngineToAppMessageType.ConnectSuccess,
-  //           }
-  //         self.postMessage(response)
-  //         break
-  //       }
-  //       case AppToEngineMessageType.Move: {
-  //         invariant(this.connected)
-  //         invariant(this.canvas)
-
-  //         this.position.madd(message.delta)
-
-  //         break
-  //       }
-  //       case AppToEngineMessageType.CreateWorld: {
-  //         invariant(this.world === null)
-  //         invariant(this.connected)
-  //         invariant(this.canvas)
-  //         console.log('todo create world')
-
-  //         this.world = true
-
-  //         break
-  //       }
-  //     }
-  //   })
-  // }
 }
