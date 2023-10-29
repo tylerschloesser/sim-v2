@@ -5,6 +5,7 @@ export enum MessageType {
   Constructor = 'constructor',
   Start = 'start',
   Move = 'move',
+  Stop = 'stop',
 }
 
 export interface ConstructorMessage {
@@ -14,7 +15,6 @@ export interface ConstructorMessage {
 
 export interface StartMessage {
   type: MessageType.Start
-  payload: undefined
 }
 
 export interface MoveMessage {
@@ -24,7 +24,12 @@ export interface MoveMessage {
   }
 }
 
+export interface StopMessage {
+  type: MessageType.Stop
+}
+
 export type Message =
   | ConstructorMessage
   | StartMessage
   | MoveMessage
+  | StopMessage

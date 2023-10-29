@@ -6,6 +6,7 @@ import {
   MessageType,
   MoveMessage,
   StartMessage,
+  StopMessage,
 } from './web-worker-message.js'
 
 export class WebWorkerBridge implements ISimulator {
@@ -33,7 +34,6 @@ export class WebWorkerBridge implements ISimulator {
   start(): void {
     const message: StartMessage = {
       type: MessageType.Start,
-      payload: undefined,
     }
     this.worker.postMessage(message)
   }
@@ -41,6 +41,12 @@ export class WebWorkerBridge implements ISimulator {
     const message: MoveMessage = {
       type: MessageType.Move,
       payload: args,
+    }
+    this.worker.postMessage(message)
+  }
+  stop(): void {
+    const message: StopMessage = {
+      type: MessageType.Stop,
     }
     this.worker.postMessage(message)
   }
