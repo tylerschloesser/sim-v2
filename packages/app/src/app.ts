@@ -1,30 +1,8 @@
 import { AppToEngineApi } from '@sim-v2/api'
 import { Vec2 } from '@sim-v2/math'
-
-interface Viewport {
-  size: Vec2
-  scale: number
-}
+import { Simulator } from '@sim-v2/simulator'
 
 export class App {
-  private readonly canvas: HTMLCanvasElement
-  private readonly engine: AppToEngineApi
-  private readonly viewport: Viewport
-
-  private constructor({
-    canvas,
-    engine,
-    viewport,
-  }: {
-    canvas: HTMLCanvasElement
-    engine: AppToEngineApi
-    viewport: Viewport
-  }) {
-    this.canvas = canvas
-    this.engine = engine
-    this.viewport = viewport
-  }
-
   static async init(): Promise<App> {
     const worker = new Worker(
       new URL('./worker.ts', import.meta.url),
@@ -80,21 +58,13 @@ export class App {
       { passive: false },
     )
 
-    return new App({
+    const simulator = await Simulator.init({
       canvas,
-      engine,
       viewport,
     })
-  }
 
-  async connect() {
-    await this.engine.connect({
-      canvas: this.canvas.transferControlToOffscreen(),
-      viewport: this.viewport,
-    })
-  }
+    simulator.start()
 
-  async createWorld() {
-    await this.engine.createWorld()
+    return new App()
   }
 }
