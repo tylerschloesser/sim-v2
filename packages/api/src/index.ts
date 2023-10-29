@@ -1,14 +1,14 @@
 import { SimpleVec2, Vec2 } from '@sim-v2/math'
 import invariant from 'tiny-invariant'
 
-export enum AppToWorkerMessageType {
+export enum AppToEngineMessageType {
   Connect = 'connect',
   Move = 'move',
   CreateWorld = 'create-world',
 }
 
-export interface ConnectAppToWorkerMessage {
-  type: AppToWorkerMessageType.Connect
+export interface ConnectAppToEngineMessage {
+  type: AppToEngineMessageType.Connect
   canvas: OffscreenCanvas
   viewport: {
     size: SimpleVec2
@@ -16,32 +16,32 @@ export interface ConnectAppToWorkerMessage {
   }
 }
 
-export interface MoveAppToWorkerMessage {
-  type: AppToWorkerMessageType.Move
+export interface MoveAppToEngineMessage {
+  type: AppToEngineMessageType.Move
   delta: SimpleVec2
 }
 
-export interface CreateWorldAppToWorkerMessage {
-  type: AppToWorkerMessageType.CreateWorld
+export interface CreateWorldAppToEngineMessage {
+  type: AppToEngineMessageType.CreateWorld
 }
 
-export type AppToWorkerMessage =
-  | ConnectAppToWorkerMessage
-  | MoveAppToWorkerMessage
-  | CreateWorldAppToWorkerMessage
+export type AppToEngineMessage =
+  | ConnectAppToEngineMessage
+  | MoveAppToEngineMessage
+  | CreateWorldAppToEngineMessage
 
-export enum WorkerToAppMessageType {
+export enum EngineToAppMessageType {
   ConnectSuccess = 'connect-success',
 }
 
-export interface ConnectSuccessWorkerToAppMessage {
-  type: WorkerToAppMessageType.ConnectSuccess
+export interface ConnectSuccessEngineToAppMessage {
+  type: EngineToAppMessageType.ConnectSuccess
 }
 
-export type WorkerToAppMessage =
-  ConnectSuccessWorkerToAppMessage
+export type EngineToAppMessage =
+  ConnectSuccessEngineToAppMessage
 
-export class AppToWorkerApi {
+export class AppToEngineApi {
   private readonly worker: Worker
 
   private connected: boolean = false
@@ -62,8 +62,8 @@ export class AppToWorkerApi {
   }) {
     invariant(this.connected === false)
 
-    const message: ConnectAppToWorkerMessage = {
-      type: AppToWorkerMessageType.Connect,
+    const message: ConnectAppToEngineMessage = {
+      type: AppToEngineMessageType.Connect,
       canvas,
       viewport,
     }
@@ -76,10 +76,10 @@ export class AppToWorkerApi {
       this.worker.addEventListener(
         'message',
         (ev) => {
-          const message = ev.data as WorkerToAppMessage
+          const message = ev.data as EngineToAppMessage
           invariant(
             message.type ===
-              WorkerToAppMessageType.ConnectSuccess,
+              EngineToAppMessageType.ConnectSuccess,
           )
           window.clearTimeout(timeout)
           resolve()
@@ -94,16 +94,16 @@ export class AppToWorkerApi {
   }
 
   async move(delta: Vec2) {
-    const message: MoveAppToWorkerMessage = {
-      type: AppToWorkerMessageType.Move,
+    const message: MoveAppToEngineMessage = {
+      type: AppToEngineMessageType.Move,
       delta,
     }
     this.worker.postMessage(message)
   }
 
   async createWorld() {
-    const message: CreateWorldAppToWorkerMessage = {
-      type: AppToWorkerMessageType.CreateWorld,
+    const message: CreateWorldAppToEngineMessage = {
+      type: AppToEngineMessageType.CreateWorld,
     }
     this.worker.postMessage(message)
   }

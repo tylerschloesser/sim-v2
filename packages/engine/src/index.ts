@@ -1,13 +1,13 @@
 import {
-  AppToWorkerMessage,
-  AppToWorkerMessageType,
-  ConnectSuccessWorkerToAppMessage,
-  WorkerToAppMessageType,
+  AppToEngineMessage,
+  AppToEngineMessageType,
+  ConnectSuccessEngineToAppMessage,
+  EngineToAppMessageType,
 } from '@sim-v2/api'
 import { Vec2 } from '@sim-v2/math'
 import invariant from 'tiny-invariant'
 
-class Worker {
+class Engine {
   private connected: boolean = false
   private canvas: OffscreenCanvas | null = null
   private world: true | null = null
@@ -19,24 +19,24 @@ class Worker {
 
   constructor() {
     self.addEventListener('message', (ev) => {
-      const message = ev.data as AppToWorkerMessage
+      const message = ev.data as AppToEngineMessage
 
       switch (message.type) {
-        case AppToWorkerMessageType.Connect: {
+        case AppToEngineMessageType.Connect: {
           this.connected = true
           this.canvas = message.canvas
           this.viewport = {
             size: new Vec2(message.viewport.size),
             scale: message.viewport.scale,
           }
-          const response: ConnectSuccessWorkerToAppMessage =
+          const response: ConnectSuccessEngineToAppMessage =
             {
-              type: WorkerToAppMessageType.ConnectSuccess,
+              type: EngineToAppMessageType.ConnectSuccess,
             }
           self.postMessage(response)
           break
         }
-        case AppToWorkerMessageType.Move: {
+        case AppToEngineMessageType.Move: {
           invariant(this.connected)
           invariant(this.canvas)
 
@@ -44,7 +44,7 @@ class Worker {
 
           break
         }
-        case AppToWorkerMessageType.CreateWorld: {
+        case AppToEngineMessageType.CreateWorld: {
           invariant(this.world === null)
           invariant(this.connected)
           invariant(this.canvas)
@@ -60,7 +60,7 @@ class Worker {
             this.viewport.scale,
           )
 
-          const worker = this
+          const engine = this
 
           let frames = 0
           let prev = performance.now()
@@ -78,22 +78,22 @@ class Worker {
             frames += 1
 
             invariant(context)
-            invariant(worker.canvas)
-            invariant(worker.viewport)
+            invariant(engine.canvas)
+            invariant(engine.viewport)
 
             context.save()
 
             context.clearRect(
               0,
               0,
-              worker.viewport.size.x,
-              worker.viewport.size.y,
+              engine.viewport.size.x,
+              engine.viewport.size.y,
             )
 
             const size = new Vec2(100, 100)
             context.translate(
-              worker.position.x,
-              worker.position.y,
+              engine.position.x,
+              engine.position.y,
             )
             context.translate(size.x / 2, size.y / 2)
             context.rotate(time / 1000)
@@ -116,5 +116,5 @@ class Worker {
 }
 
 export function main() {
-  new Worker()
+  new Engine()
 }

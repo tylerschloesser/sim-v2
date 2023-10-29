@@ -1,3 +1,3 @@
-import { main } from '@sim-v2/worker'
+import { main } from '@sim-v2/engine'
 
 main()

@@ -1,9 +1,9 @@
-import { AppToWorkerApi } from '@sim-v2/api'
+import { AppToEngineApi } from '@sim-v2/api'
 import { Vec2 } from '@sim-v2/math'
 
 export class App {
   private readonly canvas: HTMLCanvasElement
-  private readonly worker: AppToWorkerApi
+  private readonly engine: AppToEngineApi
 
   private readonly viewport: {
     size: Vec2
@@ -29,8 +29,7 @@ export class App {
       scale: dpr,
     }
 
-    this.worker = new AppToWorkerApi(worker)
-
+    this.engine = new AppToEngineApi(worker)
     let prev: PointerEvent | null = null
 
     this.canvas.addEventListener('pointermove', (e) => {
@@ -40,7 +39,7 @@ export class App {
             e.clientX - prev.clientX,
             e.clientY - prev.clientY,
           )
-          this.worker.move(delta)
+          this.engine.move(delta)
         }
         prev = e
       }
@@ -64,13 +63,13 @@ export class App {
   }
 
   async connect() {
-    await this.worker.connect({
+    await this.engine.connect({
       canvas: this.canvas.transferControlToOffscreen(),
       viewport: this.viewport,
     })
   }
 
   async createWorld() {
-    await this.worker.createWorld()
+    await this.engine.createWorld()
   }
 }

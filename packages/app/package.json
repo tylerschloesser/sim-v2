@@ -8,7 +8,7 @@
   },
   "dependencies": {
     "@sim-v2/api": "*",
-    "@sim-v2/worker": "*",
+    "@sim-v2/engine": "*",
     "copy-webpack-plugin": "^11.0.0",
     "css-loader": "^6.8.1",
     "html-webpack-plugin": "^5.5.3",
