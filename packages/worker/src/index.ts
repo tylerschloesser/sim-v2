@@ -62,7 +62,21 @@ class Worker {
 
           const worker = this
 
+          let frames = 0
+          let prev = performance.now()
+          let elapsed = 0
+
           function render(time: number) {
+            const delta = time - prev
+            prev = time
+            elapsed += delta
+            if (elapsed >= 1000) {
+              console.log('fps', frames)
+              elapsed = elapsed - 1000
+              frames = 0
+            }
+            frames += 1
+
             invariant(context)
             invariant(worker.canvas)
             invariant(worker.viewport)
