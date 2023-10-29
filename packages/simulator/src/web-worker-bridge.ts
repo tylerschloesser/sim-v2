@@ -1,6 +1,6 @@
 import { Vec2 } from '@sim-v2/math'
 import invariant from 'tiny-invariant'
-import { ISimulator, InitArgs } from './index.js'
+import { ISimulator, InitArgs } from './simulator.js'
 import {
   ConstructorMessage,
   MessageType,

@@ -1,8 +1,15 @@
 import { Vec2 } from '@sim-v2/math'
-import { Simulator } from '@sim-v2/simulator'
+import {
+  ISimulator,
+  Simulator,
+  WebWorkerBridge,
+} from '@sim-v2/simulator'
+import { SimulatorStrategy } from '@sim-v2/types'
 import { getDevicePixelRatio } from './util.js'
 
-export async function initApp(): Promise<void> {
+export async function initApp(
+  strategy: SimulatorStrategy,
+): Promise<void> {
   const canvas = document.createElement('canvas')
   document.body.appendChild(canvas)
 
@@ -18,7 +25,15 @@ export async function initApp(): Promise<void> {
     scale: dpr,
   }
 
-  const simulator = new Simulator({ canvas, viewport })
+  let simulator: ISimulator
+  switch (strategy) {
+    case SimulatorStrategy.Local:
+      simulator = new Simulator({ canvas, viewport })
+      break
+    case SimulatorStrategy.WebWorker:
+      simulator = new WebWorkerBridge({ canvas, viewport })
+      break
+  }
 
   let prev: PointerEvent | null = null
 

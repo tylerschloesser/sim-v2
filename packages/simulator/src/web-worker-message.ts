@@ -1,5 +1,5 @@
 import { Vec2 } from '@sim-v2/math'
-import { InitArgs } from './index.js'
+import { InitArgs } from './simulator.js'
 
 export enum MessageType {
   Constructor = 'constructor',
