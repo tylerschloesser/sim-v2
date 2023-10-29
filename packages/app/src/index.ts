@@ -3,11 +3,7 @@ import './index.scss'
 
 console.log('hello from app')
 
-const worker = new Worker(
-  new URL('./worker.ts', import.meta.url),
-)
-
-const app = new App(worker)
+const app = await App.init()
 
 await app.connect()
 console.log('app connected to worker')

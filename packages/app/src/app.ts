@@ -1,18 +1,37 @@
 import { AppToEngineApi } from '@sim-v2/api'
 import { Vec2 } from '@sim-v2/math'
 
+interface Viewport {
+  size: Vec2
+  scale: number
+}
+
 export class App {
   private readonly canvas: HTMLCanvasElement
   private readonly engine: AppToEngineApi
+  private readonly viewport: Viewport
 
-  private readonly viewport: {
-    size: Vec2
-    scale: number
+  private constructor({
+    canvas,
+    engine,
+    viewport,
+  }: {
+    canvas: HTMLCanvasElement
+    engine: AppToEngineApi
+    viewport: Viewport
+  }) {
+    this.canvas = canvas
+    this.engine = engine
+    this.viewport = viewport
   }
 
-  constructor(worker: Worker) {
-    this.canvas = document.createElement('canvas')
-    document.body.appendChild(this.canvas)
+  static async init(): Promise<App> {
+    const worker = new Worker(
+      new URL('./worker.ts', import.meta.url),
+    )
+
+    const canvas = document.createElement('canvas')
+    document.body.appendChild(canvas)
 
     const rect = document.body.getBoundingClientRect()
 
@@ -21,45 +40,51 @@ export class App {
     //
     const dpr = Math.min(1, window.devicePixelRatio)
 
-    this.canvas.width = rect.width * dpr
-    this.canvas.height = rect.height * dpr
+    canvas.width = rect.width * dpr
+    canvas.height = rect.height * dpr
 
-    this.viewport = {
+    const viewport = {
       size: new Vec2(rect.width, rect.height),
       scale: dpr,
     }
 
-    this.engine = new AppToEngineApi(worker)
+    const engine = new AppToEngineApi(worker)
     let prev: PointerEvent | null = null
 
-    this.canvas.addEventListener('pointermove', (e) => {
+    canvas.addEventListener('pointermove', (e) => {
       if (e.buttons === 1) {
         if (prev) {
           const delta = new Vec2(
             e.clientX - prev.clientX,
             e.clientY - prev.clientY,
           )
-          this.engine.move(delta)
+          engine.move(delta)
         }
         prev = e
       }
     })
 
-    this.canvas.addEventListener('pointerup', () => {
+    canvas.addEventListener('pointerup', () => {
       prev = null
     })
 
-    this.canvas.addEventListener('touchstart', (e) => {
+    canvas.addEventListener('touchstart', (e) => {
       e.preventDefault()
     })
 
-    this.canvas.addEventListener(
+    canvas.addEventListener(
       'wheel',
       (e) => {
         e.preventDefault()
       },
       { passive: false },
     )
+
+    return new App({
+      canvas,
+      engine,
+      viewport,
+    })
   }
 
   async connect() {
