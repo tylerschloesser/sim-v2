@@ -7,9 +7,13 @@ import {
 import { SimulatorStrategy } from '@sim-v2/types'
 import { getDevicePixelRatio } from './util.js'
 
+export interface App {
+  destroy(): void
+}
+
 export async function initApp(
   strategy: SimulatorStrategy,
-): Promise<void> {
+): Promise<App> {
   const canvas = document.createElement('canvas')
   document.body.appendChild(canvas)
 
@@ -31,7 +35,10 @@ export async function initApp(
       simulator = new Simulator({ canvas, viewport })
       break
     case SimulatorStrategy.WebWorker:
-      simulator = new WebWorkerBridge({ canvas, viewport })
+      simulator = new WebWorkerBridge({
+        canvas: canvas.transferControlToOffscreen(),
+        viewport,
+      })
       break
   }
 
@@ -67,4 +74,11 @@ export async function initApp(
   )
 
   simulator.start()
+
+  return {
+    destroy() {
+      simulator.stop()
+      canvas.remove()
+    },
+  }
 }

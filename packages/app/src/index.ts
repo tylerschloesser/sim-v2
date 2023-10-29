@@ -3,11 +3,16 @@ import { initApp } from './app.js'
 import './index.scss'
 
 let strategy: SimulatorStrategy = SimulatorStrategy.Local
+let app = await initApp(strategy)
 
-window.addEventListener('keyup', (e) => {
+window.addEventListener('keyup', async (e) => {
   if (e.key === '.') {
-    console.log('todo toggle simulator strategy')
+    app.destroy()
+    if (strategy === SimulatorStrategy.Local) {
+      strategy = SimulatorStrategy.WebWorker
+    } else {
+      strategy = SimulatorStrategy.Local
+    }
+    app = await initApp(strategy)
   }
 })
-
-await initApp(strategy)
