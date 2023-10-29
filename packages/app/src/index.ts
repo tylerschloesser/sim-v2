@@ -1,4 +1,4 @@
-import { App } from './app.js'
+import { initApp } from './app.js'
 import './index.scss'
 
-await App.init()
+await initApp()
