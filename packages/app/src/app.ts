@@ -1,13 +1,8 @@
-import { AppToEngineApi } from '@sim-v2/api'
 import { Vec2 } from '@sim-v2/math'
 import { Simulator } from '@sim-v2/simulator'
 
 export class App {
   static async init(): Promise<App> {
-    const worker = new Worker(
-      new URL('./worker.ts', import.meta.url),
-    )
-
     const canvas = document.createElement('canvas')
     document.body.appendChild(canvas)
 
@@ -26,7 +21,11 @@ export class App {
       scale: dpr,
     }
 
-    const engine = new AppToEngineApi(worker)
+    const simulator = await Simulator.init({
+      canvas,
+      viewport,
+    })
+
     let prev: PointerEvent | null = null
 
     canvas.addEventListener('pointermove', (e) => {
@@ -36,7 +35,7 @@ export class App {
             e.clientX - prev.clientX,
             e.clientY - prev.clientY,
           )
-          engine.move(delta)
+          simulator.move({ delta })
         }
         prev = e
       }
@@ -57,11 +56,6 @@ export class App {
       },
       { passive: false },
     )
-
-    const simulator = await Simulator.init({
-      canvas,
-      viewport,
-    })
 
     simulator.start()
 
