@@ -2,4 +2,12 @@ import { SimulatorStrategy } from '@sim-v2/types'
 import { initApp } from './app.js'
 import './index.scss'
 
-await initApp(SimulatorStrategy.Local)
+let strategy: SimulatorStrategy = SimulatorStrategy.Local
+
+window.addEventListener('keyup', (e) => {
+  if (e.key === '.') {
+    console.log('todo toggle simulator strategy')
+  }
+})
+
+await initApp(strategy)
