@@ -40,23 +40,26 @@ export async function initApp(
     scale: dpr,
   }
 
-  const camera: Camera = {
-    position: viewport.size.div(2),
-    zoom: 0.5,
-  }
-
   let graphics = initGraphics({
     canvas,
     executor: config.executor.graphics,
     strategy: config.strategy.graphics,
     viewport,
-    camera,
+    // camera is mutable, don't share between graphics and simulator
+    camera: {
+      position: viewport.size.div(2),
+      zoom: 0.5,
+    },
   })
 
   let simulator = initSimulator({
     executor: config.executor.simulator,
     viewport,
-    camera,
+    // camera is mutable, don't share between graphics and simulator
+    camera: {
+      position: viewport.size.div(2),
+      zoom: 0.5,
+    },
   })
 
   let prev: PointerEvent | null = null
