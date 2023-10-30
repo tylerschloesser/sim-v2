@@ -165,19 +165,20 @@ export const initGpuGraphics: InitGraphicsFn<
   }
   updateView()
 
-  const model = mat4.create()
-  mat4.translate(
-    model,
-    model,
-    vec3.fromValues(-0.5, -0.5, 0),
-  )
-
-  function render() {
+  function render(time: number) {
     if (state === GraphicsState.Stopped) {
       return
     }
     gl.clearColor(1, 1, 1, 1)
     gl.clear(gl.COLOR_BUFFER_BIT)
+
+    const model = mat4.create()
+    mat4.rotateZ(model, model, time / 1000)
+    mat4.translate(
+      model,
+      model,
+      vec3.fromValues(-0.5, -0.5, 0),
+    )
 
     gl.uniformMatrix4fv(
       context.programs.main.uniforms.view,
