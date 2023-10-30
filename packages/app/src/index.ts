@@ -2,8 +2,13 @@ import { Executor, GraphicsStrategy } from '@sim-v2/types'
 import invariant from 'tiny-invariant'
 import { AppConfig, initApp } from './app.js'
 import './index.scss'
+import { getDevicePixelRatio } from './util.js'
+
+const dpr = getDevicePixelRatio()
+renderDpr()
 
 const DEFAULT_CONFIG: AppConfig = {
+  dpr,
   executor: {
     simulator: Executor.Main,
     graphics: Executor.Main,
@@ -34,7 +39,7 @@ async function updateApp() {
 }
 
 document
-  .querySelectorAll<HTMLInputElement>('.debug input')
+  .querySelectorAll<HTMLInputElement>('.toggles input')
   .forEach((input) => {
     let value: string
     switch (input.name) {
@@ -84,3 +89,10 @@ document
     }
     input.checked = input.value === value
   })
+
+function renderDpr() {
+  const element =
+    document.querySelector<HTMLSpanElement>('.dpr .value')
+  invariant(element)
+  element.innerText = `${dpr}`
+}

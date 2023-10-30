@@ -1,14 +1,10 @@
 import { initGraphics } from '@sim-v2/graphics'
 import { Vec2 } from '@sim-v2/math'
 import { initSimulator } from '@sim-v2/simulator'
-import {
-  Camera,
-  Executor,
-  GraphicsStrategy,
-} from '@sim-v2/types'
-import { getDevicePixelRatio } from './util.js'
+import { Executor, GraphicsStrategy } from '@sim-v2/types'
 
 export interface AppConfig {
+  dpr: number
   executor: {
     simulator: Executor
     graphics: Executor
@@ -30,14 +26,12 @@ export async function initApp(
 
   const rect = document.body.getBoundingClientRect()
 
-  const dpr = getDevicePixelRatio()
-
-  canvas.width = rect.width * dpr
-  canvas.height = rect.height * dpr
+  canvas.width = rect.width * config.dpr
+  canvas.height = rect.height * config.dpr
 
   const viewport = {
     size: new Vec2(rect.width, rect.height),
-    scale: dpr,
+    scale: config.dpr,
   }
 
   let graphics = initGraphics({

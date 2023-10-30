@@ -12,9 +12,15 @@ canvas {
   height: 100dvh;
 }
 
-.debug {
-  width: 100dvw;
+.toggles {
   position: fixed;
+  width: 100dvw;
   display: flex;
   justify-content: space-between;
+}
+
+.info {
+  position: fixed;
+  width: 100dvw;
+  bottom: env(safe-area-inset-bottom);
 }
