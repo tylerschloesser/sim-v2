@@ -3,8 +3,8 @@ import {
   GraphicsStrategy,
   Viewport,
 } from '@sim-v2/types'
-import invariant from 'tiny-invariant'
 import { initCpuGraphics } from './init-cpu-graphics.js'
+import { initGpuGraphics } from './init-gpu-graphics.js'
 
 export function initGraphics({
   strategy,
@@ -18,6 +18,6 @@ export function initGraphics({
     case GraphicsStrategy.Cpu:
       return initCpuGraphics(args)
     case GraphicsStrategy.Gpu:
-      invariant(false, 'TODO')
+      return initGpuGraphics(args)
   }
 }
