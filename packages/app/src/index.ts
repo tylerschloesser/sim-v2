@@ -6,44 +6,39 @@ import invariant from 'tiny-invariant'
 import { initApp } from './app.js'
 import './index.scss'
 
-const graphicsStrategy: GraphicsStrategy =
-  GraphicsStrategy.Cpu
-
-const debug = document.querySelector<HTMLDivElement>(
-  '.debug__strategy',
-)!
-invariant(debug)
-const toggle = document.querySelector<HTMLButtonElement>(
-  '.debug__toggle',
-)!
-invariant(toggle)
-
-let simulatorStrategy: SimulatorStrategy =
-  SimulatorStrategy.Local
-let app = await initApp({
-  simulatorStrategy,
-  graphicsStrategy,
-})
-debug.innerText = `strategy: ${simulatorStrategy}`
-
-async function toggleStrategy() {
-  app.destroy()
-  if (simulatorStrategy === SimulatorStrategy.Local) {
-    simulatorStrategy = SimulatorStrategy.WebWorker
-  } else {
-    simulatorStrategy = SimulatorStrategy.Local
-  }
-  app = await initApp({
-    simulatorStrategy,
-    graphicsStrategy,
-  })
-  debug.innerText = `strategy: ${simulatorStrategy}`
+let config: {
+  simulatorStrategy: SimulatorStrategy
+  graphicsStrategy: GraphicsStrategy
+} = {
+  simulatorStrategy: SimulatorStrategy.Local,
+  graphicsStrategy: GraphicsStrategy.Cpu,
 }
 
-window.addEventListener('keyup', async (e) => {
-  if (e.key === '.') {
-    toggleStrategy()
-  }
+let app = await initApp(config)
+
+async function updateApp() {
+  app.destroy()
+  app = await initApp(config)
+}
+
+Object.values(SimulatorStrategy).forEach((strategy) => {
+  const input = document.querySelector(
+    `input[name="simulator-strategy"][value=${strategy}]`,
+  )
+  invariant(input)
+  input.addEventListener('change', () => {
+    config.simulatorStrategy = strategy
+    updateApp()
+  })
 })
 
-toggle.addEventListener('pointerup', toggleStrategy)
+Object.values(GraphicsStrategy).forEach((strategy) => {
+  const input = document.querySelector(
+    `input[name="graphics-strategy"][value=${strategy}]`,
+  )
+  invariant(input)
+  input.addEventListener('change', () => {
+    config.graphicsStrategy = strategy
+    updateApp()
+  })
+})
