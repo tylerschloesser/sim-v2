@@ -26,6 +26,10 @@ export function initCpuGraphics({
   let prev = performance.now()
   let elapsed = 0
 
+  const size = new Vec2(
+    Math.min(viewport.size.x, viewport.size.y),
+  ).div(4)
+
   function render(time: number) {
     if (state === GraphicsState.Stopped) {
       return
@@ -50,7 +54,6 @@ export function initCpuGraphics({
       viewport.size.y,
     )
 
-    const size = new Vec2(100, 100)
     context.translate(camera.position.x, camera.position.y)
     context.translate(size.x / 2, size.y / 2)
     context.rotate(time / 1000)
