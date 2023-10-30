@@ -165,6 +165,8 @@ export const initGpuGraphics: InitGraphicsFn<
   }
   updateView()
 
+    const model = mat4.create()
+
   function render(time: number) {
     if (state === GraphicsState.Stopped) {
       return
@@ -172,7 +174,7 @@ export const initGpuGraphics: InitGraphicsFn<
     gl.clearColor(1, 1, 1, 1)
     gl.clear(gl.COLOR_BUFFER_BIT)
 
-    const model = mat4.create()
+    mat4.identity(model)
     mat4.rotateZ(model, model, time / 1000)
     mat4.translate(
       model,
