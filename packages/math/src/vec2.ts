@@ -41,6 +41,11 @@ export class Vec2 {
   simple(): SimpleVec2 {
     return [this.x, this.y]
   }
+
+  div(s: number): Vec2 {
+    invariant(s !== 0)
+    return new Vec2(this.x / s, this.y / s)
+  }
 }
 
 export type SimpleVec2 =

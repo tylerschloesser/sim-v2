@@ -13,6 +13,7 @@ export enum Executor {
 export interface InitSimulatorArgs {
   executor: Executor
   viewport: Viewport
+  camera: Camera
 }
 
 export type InitSimulatorFn = (
@@ -29,11 +30,17 @@ export enum GraphicsStrategy {
   Gpu = 'gpu',
 }
 
+export interface Camera {
+  position: Vec2
+  zoom: number
+}
+
 export interface InitGraphicsArgs {
   executor: Executor
   strategy: GraphicsStrategy
   canvas: HTMLCanvasElement | OffscreenCanvas
   viewport: Viewport
+  camera: Camera
 }
 
 export type InitGraphicsFn = (

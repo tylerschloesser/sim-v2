@@ -1,5 +1,5 @@
 import { Vec2 } from '@sim-v2/math'
-import { Viewport } from '@sim-v2/types'
+import { Camera, Viewport } from '@sim-v2/types'
 
 export enum MessageType {
   Init = 'init',
@@ -10,6 +10,7 @@ export interface InitMessage {
   type: MessageType.Init
   payload: {
     viewport: Viewport
+    camera: Camera
   }
 }
 
