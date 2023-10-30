@@ -25,3 +25,7 @@ export interface Simulator {
   move(args: { delta: Vec2 }): void
   stop(): void
 }
+
+export interface Graphics {
+  stop(): void
+}

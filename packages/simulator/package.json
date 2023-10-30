@@ -4,6 +4,7 @@
   "exports": "./src/index.ts",
   "sideEffects": false,
   "dependencies": {
+    "@sim-v2/graphics": "*",
     "@sim-v2/types": "*"
   }
 }
