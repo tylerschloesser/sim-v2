@@ -25,8 +25,3 @@ export interface Simulator {
   move(args: { delta: Vec2 }): void
   stop(): void
 }
-
-export enum SimulatorState {
-  Stopped = 'stopped',
-  Started = 'started',
-}

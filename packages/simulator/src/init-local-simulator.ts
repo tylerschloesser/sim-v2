@@ -1,7 +1,12 @@
 import { Vec2 } from '@sim-v2/math'
-import { SimulatorState, Viewport } from '@sim-v2/types'
+import { Viewport } from '@sim-v2/types'
 import invariant from 'tiny-invariant'
 import { getContext } from './util.js'
+
+export enum SimulatorState {
+  Stopped = 'stopped',
+  Started = 'started',
+}
 
 export function initLocalSimulator({
   canvas,
