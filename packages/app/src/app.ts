@@ -1,9 +1,5 @@
 import { Vec2 } from '@sim-v2/math'
-import {
-  ISimulator,
-  Simulator,
-  WebWorkerBridge,
-} from '@sim-v2/simulator'
+import { initSimulator } from '@sim-v2/simulator'
 import { SimulatorStrategy } from '@sim-v2/types'
 import { getDevicePixelRatio } from './util.js'
 
@@ -29,18 +25,11 @@ export async function initApp(
     scale: dpr,
   }
 
-  let simulator: ISimulator
-  switch (strategy) {
-    case SimulatorStrategy.Local:
-      simulator = new Simulator({ canvas, viewport })
-      break
-    case SimulatorStrategy.WebWorker:
-      simulator = new WebWorkerBridge({
-        canvas: canvas.transferControlToOffscreen(),
-        viewport,
-      })
-      break
-  }
+  let simulator = initSimulator({
+    strategy,
+    canvas,
+    viewport,
+  })
 
   let prev: PointerEvent | null = null
 

@@ -1,16 +1,19 @@
 import { Vec2 } from '@sim-v2/math'
-import { InitArgs } from './simulator.js'
+import { Viewport } from '@sim-v2/types'
 
 export enum MessageType {
-  Constructor = 'constructor',
+  Init = 'init',
   Start = 'start',
   Move = 'move',
   Stop = 'stop',
 }
 
-export interface ConstructorMessage {
-  type: MessageType.Constructor
-  payload: InitArgs
+export interface InitMessage {
+  type: MessageType.Init
+  payload: {
+    canvas: OffscreenCanvas
+    viewport: Viewport
+  }
 }
 
 export interface StartMessage {
@@ -29,7 +32,7 @@ export interface StopMessage {
 }
 
 export type Message =
-  | ConstructorMessage
+  | InitMessage
   | StartMessage
   | MoveMessage
   | StopMessage

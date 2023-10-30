@@ -1,5 +1,6 @@
+import { Simulator } from '@sim-v2/types'
 import invariant from 'tiny-invariant'
-import { Simulator } from './index.js'
+import { initLocalSimulator } from './init-local-simulator.js'
 import {
   Message,
   MessageType,
@@ -10,9 +11,9 @@ let simulator: Simulator | null = null
 self.addEventListener('message', (e) => {
   const message = e.data as Message
   switch (message.type) {
-    case MessageType.Constructor:
+    case MessageType.Init:
       invariant(simulator === null)
-      simulator = new Simulator(message.payload)
+      simulator = initLocalSimulator(message.payload)
       break
     case MessageType.Start:
       invariant(simulator !== null)
