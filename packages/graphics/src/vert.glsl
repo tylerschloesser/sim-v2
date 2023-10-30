@@ -1,5 +1,8 @@
 attribute vec4 aVertex;
-uniform mat4 uTransform;
+
+uniform mat4 uModel;
+uniform mat4 uView;
+uniform mat4 uProjection;
 void main() {
-  gl_Position = uTransform * aVertex;
+  gl_Position = uProjection * uModel * uView * aVertex;
 }

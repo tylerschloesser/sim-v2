@@ -1,8 +1,9 @@
+import { Vec2 } from '@sim-v2/math'
 import {
   InitGraphicsArgs,
   InitGraphicsFn,
 } from '@sim-v2/types'
-import { mat4 } from 'gl-matrix'
+import { mat4, vec3 } from 'gl-matrix'
 import invariant from 'tiny-invariant'
 import frag from './frag.glsl'
 import { getGpuContext } from './util.js'
@@ -26,7 +27,9 @@ interface Context {
         vertex: WebGLAttributeLocation
       }
       uniforms: {
-        transform: WebGLUniformLocation
+        model: WebGLUniformLocation
+        view: WebGLUniformLocation
+        projection: WebGLUniformLocation
       }
     }
   }
@@ -42,7 +45,7 @@ enum GraphicsState {
 
 export const initGpuGraphics: InitGraphicsFn<
   Omit<InitGraphicsArgs, 'executor' | 'strategy'>
-> = ({ canvas, camera }) => {
+> = ({ canvas, camera, viewport }) => {
   let state: GraphicsState = GraphicsState.Started
 
   const gl = getGpuContext(canvas)
@@ -63,10 +66,12 @@ export const initGpuGraphics: InitGraphicsFn<
           vertex: getAttribLocation(gl, program, 'aVertex'),
         },
         uniforms: {
-          transform: getUniformLocation(
+          model: getUniformLocation(gl, program, 'uModel'),
+          view: getUniformLocation(gl, program, 'uView'),
+          projection: getUniformLocation(
             gl,
             program,
-            'uTransform',
+            'uProjection',
           ),
         },
       },
@@ -92,13 +97,29 @@ export const initGpuGraphics: InitGraphicsFn<
 
   gl.useProgram(context.programs.main.program)
 
-  const transform = mat4.create()
-
-  gl.uniformMatrix4fv(
-    context.programs.main.uniforms.transform,
-    false,
-    transform,
+  const projection = mat4.create()
+  mat4.scale(
+    projection,
+    projection,
+    vec3.fromValues(
+      1 / viewport.size.x,
+      1 / viewport.size.y,
+      0,
+    ),
   )
+  gl.uniformMatrix4fv(
+    context.programs.main.uniforms.projection,
+    false,
+    projection,
+  )
+
+  const view = mat4.create()
+  const size = new Vec2(
+    Math.min(viewport.size.x, viewport.size.y),
+  ).div(4)
+  mat4.scale(view, view, vec3.fromValues(size.x, size.y, 0))
+
+  const model = mat4.create()
 
   function render() {
     if (state === GraphicsState.Stopped) {
@@ -107,6 +128,16 @@ export const initGpuGraphics: InitGraphicsFn<
     gl.clearColor(0, 0, 0, 1)
     gl.clear(gl.COLOR_BUFFER_BIT)
 
+    gl.uniformMatrix4fv(
+      context.programs.main.uniforms.view,
+      false,
+      view,
+    )
+    gl.uniformMatrix4fv(
+      context.programs.main.uniforms.model,
+      false,
+      model,
+    )
     gl.drawArrays(gl.TRIANGLE_STRIP, 0, 4)
     requestAnimationFrame(render)
   }
@@ -119,6 +150,15 @@ export const initGpuGraphics: InitGraphicsFn<
     },
     move(delta) {
       camera.position.madd(delta)
+      mat4.translate(
+        view,
+        view,
+        vec3.fromValues(
+          camera.position.x / 20000,
+          camera.position.y / 20000,
+          0,
+        ),
+      )
     },
   }
 }
