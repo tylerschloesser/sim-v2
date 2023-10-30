@@ -18,7 +18,7 @@ type Shaders = {
 
 type WebGLAttributeLocation = number
 
-interface State {
+interface Context {
   programs: {
     main: {
       program: WebGLProgram
@@ -35,9 +35,16 @@ interface State {
   }
 }
 
+enum GraphicsState {
+  Started = 'started',
+  Stopped = 'stopped',
+}
+
 export const initGpuGraphics: InitGraphicsFn<
   Omit<InitGraphicsArgs, 'executor' | 'strategy'>
-> = ({ canvas }) => {
+> = ({ canvas, camera }) => {
+  let state: GraphicsState = GraphicsState.Started
+
   const gl = getGpuContext(canvas)
   invariant(gl)
 
@@ -48,7 +55,7 @@ export const initGpuGraphics: InitGraphicsFn<
 
   const program = initProgram(gl, shaders)
 
-  const state: State = {
+  const context: Context = {
     programs: {
       main: {
         program,
@@ -72,9 +79,9 @@ export const initGpuGraphics: InitGraphicsFn<
   gl.clearColor(0, 0, 0, 1)
   gl.clear(gl.COLOR_BUFFER_BIT)
 
-  gl.bindBuffer(gl.ARRAY_BUFFER, state.buffers.square)
+  gl.bindBuffer(gl.ARRAY_BUFFER, context.buffers.square)
   gl.vertexAttribPointer(
-    state.programs.main.attributes.vertex,
+    context.programs.main.attributes.vertex,
     2,
     gl.FLOAT,
     false,
@@ -83,14 +90,15 @@ export const initGpuGraphics: InitGraphicsFn<
   )
   // TODO study this and figure out where it should go
   gl.enableVertexAttribArray(
-    state.programs.main.attributes.vertex,
+    context.programs.main.attributes.vertex,
   )
 
-  gl.useProgram(state.programs.main.program)
+  gl.useProgram(context.programs.main.program)
 
   const transform = mat4.create()
+
   gl.uniformMatrix4fv(
-    state.programs.main.uniforms.transform,
+    context.programs.main.uniforms.transform,
     false,
     transform,
   )
@@ -98,7 +106,9 @@ export const initGpuGraphics: InitGraphicsFn<
 
   return {
     stop() {},
-    move(delta) {},
+    move(delta) {
+      camera.position.madd(delta)
+    },
   }
 }
 
