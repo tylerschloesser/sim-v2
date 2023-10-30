@@ -1,5 +1,5 @@
 import { Vec2 } from '@sim-v2/math'
-import { Graphics, Viewport } from '@sim-v2/types'
+import { Camera, Graphics, Viewport } from '@sim-v2/types'
 import invariant from 'tiny-invariant'
 import { getCpuContext } from './util.js'
 
@@ -11,9 +11,11 @@ enum GraphicsState {
 export function initCpuGraphics({
   canvas,
   viewport,
+  camera,
 }: {
   canvas: HTMLCanvasElement | OffscreenCanvas
   viewport: Viewport
+  camera: Camera
 }): Graphics {
   let state: GraphicsState = GraphicsState.Started
 
@@ -23,8 +25,6 @@ export function initCpuGraphics({
   let frames = 0
   let prev = performance.now()
   let elapsed = 0
-
-  let position = new Vec2(100, 100)
 
   function render(time: number) {
     if (state === GraphicsState.Stopped) {
@@ -51,7 +51,7 @@ export function initCpuGraphics({
     )
 
     const size = new Vec2(100, 100)
-    context.translate(position.x, position.y)
+    context.translate(camera.position.x, camera.position.y)
     context.translate(size.x / 2, size.y / 2)
     context.rotate(time / 1000)
     context.translate(-size.x / 2, -size.y / 2)
@@ -71,7 +71,7 @@ export function initCpuGraphics({
       state = GraphicsState.Stopped
     },
     move(delta) {
-      position.madd(delta)
+      camera.position.madd(delta)
     },
   }
 }
