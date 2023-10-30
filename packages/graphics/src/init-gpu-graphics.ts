@@ -101,10 +101,25 @@ export const initGpuGraphics: InitGraphicsFn<
   mat4.scale(
     projection,
     projection,
+    vec3.fromValues(1, -1, 1),
+  )
+  mat4.translate(
+    projection,
+    projection,
+    vec3.fromValues(-1, -1, 0),
+  )
+  mat4.scale(
+    projection,
+    projection,
+    vec3.fromValues(2, 2, 2),
+  )
+  mat4.scale(
+    projection,
+    projection,
     vec3.fromValues(
       1 / viewport.size.x,
       1 / viewport.size.y,
-      0,
+      1,
     ),
   )
   gl.uniformMatrix4fv(
@@ -113,13 +128,49 @@ export const initGpuGraphics: InitGraphicsFn<
     projection,
   )
 
-  const view = mat4.create()
   const size = new Vec2(
     Math.min(viewport.size.x, viewport.size.y),
   ).div(4)
-  mat4.scale(view, view, vec3.fromValues(size.x, size.y, 0))
+
+  const view = mat4.create()
+
+  function updateView() {
+    mat4.identity(view)
+
+    mat4.translate(
+      view,
+      view,
+      vec3.fromValues(
+        camera.position.x,
+        camera.position.y,
+        0,
+      ),
+    )
+
+    mat4.translate(
+      view,
+      view,
+      vec3.fromValues(
+        viewport.size.x / 2,
+        viewport.size.y / 2,
+        0,
+      ),
+    )
+
+    mat4.scale(
+      view,
+      view,
+      vec3.fromValues(size.x, size.y, 1),
+    )
+  }
+  updateView()
 
   const model = mat4.create()
+  mat4.translate(
+    model,
+    model,
+    vec3.fromValues(-0.5, -0.5, 0),
+  )
 
   function render() {
     if (state === GraphicsState.Stopped) {
@@ -150,6 +201,7 @@ export const initGpuGraphics: InitGraphicsFn<
     },
     move(delta) {
       camera.position.madd(delta)
+
       mat4.translate(
         view,
         view,

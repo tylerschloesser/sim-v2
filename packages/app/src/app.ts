@@ -47,7 +47,7 @@ export async function initApp(
     viewport,
     // camera is mutable, don't share between graphics and simulator
     camera: {
-      position: viewport.size.div(2),
+      position: new Vec2(0),
       zoom: 0.5,
     },
   })
@@ -57,7 +57,7 @@ export async function initApp(
     viewport,
     // camera is mutable, don't share between graphics and simulator
     camera: {
-      position: viewport.size.div(2),
+      position: new Vec2(0),
       zoom: 0.5,
     },
   })
