@@ -43,8 +43,8 @@ export interface InitGraphicsArgs {
   camera: Camera
 }
 
-export type InitGraphicsFn = (
-  args: InitGraphicsArgs,
+export type InitGraphicsFn<T = InitGraphicsArgs> = (
+  args: T,
 ) => Graphics
 
 export interface Graphics {

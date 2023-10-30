@@ -1,5 +1,8 @@
 import { Vec2 } from '@sim-v2/math'
-import { Camera, Graphics, Viewport } from '@sim-v2/types'
+import {
+  InitGraphicsArgs,
+  InitGraphicsFn,
+} from '@sim-v2/types'
 import invariant from 'tiny-invariant'
 import { getCpuContext } from './util.js'
 
@@ -8,15 +11,9 @@ enum GraphicsState {
   Stopped = 'stopped',
 }
 
-export function initCpuGraphics({
-  canvas,
-  viewport,
-  camera,
-}: {
-  canvas: HTMLCanvasElement | OffscreenCanvas
-  viewport: Viewport
-  camera: Camera
-}): Graphics {
+export const initCpuGraphics: InitGraphicsFn<
+  Omit<InitGraphicsArgs, 'executor' | 'strategy'>
+> = ({ canvas, viewport, camera }) => {
   let state: GraphicsState = GraphicsState.Started
 
   const context = getCpuContext(canvas)

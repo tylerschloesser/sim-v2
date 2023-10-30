@@ -1,4 +1,7 @@
-import { Graphics, Viewport } from '@sim-v2/types'
+import {
+  InitGraphicsArgs,
+  InitGraphicsFn,
+} from '@sim-v2/types'
 import { mat4 } from 'gl-matrix'
 import invariant from 'tiny-invariant'
 import frag from './frag.glsl'
@@ -32,13 +35,9 @@ interface State {
   }
 }
 
-export function initGpuGraphics({
-  canvas,
-  viewport,
-}: {
-  canvas: HTMLCanvasElement | OffscreenCanvas
-  viewport: Viewport
-}): Graphics {
+export const initGpuGraphics: InitGraphicsFn<
+  Omit<InitGraphicsArgs, 'executor' | 'strategy'>
+> = ({ canvas }) => {
   const gl = getGpuContext(canvas)
   invariant(gl)
 
