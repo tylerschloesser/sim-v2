@@ -3,9 +3,7 @@ import { Viewport } from '@sim-v2/types'
 
 export enum MessageType {
   Init = 'init',
-  Start = 'start',
   Move = 'move',
-  Stop = 'stop',
 }
 
 export interface InitMessage {
@@ -15,21 +13,9 @@ export interface InitMessage {
   }
 }
 
-export interface StartMessage {
-  type: MessageType.Start
-}
-
 export interface MoveMessage {
   type: MessageType.Move
   payload: { delta: Vec2 }
 }
 
-export interface StopMessage {
-  type: MessageType.Stop
-}
-
-export type Message =
-  | InitMessage
-  | StartMessage
-  | MoveMessage
-  | StopMessage
+export type Message = InitMessage | MoveMessage

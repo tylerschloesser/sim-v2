@@ -16,14 +16,9 @@ self.addEventListener('message', (e) => {
       graphics = initLocalGraphics(message.payload)
       break
     }
-    case MessageType.Stop: {
+    case MessageType.Move: {
       invariant(graphics !== null)
-      graphics.stop()
-      break
-    }
-    case MessageType.UpdatePosition: {
-      invariant(graphics !== null)
-      graphics.updatePosition(message.payload.delta)
+      graphics.move(message.payload.delta)
       break
     }
   }

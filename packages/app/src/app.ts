@@ -57,6 +57,7 @@ export async function initApp(
           e.clientX - prev.clientX,
           e.clientY - prev.clientY,
         )
+        graphics.move(delta)
         simulator.move(delta)
       }
       prev = e
@@ -78,8 +79,6 @@ export async function initApp(
     },
     { passive: false },
   )
-
-  simulator.start()
 
   return {
     destroy() {

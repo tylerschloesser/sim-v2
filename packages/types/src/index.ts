@@ -20,7 +20,6 @@ export type InitSimulatorFn = (
 ) => Simulator
 
 export interface Simulator {
-  start(): void
   move(delta: Vec2): void
   stop(): void
 }
@@ -42,6 +41,6 @@ export type InitGraphicsFn = (
 ) => Graphics
 
 export interface Graphics {
+  move(delta: Vec2): void
   stop(): void
-  updatePosition(delta: Vec2): void
 }

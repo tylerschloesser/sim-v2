@@ -12,14 +12,9 @@ export function initLocalSimulator({}: Omit<
   'executor'
 >): Simulator {
   const position: Vec2 = new Vec2(100, 100)
-  let state: SimulatorState = SimulatorState.Stopped
+  let state: SimulatorState = SimulatorState.Started
 
   return {
-    start(): void {
-      invariant(state === SimulatorState.Stopped)
-      state = SimulatorState.Started
-    },
-
     move(delta): void {
       position.madd(delta)
     },

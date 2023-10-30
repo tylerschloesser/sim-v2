@@ -3,7 +3,6 @@ import {
   InitMessage,
   MessageType,
   MoveMessage,
-  StartMessage,
 } from './web-worker-message.js'
 
 export function initWebWorkerSimulator(
@@ -21,12 +20,6 @@ export function initWebWorkerSimulator(
   worker.postMessage(init)
 
   return {
-    start(): void {
-      const message: StartMessage = {
-        type: MessageType.Start,
-      }
-      worker.postMessage(message)
-    },
     move(args): void {
       const message: MoveMessage = {
         type: MessageType.Move,
@@ -37,7 +30,6 @@ export function initWebWorkerSimulator(
       worker.postMessage(message)
     },
     stop(): void {
-      // TODO send "stop" message to worker?
       worker.terminate()
     },
   }

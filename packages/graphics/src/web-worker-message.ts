@@ -3,8 +3,7 @@ import { GraphicsStrategy, Viewport } from '@sim-v2/types'
 
 export enum MessageType {
   Init = 'init',
-  Stop = 'stop',
-  UpdatePosition = 'update-position',
+  Move = 'move',
 }
 
 export interface InitMessage {
@@ -16,16 +15,9 @@ export interface InitMessage {
   }
 }
 
-export interface StopMessage {
-  type: MessageType.Stop
-}
-
-export interface UpdatePositionMessage {
-  type: MessageType.UpdatePosition
+export interface MoveMessage {
+  type: MessageType.Move
   payload: { delta: Vec2 }
 }
 
-export type Message =
-  | InitMessage
-  | StopMessage
-  | UpdatePositionMessage
+export type Message = InitMessage | MoveMessage

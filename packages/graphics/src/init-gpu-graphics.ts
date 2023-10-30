@@ -20,6 +20,6 @@ export function initGpuGraphics({
 
   return {
     stop() {},
-    updatePosition(delta) {},
+    move(delta) {},
   }
 }

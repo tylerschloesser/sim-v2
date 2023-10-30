@@ -70,7 +70,7 @@ export function initCpuGraphics({
       invariant(state === GraphicsState.Started)
       state = GraphicsState.Stopped
     },
-    updatePosition(delta) {
+    move(delta) {
       position.madd(delta)
     },
   }
