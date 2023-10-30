@@ -73,7 +73,6 @@ export function initGpuGraphics({
   gl.clearColor(0, 0, 0, 1)
   gl.clear(gl.COLOR_BUFFER_BIT)
 
-
   gl.bindBuffer(gl.ARRAY_BUFFER, state.buffers.square)
   gl.vertexAttribPointer(
     state.programs.main.attributes.vertex,
@@ -91,7 +90,11 @@ export function initGpuGraphics({
   gl.useProgram(state.programs.main.program)
 
   const transform = mat4.create()
-  gl.uniformMatrix4fv(state.programs.main.uniforms.transform, false, transform)
+  gl.uniformMatrix4fv(
+    state.programs.main.uniforms.transform,
+    false,
+    transform,
+  )
   gl.drawArrays(gl.TRIANGLE_STRIP, 0, 4)
 
   return {
@@ -106,9 +109,15 @@ function initBuffer(
   const buffer = gl.createBuffer()
   invariant(buffer)
   gl.bindBuffer(gl.ARRAY_BUFFER, buffer)
+
+  // prettier-ignore
   const square = [
-    1.0, 1.0, -1.0, 1.0, 1.0, -1.0, -1.0, -1.0,
+    0.0, 0.0,
+    1.0, 0.0,
+    0.0, 1.0,
+    1.0, 1.0,
   ]
+
   gl.bufferData(
     gl.ARRAY_BUFFER,
     new Float32Array(square),
