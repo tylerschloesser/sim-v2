@@ -1,14 +1,15 @@
 import { Executor, GraphicsStrategy } from '@sim-v2/types'
 import invariant from 'tiny-invariant'
-import { AppConfig, initApp } from './app.js'
+import { AppConfig, AppSettings, initApp } from './app.js'
 import './index.scss'
 import { getDevicePixelRatio } from './util.js'
 
 const dpr = getDevicePixelRatio()
 renderDpr()
 
-const DEFAULT_CONFIG: AppConfig = {
-  dpr,
+const config: AppConfig = { dpr }
+
+const DEFAULT_SETTINGS: AppSettings = {
   executor: {
     simulator: Executor.Main,
     graphics: Executor.Main,
@@ -18,24 +19,24 @@ const DEFAULT_CONFIG: AppConfig = {
   },
 }
 
-let config: AppConfig = (() => {
-  const json = localStorage.getItem('config')
+let settings: AppSettings = (() => {
+  const json = localStorage.getItem('settings')
   if (json) {
-    return JSON.parse(json)
+    return AppSettings.parse(JSON.parse(json))
   }
-  return DEFAULT_CONFIG
+  return DEFAULT_SETTINGS
 })()
 
-let app = await initApp(config)
+let app = await initApp({ settings, config })
 
 async function updateApp() {
   app.destroy()
   localStorage.setItem(
-    'config',
-    JSON.stringify(config, null, 2),
+    'settings',
+    JSON.stringify(settings, null, 2),
   )
-  console.log('reloading app with', config)
-  app = await initApp(config)
+  console.log('reloading app with', settings)
+  app = await initApp({ settings, config })
 }
 
 document
@@ -44,31 +45,31 @@ document
     let value: string
     switch (input.name) {
       case 'simulator-executor': {
-        value = config.executor.simulator
+        value = settings.executor.simulator
         input.addEventListener('change', () => {
           const executor = input.value as Executor
           invariant(
             Object.values(Executor).includes(executor),
           )
-          config.executor.simulator = executor
+          settings.executor.simulator = executor
           updateApp()
         })
         break
       }
       case 'graphics-executor': {
-        value = config.executor.graphics
+        value = settings.executor.graphics
         input.addEventListener('change', () => {
           const executor = input.value as Executor
           invariant(
             Object.values(Executor).includes(executor),
           )
-          config.executor.graphics = executor
+          settings.executor.graphics = executor
           updateApp()
         })
         break
       }
       case 'graphics-strategy': {
-        value = config.strategy.graphics
+        value = settings.strategy.graphics
         input.addEventListener('change', () => {
           const strategy = input.value as GraphicsStrategy
           invariant(
@@ -76,7 +77,7 @@ document
               strategy,
             ),
           )
-          config.strategy.graphics = strategy
+          settings.strategy.graphics = strategy
           updateApp()
         })
         break
