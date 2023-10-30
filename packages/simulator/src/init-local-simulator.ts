@@ -27,6 +27,7 @@ export function initLocalSimulator({
 
     move(delta): void {
       position.madd(delta)
+      graphics.updatePosition(delta)
     },
 
     stop(): void {

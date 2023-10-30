@@ -15,7 +15,7 @@ export function initGraphics({
   canvas: HTMLCanvasElement | OffscreenCanvas
   viewport: Viewport
 }): Graphics {
-  let state: GraphicsState = GraphicsState.Stopped
+  let state: GraphicsState = GraphicsState.Started
 
   const context = getContext(canvas)
   context.scale(viewport.scale, viewport.scale)
@@ -27,7 +27,7 @@ export function initGraphics({
   let position = new Vec2(100, 100)
 
   function render(time: number) {
-    if (state === GraphicsState.Started) {
+    if (state === GraphicsState.Stopped) {
       return
     }
 
