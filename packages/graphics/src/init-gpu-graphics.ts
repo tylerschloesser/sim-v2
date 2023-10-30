@@ -5,9 +5,9 @@ import {
 } from '@sim-v2/types'
 import { mat4, vec3 } from 'gl-matrix'
 import invariant from 'tiny-invariant'
-import frag from './frag.glsl'
+import frag from './shaders/frag.glsl'
+import vert from './shaders/vert.glsl'
 import { getGpuContext } from './util.js'
-import vert from './vert.glsl'
 
 type ShaderType = number
 type ShaderSource = string

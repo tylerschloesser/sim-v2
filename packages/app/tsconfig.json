@@ -1,4 +1,4 @@
 {
   "extends": "../../tsconfig.json",
-  "include": ["**/*", "../graphics/src/glsl.d.ts"]
+  "include": ["**/*", "../graphics/src/shaders/glsl.d.ts"]
 }
