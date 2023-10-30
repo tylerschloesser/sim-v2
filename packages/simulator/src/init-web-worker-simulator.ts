@@ -4,7 +4,6 @@ import {
   MessageType,
   MoveMessage,
   StartMessage,
-  StopMessage,
 } from './web-worker-message.js'
 
 export function initWebWorkerSimulator(
@@ -38,11 +37,8 @@ export function initWebWorkerSimulator(
       worker.postMessage(message)
     },
     stop(): void {
-      const message: StopMessage = {
-        type: MessageType.Stop,
-      }
-      worker.postMessage(message)
-      // TODO worker.terminate()
+      // TODO send "stop" message to worker?
+      worker.terminate()
     },
   }
 }

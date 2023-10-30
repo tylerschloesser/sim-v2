@@ -2,7 +2,6 @@ import { Graphics, InitGraphicsArgs } from '@sim-v2/types'
 import {
   InitMessage,
   MessageType,
-  StopMessage,
   UpdatePositionMessage,
 } from './web-worker-message.js'
 
@@ -24,11 +23,8 @@ export function initWebWorkerGraphics(
 
   return {
     stop() {
-      const message: StopMessage = {
-        type: MessageType.Stop,
-      }
-      worker.postMessage(message)
-      // TODO worker.terminate()
+      // TODO send "stop" message to worker?
+      worker.terminate()
     },
     updatePosition(delta) {
       const message: UpdatePositionMessage = {
