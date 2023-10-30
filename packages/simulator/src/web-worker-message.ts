@@ -1,5 +1,5 @@
 import { Vec2 } from '@sim-v2/math'
-import { Viewport } from '@sim-v2/types'
+import { GraphicsStrategy, Viewport } from '@sim-v2/types'
 
 export enum MessageType {
   Init = 'init',
@@ -13,6 +13,7 @@ export interface InitMessage {
   payload: {
     canvas: OffscreenCanvas
     viewport: Viewport
+    graphicsStrategy: GraphicsStrategy
   }
 }
 

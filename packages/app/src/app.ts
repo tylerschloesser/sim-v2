@@ -1,15 +1,22 @@
 import { Vec2 } from '@sim-v2/math'
 import { initSimulator } from '@sim-v2/simulator'
-import { SimulatorStrategy } from '@sim-v2/types'
+import {
+  GraphicsStrategy,
+  SimulatorStrategy,
+} from '@sim-v2/types'
 import { getDevicePixelRatio } from './util.js'
 
 export interface App {
   destroy(): void
 }
 
-export async function initApp(
-  strategy: SimulatorStrategy,
-): Promise<App> {
+export async function initApp({
+  simulatorStrategy,
+  graphicsStrategy,
+}: {
+  simulatorStrategy: SimulatorStrategy
+  graphicsStrategy: GraphicsStrategy
+}): Promise<App> {
   const canvas = document.createElement('canvas')
   document.body.appendChild(canvas)
 
@@ -26,7 +33,8 @@ export async function initApp(
   }
 
   let simulator = initSimulator({
-    strategy,
+    strategy: simulatorStrategy,
+    graphicsStrategy,
     canvas,
     viewport,
   })

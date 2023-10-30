@@ -12,6 +12,7 @@ export enum SimulatorStrategy {
 
 export interface InitSimulatorArgs {
   strategy: SimulatorStrategy
+  graphicsStrategy: GraphicsStrategy
   canvas: HTMLCanvasElement
   viewport: Viewport
 }
@@ -24,6 +25,11 @@ export interface Simulator {
   start(): void
   move(delta: Vec2): void
   stop(): void
+}
+
+export enum GraphicsStrategy {
+  Cpu = 'cpu',
+  Gpu = 'gpu',
 }
 
 export interface Graphics {

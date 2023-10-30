@@ -1,7 +1,13 @@
-import { SimulatorStrategy } from '@sim-v2/types'
+import {
+  GraphicsStrategy,
+  SimulatorStrategy,
+} from '@sim-v2/types'
 import invariant from 'tiny-invariant'
 import { initApp } from './app.js'
 import './index.scss'
+
+const graphicsStrategy: GraphicsStrategy =
+  GraphicsStrategy.Cpu
 
 const debug = document.querySelector<HTMLDivElement>(
   '.debug__strategy',
@@ -12,19 +18,26 @@ const toggle = document.querySelector<HTMLButtonElement>(
 )!
 invariant(toggle)
 
-let strategy: SimulatorStrategy = SimulatorStrategy.Local
-let app = await initApp(strategy)
-debug.innerText = `strategy: ${strategy}`
+let simulatorStrategy: SimulatorStrategy =
+  SimulatorStrategy.Local
+let app = await initApp({
+  simulatorStrategy,
+  graphicsStrategy,
+})
+debug.innerText = `strategy: ${simulatorStrategy}`
 
 async function toggleStrategy() {
   app.destroy()
-  if (strategy === SimulatorStrategy.Local) {
-    strategy = SimulatorStrategy.WebWorker
+  if (simulatorStrategy === SimulatorStrategy.Local) {
+    simulatorStrategy = SimulatorStrategy.WebWorker
   } else {
-    strategy = SimulatorStrategy.Local
+    simulatorStrategy = SimulatorStrategy.Local
   }
-  app = await initApp(strategy)
-  debug.innerText = `strategy: ${strategy}`
+  app = await initApp({
+    simulatorStrategy,
+    graphicsStrategy,
+  })
+  debug.innerText = `strategy: ${simulatorStrategy}`
 }
 
 window.addEventListener('keyup', async (e) => {

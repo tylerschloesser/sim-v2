@@ -1,6 +1,10 @@
 import { initGraphics } from '@sim-v2/graphics'
 import { Vec2 } from '@sim-v2/math'
-import { Simulator, Viewport } from '@sim-v2/types'
+import {
+  GraphicsStrategy,
+  Simulator,
+  Viewport,
+} from '@sim-v2/types'
 import invariant from 'tiny-invariant'
 
 export enum SimulatorState {
@@ -11,13 +15,19 @@ export enum SimulatorState {
 export function initLocalSimulator({
   canvas,
   viewport,
+  graphicsStrategy,
 }: {
   canvas: HTMLCanvasElement | OffscreenCanvas
   viewport: Viewport
+  graphicsStrategy: GraphicsStrategy
 }): Simulator {
   const position: Vec2 = new Vec2(100, 100)
   let state: SimulatorState = SimulatorState.Stopped
-  const graphics = initGraphics({ canvas, viewport })
+  const graphics = initGraphics({
+    strategy: graphicsStrategy,
+    canvas,
+    viewport,
+  })
 
   return {
     start(): void {
