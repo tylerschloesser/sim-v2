@@ -165,7 +165,7 @@ export const initGpuGraphics: InitGraphicsFn<
   }
   updateView()
 
-    const model = mat4.create()
+  const model = mat4.create()
 
   function render(time: number) {
     if (state === GraphicsState.Stopped) {
