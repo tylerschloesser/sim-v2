@@ -12,6 +12,9 @@ canvas {
   height: 100dvh;
 }
 
-#debug {
-  display: fixed;
+.debug {
+  width: 100dvw;
+  position: fixed;
+  display: flex;
+  justify-content: space-between;
 }
