@@ -14,12 +14,12 @@ export function initWebWorkerSimulator(
     new URL('./web-worker-entry.js', import.meta.url),
   )
 
-  const message: InitMessage = {
+  const init: InitMessage = {
     type: MessageType.Init,
     payload: args,
   }
 
-  worker.postMessage(message, [message.payload.canvas])
+  worker.postMessage(init, [init.payload.canvas])
 
   return {
     start(): void {
