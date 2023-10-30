@@ -201,16 +201,7 @@ export const initGpuGraphics: InitGraphicsFn<
     },
     move(delta) {
       camera.position.madd(delta)
-
-      mat4.translate(
-        view,
-        view,
-        vec3.fromValues(
-          camera.position.x / 20000,
-          camera.position.y / 20000,
-          0,
-        ),
-      )
+      updateView()
     },
   }
 }
