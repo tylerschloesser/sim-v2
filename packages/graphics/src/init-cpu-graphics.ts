@@ -52,8 +52,8 @@ export const initCpuGraphics: InitGraphicsFn<
     )
 
     context.translate(
-      camera.position.x - size.x / 2,
-      camera.position.y - size.y / 2,
+      viewport.size.x / 2 + camera.position.x - size.x / 2,
+      viewport.size.y / 2 + camera.position.y - size.y / 2,
     )
     context.translate(size.x / 2, size.y / 2)
     context.rotate(time / 1000)
