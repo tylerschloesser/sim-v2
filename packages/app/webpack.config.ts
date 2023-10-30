@@ -63,6 +63,10 @@ export default (
             'sass-loader',
           ],
         },
+        {
+          test: /\.glsl$/,
+          type: 'asset/source',
+        },
       ],
     },
     resolve: {

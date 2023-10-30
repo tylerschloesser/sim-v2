@@ -29,6 +29,12 @@ export function getGpuContext(
   canvas: OffscreenCanvas | HTMLCanvasElement,
 ): WebGL2RenderingContext {
   let context: WebGL2RenderingContext | null
+
+  // It's important to check for OffscreenCanvas type first.
+  // OffscreenCanvas is available on both main thread and the
+  // web worker. HTMLCanvasElement is ONLY available on the
+  // main thread.
+  //
   if (canvas instanceof OffscreenCanvas) {
     context = canvas.getContext('webgl2')
   } else {
