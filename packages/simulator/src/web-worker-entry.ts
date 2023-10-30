@@ -1,3 +1,4 @@
+import { Vec2 } from '@sim-v2/math'
 import { Simulator } from '@sim-v2/types'
 import invariant from 'tiny-invariant'
 import { initLocalSimulator } from './init-local-simulator.js'
@@ -13,7 +14,15 @@ self.addEventListener('message', (e) => {
   switch (message.type) {
     case MessageType.Init:
       invariant(simulator === null)
-      simulator = initLocalSimulator(message.payload)
+      simulator = initLocalSimulator({
+        ...message.payload,
+        camera: {
+          ...message.payload.camera,
+          position: new Vec2(
+            message.payload.camera.position,
+          ),
+        },
+      })
       break
     case MessageType.Move:
       invariant(simulator !== null)

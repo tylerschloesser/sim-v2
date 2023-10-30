@@ -1,3 +1,4 @@
+import { Vec2 } from '@sim-v2/math'
 import { Graphics } from '@sim-v2/types'
 import invariant from 'tiny-invariant'
 import { initLocalGraphics } from './init-local-graphics.js'
@@ -13,7 +14,15 @@ self.addEventListener('message', (e) => {
   switch (message.type) {
     case MessageType.Init: {
       invariant(graphics === null)
-      graphics = initLocalGraphics(message.payload)
+      graphics = initLocalGraphics({
+        ...message.payload,
+        camera: {
+          ...message.payload.camera,
+          position: new Vec2(
+            message.payload.camera.position,
+          ),
+        },
+      })
       break
     }
     case MessageType.Move: {

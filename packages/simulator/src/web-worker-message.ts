@@ -1,4 +1,4 @@
-import { Vec2 } from '@sim-v2/math'
+import { SimpleVec2 } from '@sim-v2/math'
 import { Camera, Viewport } from '@sim-v2/types'
 
 export enum MessageType {
@@ -10,13 +10,15 @@ export interface InitMessage {
   type: MessageType.Init
   payload: {
     viewport: Viewport
-    camera: Camera
+    camera: Omit<Camera, 'position'> & {
+      position: SimpleVec2
+    }
   }
 }
 
 export interface MoveMessage {
   type: MessageType.Move
-  payload: { delta: Vec2 }
+  payload: { delta: SimpleVec2 }
 }
 
 export type Message = InitMessage | MoveMessage

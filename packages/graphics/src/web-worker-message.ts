@@ -1,4 +1,4 @@
-import { Vec2 } from '@sim-v2/math'
+import { SimpleVec2, Vec2 } from '@sim-v2/math'
 import {
   Camera,
   GraphicsStrategy,
@@ -16,13 +16,15 @@ export interface InitMessage {
     strategy: GraphicsStrategy
     canvas: OffscreenCanvas
     viewport: Viewport
-    camera: Camera
+    camera: Omit<Camera, 'position'> & {
+      position: SimpleVec2
+    }
   }
 }
 
 export interface MoveMessage {
   type: MessageType.Move
-  payload: { delta: Vec2 }
+  payload: { delta: SimpleVec2 }
 }
 
 export type Message = InitMessage | MoveMessage

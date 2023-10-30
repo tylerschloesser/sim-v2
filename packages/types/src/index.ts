@@ -1,4 +1,4 @@
-import { Vec2 } from '@sim-v2/math'
+import { SimpleVec2, Vec2 } from '@sim-v2/math'
 
 export interface Viewport {
   size: Vec2
@@ -21,7 +21,7 @@ export type InitSimulatorFn = (
 ) => Simulator
 
 export interface Simulator {
-  move(delta: Vec2): void
+  move(delta: SimpleVec2): void
   stop(): void
 }
 
@@ -48,6 +48,6 @@ export type InitGraphicsFn = (
 ) => Graphics
 
 export interface Graphics {
-  move(delta: Vec2): void
+  move(delta: SimpleVec2): void
   stop(): void
 }
