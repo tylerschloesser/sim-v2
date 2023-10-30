@@ -22,9 +22,7 @@ export interface StartMessage {
 
 export interface MoveMessage {
   type: MessageType.Move
-  payload: {
-    delta: Vec2
-  }
+  payload: { delta: Vec2 }
 }
 
 export interface StopMessage {

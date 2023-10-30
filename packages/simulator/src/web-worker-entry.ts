@@ -21,7 +21,7 @@ self.addEventListener('message', (e) => {
       break
     case MessageType.Move:
       invariant(simulator !== null)
-      simulator.move(message.payload)
+      simulator.move(message.payload.delta)
       break
   }
 })

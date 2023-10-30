@@ -40,7 +40,7 @@ export async function initApp(
           e.clientX - prev.clientX,
           e.clientY - prev.clientY,
         )
-        simulator.move({ delta })
+        simulator.move(delta)
       }
       prev = e
     }

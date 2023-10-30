@@ -70,5 +70,8 @@ export function initGraphics({
       invariant(state === GraphicsState.Started)
       state = GraphicsState.Stopped
     },
+    updatePosition(delta) {
+      position.madd(delta)
+    },
   }
 }

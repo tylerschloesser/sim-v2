@@ -1,4 +1,4 @@
-import { Vec2 } from '@sim-v2/math'
+import { Simulator } from '@sim-v2/types'
 import {
   InitMessage,
   MessageType,
@@ -9,7 +9,7 @@ import {
 
 export function initWebWorkerSimulator(
   args: InitMessage['payload'],
-) {
+): Simulator {
   const worker = new Worker(
     new URL('./web-worker-entry.js', import.meta.url),
   )
@@ -28,10 +28,12 @@ export function initWebWorkerSimulator(
       }
       worker.postMessage(message)
     },
-    move(args: { delta: Vec2 }): void {
+    move(args): void {
       const message: MoveMessage = {
         type: MessageType.Move,
-        payload: args,
+        payload: {
+          delta: args,
+        },
       }
       worker.postMessage(message)
     },

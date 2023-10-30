@@ -22,10 +22,11 @@ export type InitSimulatorFn = (
 
 export interface Simulator {
   start(): void
-  move(args: { delta: Vec2 }): void
+  move(delta: Vec2): void
   stop(): void
 }
 
 export interface Graphics {
   stop(): void
+  updatePosition(delta: Vec2): void
 }
