@@ -76,9 +76,6 @@ export const initGpuGraphics: InitGraphicsFn<
     },
   }
 
-  gl.clearColor(0, 0, 0, 1)
-  gl.clear(gl.COLOR_BUFFER_BIT)
-
   gl.bindBuffer(gl.ARRAY_BUFFER, context.buffers.square)
   gl.vertexAttribPointer(
     context.programs.main.attributes.vertex,
@@ -102,10 +99,24 @@ export const initGpuGraphics: InitGraphicsFn<
     false,
     transform,
   )
-  gl.drawArrays(gl.TRIANGLE_STRIP, 0, 4)
+
+  function render() {
+    if (state === GraphicsState.Stopped) {
+      return
+    }
+    gl.clearColor(0, 0, 0, 1)
+    gl.clear(gl.COLOR_BUFFER_BIT)
+
+    gl.drawArrays(gl.TRIANGLE_STRIP, 0, 4)
+    requestAnimationFrame(render)
+  }
+  requestAnimationFrame(render)
 
   return {
-    stop() {},
+    stop() {
+      invariant(state === GraphicsState.Started)
+      state = GraphicsState.Stopped
+    },
     move(delta) {
       camera.position.madd(delta)
     },
