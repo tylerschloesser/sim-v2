@@ -40,14 +40,40 @@ document
     switch (input.name) {
       case 'simulator-executor': {
         value = config.executor.simulator
+        input.addEventListener('change', () => {
+          const executor = input.value as Executor
+          invariant(
+            Object.values(Executor).includes(executor),
+          )
+          config.executor.simulator = executor
+          updateApp()
+        })
         break
       }
       case 'graphics-executor': {
         value = config.executor.graphics
+        input.addEventListener('change', () => {
+          const executor = input.value as Executor
+          invariant(
+            Object.values(Executor).includes(executor),
+          )
+          config.executor.graphics = executor
+          updateApp()
+        })
         break
       }
       case 'graphics-strategy': {
         value = config.strategy.graphics
+        input.addEventListener('change', () => {
+          const strategy = input.value as GraphicsStrategy
+          invariant(
+            Object.values(GraphicsStrategy).includes(
+              strategy,
+            ),
+          )
+          config.strategy.graphics = strategy
+          updateApp()
+        })
         break
       }
       default:
@@ -57,41 +83,4 @@ document
         )
     }
     input.checked = input.value === value
-
-    input.addEventListener('change', () => {
-      switch (input.name) {
-        case 'simulator-executor': {
-          const executor = input.value as Executor
-          invariant(
-            Object.values(Executor).includes(executor),
-          )
-          config.executor.simulator = executor
-          break
-        }
-        case 'graphics-executor': {
-          const executor = input.value as Executor
-          invariant(
-            Object.values(Executor).includes(executor),
-          )
-          config.executor.graphics = executor
-          break
-        }
-        case 'graphics-strategy': {
-          const strategy = input.value as GraphicsStrategy
-          invariant(
-            Object.values(GraphicsStrategy).includes(
-              strategy,
-            ),
-          )
-          config.strategy.graphics = strategy
-          break
-        }
-        default:
-          invariant(
-            false,
-            `invalid input name: ${input.name}`,
-          )
-      }
-      updateApp()
-    })
   })
