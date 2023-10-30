@@ -23,5 +23,9 @@ self.addEventListener('message', (e) => {
       invariant(simulator !== null)
       simulator.move(message.payload.delta)
       break
+    case MessageType.Stop:
+      invariant(simulator !== null)
+      simulator.stop()
+      break
   }
 })

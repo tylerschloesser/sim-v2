@@ -9,28 +9,48 @@
 </head>
 <body>
   <div class="debug">
-    <fieldset class="simulator-strategy">
-      <legend>Simulator</legend>
+    <fieldset>
+      <legend>Simulator Executor</legend>
       <label>
         <input
           type="radio"
-          name="simulator-strategy"
-          value="local"
+          name="simulator-executor"
+          value="main"
           checked
         />
-        Local
+        Main
       </label>
       <label>
         <input
           type="radio"
-          name="simulator-strategy"
+          name="simulator-executor"
           value="web-worker"
         />
         Web Worker
       </label>
     </fieldset>
-    <fieldset class="graphics-strategy">
-      <legend>Graphics</legend>
+    <fieldset>
+      <legend>Graphics Executor</legend>
+      <label>
+        <input
+          type="radio"
+          name="graphics-executor"
+          value="main"
+          checked
+        />
+        Main
+      </label>
+      <label>
+        <input
+          type="radio"
+          name="graphics-executor"
+          value="web-worker"
+        />
+        Web Worker
+      </label>
+    </fieldset>
+    <fieldset>
+      <legend>Graphics Strategy</legend>
       <label>
         <input
           type="radio"

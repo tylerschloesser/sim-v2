@@ -1,4 +1,4 @@
-import { Simulator } from '@sim-v2/types'
+import { InitSimulatorArgs, Simulator } from '@sim-v2/types'
 import {
   InitMessage,
   MessageType,
@@ -8,7 +8,7 @@ import {
 } from './web-worker-message.js'
 
 export function initWebWorkerSimulator(
-  args: InitMessage['payload'],
+  args: Omit<InitSimulatorArgs, 'executor'>,
 ): Simulator {
   const worker = new Worker(
     new URL('./web-worker-entry.js', import.meta.url),
@@ -19,7 +19,7 @@ export function initWebWorkerSimulator(
     payload: args,
   }
 
-  worker.postMessage(init, [init.payload.canvas])
+  worker.postMessage(init)
 
   return {
     start(): void {
@@ -42,6 +42,7 @@ export function initWebWorkerSimulator(
         type: MessageType.Stop,
       }
       worker.postMessage(message)
+      // TODO worker.terminate()
     },
   }
 }

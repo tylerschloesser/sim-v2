@@ -5,15 +5,13 @@ export interface Viewport {
   scale: number
 }
 
-export enum SimulatorStrategy {
-  Local = 'local',
+export enum Executor {
+  Main = 'main',
   WebWorker = 'web-worker',
 }
 
 export interface InitSimulatorArgs {
-  strategy: SimulatorStrategy
-  graphicsStrategy: GraphicsStrategy
-  canvas: HTMLCanvasElement
+  executor: Executor
   viewport: Viewport
 }
 
@@ -31,6 +29,17 @@ export enum GraphicsStrategy {
   Cpu = 'cpu',
   Gpu = 'gpu',
 }
+
+export interface InitGraphicsArgs {
+  executor: Executor
+  strategy: GraphicsStrategy
+  canvas: HTMLCanvasElement | OffscreenCanvas
+  viewport: Viewport
+}
+
+export type InitGraphicsFn = (
+  args: InitGraphicsArgs,
+) => Graphics
 
 export interface Graphics {
   stop(): void

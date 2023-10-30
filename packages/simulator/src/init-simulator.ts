@@ -1,21 +1,15 @@
-import {
-  InitSimulatorFn,
-  SimulatorStrategy,
-} from '@sim-v2/types'
+import { Executor, InitSimulatorFn } from '@sim-v2/types'
 import { initLocalSimulator } from './init-local-simulator.js'
 import { initWebWorkerSimulator } from './init-web-worker-simulator.js'
 
 export const initSimulator: InitSimulatorFn = ({
-  strategy,
+  executor,
   ...args
 }) => {
-  switch (strategy) {
-    case SimulatorStrategy.Local:
+  switch (executor) {
+    case Executor.Main:
       return initLocalSimulator(args)
-    case SimulatorStrategy.WebWorker:
-      return initWebWorkerSimulator({
-        ...args,
-        canvas: args.canvas.transferControlToOffscreen(),
-      })
+    case Executor.WebWorker:
+      return initWebWorkerSimulator(args)
   }
 }

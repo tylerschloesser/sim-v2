@@ -1,23 +1,20 @@
-import {
-  Graphics,
-  GraphicsStrategy,
-  Viewport,
-} from '@sim-v2/types'
-import { initCpuGraphics } from './init-cpu-graphics.js'
-import { initGpuGraphics } from './init-gpu-graphics.js'
+import { Executor, InitGraphicsFn } from '@sim-v2/types'
+import invariant from 'tiny-invariant'
+import { initLocalGraphics } from './init-local-graphics.js'
+import { initWebWorkerGraphics } from './init-web-worker-graphics.js'
 
-export function initGraphics({
-  strategy,
+export const initGraphics: InitGraphicsFn = ({
+  executor,
   ...args
-}: {
-  strategy: GraphicsStrategy
-  canvas: HTMLCanvasElement | OffscreenCanvas
-  viewport: Viewport
-}): Graphics {
-  switch (strategy) {
-    case GraphicsStrategy.Cpu:
-      return initCpuGraphics(args)
-    case GraphicsStrategy.Gpu:
-      return initGpuGraphics(args)
+}) => {
+  switch (executor) {
+    case Executor.Main:
+      return initLocalGraphics(args)
+    case Executor.WebWorker:
+      invariant(args.canvas instanceof HTMLCanvasElement)
+      return initWebWorkerGraphics({
+        ...args,
+        canvas: args.canvas.transferControlToOffscreen(),
+      })
   }
 }

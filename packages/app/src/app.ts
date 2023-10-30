@@ -1,22 +1,26 @@
+import { initGraphics } from '@sim-v2/graphics'
 import { Vec2 } from '@sim-v2/math'
 import { initSimulator } from '@sim-v2/simulator'
-import {
-  GraphicsStrategy,
-  SimulatorStrategy,
-} from '@sim-v2/types'
+import { Executor, GraphicsStrategy } from '@sim-v2/types'
 import { getDevicePixelRatio } from './util.js'
+
+export interface AppConfig {
+  executor: {
+    simulator: Executor
+    graphics: Executor
+  }
+  strategy: {
+    graphics: GraphicsStrategy
+  }
+}
 
 export interface App {
   destroy(): void
 }
 
-export async function initApp({
-  simulatorStrategy,
-  graphicsStrategy,
-}: {
-  simulatorStrategy: SimulatorStrategy
-  graphicsStrategy: GraphicsStrategy
-}): Promise<App> {
+export async function initApp(
+  config: AppConfig,
+): Promise<App> {
   const canvas = document.createElement('canvas')
   document.body.appendChild(canvas)
 
@@ -32,10 +36,15 @@ export async function initApp({
     scale: dpr,
   }
 
-  let simulator = initSimulator({
-    strategy: simulatorStrategy,
-    graphicsStrategy,
+  let graphics = initGraphics({
     canvas,
+    executor: config.executor.graphics,
+    strategy: config.strategy.graphics,
+    viewport,
+  })
+
+  let simulator = initSimulator({
+    executor: config.executor.simulator,
     viewport,
   })
 
@@ -74,6 +83,7 @@ export async function initApp({
 
   return {
     destroy() {
+      graphics.stop()
       simulator.stop()
       canvas.remove()
     },
