@@ -16,8 +16,8 @@ export interface InitSimulatorArgs {
   camera: Camera
 }
 
-export type InitSimulatorFn = (
-  args: InitSimulatorArgs,
+export type InitSimulatorFn<T = InitSimulatorArgs> = (
+  args: T,
 ) => Simulator
 
 export interface Simulator {

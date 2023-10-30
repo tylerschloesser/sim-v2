@@ -1,13 +1,16 @@
-import { InitSimulatorArgs, Simulator } from '@sim-v2/types'
+import {
+  InitSimulatorArgs,
+  InitSimulatorFn,
+} from '@sim-v2/types'
 import {
   InitMessage,
   MessageType,
   MoveMessage,
 } from './web-worker-message.js'
 
-export function initWebWorkerSimulator(
-  args: Omit<InitSimulatorArgs, 'executor'>,
-): Simulator {
+export const initWebWorkerSimulator: InitSimulatorFn<
+  Omit<InitSimulatorArgs, 'executor'>
+> = (args) => {
   const worker = new Worker(
     new URL('./web-worker-entry.js', import.meta.url),
   )

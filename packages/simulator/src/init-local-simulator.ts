@@ -1,4 +1,7 @@
-import { InitSimulatorArgs, Simulator } from '@sim-v2/types'
+import {
+  InitSimulatorArgs,
+  InitSimulatorFn,
+} from '@sim-v2/types'
 import invariant from 'tiny-invariant'
 
 export enum SimulatorState {
@@ -6,9 +9,9 @@ export enum SimulatorState {
   Started = 'started',
 }
 
-export function initLocalSimulator({
-  camera,
-}: Omit<InitSimulatorArgs, 'executor'>): Simulator {
+export const initLocalSimulator: InitSimulatorFn<
+  Omit<InitSimulatorArgs, 'executor'>
+> = ({ camera }) => {
   let state: SimulatorState = SimulatorState.Started
 
   return {
