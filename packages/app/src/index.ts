@@ -3,7 +3,7 @@ import invariant from 'tiny-invariant'
 import { AppConfig, initApp } from './app.js'
 import './index.scss'
 
-let config: AppConfig = {
+const DEFAULT_CONFIG: AppConfig = {
   executor: {
     simulator: Executor.Main,
     graphics: Executor.Main,
@@ -13,10 +13,22 @@ let config: AppConfig = {
   },
 }
 
+let config: AppConfig = (() => {
+  const json = localStorage.getItem('config')
+  if (json) {
+    return JSON.parse(json)
+  }
+  return DEFAULT_CONFIG
+})()
+
 let app = await initApp(config)
 
 async function updateApp() {
   app.destroy()
+  localStorage.setItem(
+    'config',
+    JSON.stringify(config, null, 2),
+  )
   console.log('reloading app with', config)
   app = await initApp(config)
 }
@@ -24,6 +36,28 @@ async function updateApp() {
 document
   .querySelectorAll<HTMLInputElement>('.debug input')
   .forEach((input) => {
+    let value: string
+    switch (input.name) {
+      case 'simulator-executor': {
+        value = config.executor.simulator
+        break
+      }
+      case 'graphics-executor': {
+        value = config.executor.graphics
+        break
+      }
+      case 'graphics-strategy': {
+        value = config.strategy.graphics
+        break
+      }
+      default:
+        invariant(
+          false,
+          `invalid input name: ${input.name}`,
+        )
+    }
+    input.checked = input.value === value
+
     input.addEventListener('change', () => {
       switch (input.name) {
         case 'simulator-executor': {
