@@ -18,8 +18,8 @@ export function initGpuGraphics({
   invariant(gl)
 
   const shaders = {
-    vert: loadShader(gl, gl.VERTEX_SHADER, vert),
-    frag: loadShader(gl, gl.FRAGMENT_SHADER, frag),
+    vert: initShader(gl, gl.VERTEX_SHADER, vert),
+    frag: initShader(gl, gl.FRAGMENT_SHADER, frag),
   }
 
   gl.clearColor(0, 0, 0, 1)
@@ -33,7 +33,7 @@ export function initGpuGraphics({
   }
 }
 
-function loadShader(
+function initShader(
   gl: WebGL2RenderingContext,
   type: ShaderType,
   source: ShaderSource,
