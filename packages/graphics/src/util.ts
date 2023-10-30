@@ -1,6 +1,6 @@
 import invariant from 'tiny-invariant'
 
-export function getContext(
+export function getCpuContext(
   canvas: OffscreenCanvas | HTMLCanvasElement,
 ):
   | OffscreenCanvasRenderingContext2D
@@ -20,6 +20,20 @@ export function getContext(
   } else {
     invariant(canvas instanceof HTMLCanvasElement)
     context = canvas.getContext('2d')
+  }
+  invariant(context)
+  return context
+}
+
+export function getGpuContext(
+  canvas: OffscreenCanvas | HTMLCanvasElement,
+): WebGL2RenderingContext {
+  let context: WebGL2RenderingContext | null
+  if (canvas instanceof OffscreenCanvas) {
+    context = canvas.getContext('webgl2')
+  } else {
+    invariant(canvas instanceof HTMLCanvasElement)
+    context = canvas.getContext('webgl2')
   }
   invariant(context)
   return context

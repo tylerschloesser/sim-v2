@@ -1,7 +1,7 @@
 import { Vec2 } from '@sim-v2/math'
 import { Graphics, Viewport } from '@sim-v2/types'
 import invariant from 'tiny-invariant'
-import { getContext } from './util.js'
+import { getCpuContext } from './util.js'
 
 enum GraphicsState {
   Started = 'started',
@@ -17,7 +17,7 @@ export function initCpuGraphics({
 }): Graphics {
   let state: GraphicsState = GraphicsState.Started
 
-  const context = getContext(canvas)
+  const context = getCpuContext(canvas)
   context.scale(viewport.scale, viewport.scale)
 
   let frames = 0
