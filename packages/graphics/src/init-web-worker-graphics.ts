@@ -4,12 +4,15 @@ import {
   Graphics,
   InitGraphicsArgs,
   Viewport,
+  GraphicsUpdate,
 } from '@sim-v2/types'
 import invariant from 'tiny-invariant'
 import {
   InitMessage,
   MessageType,
   SetCameraMessage,
+  SetViewportMessage,
+  UpdateMessage,
 } from './web-worker-message.js'
 
 export function initWebWorkerGraphics(
@@ -35,15 +38,22 @@ export function initWebWorkerGraphics(
     setCamera(camera: Camera) {
       const message: SetCameraMessage = {
         type: MessageType.SetCamera,
-        camera: {
-          ...camera,
-          position: new Vec2(camera.position),
-        },
+        camera,
       }
       worker.postMessage(message)
     },
     setViewport(viewport: Viewport): void {
-      invariant(false, 'TODO')
+      const message: SetViewportMessage = {
+        type: MessageType.SetViewport,
+        viewport,
+      }
+      worker.postMessage(message)
+    },
+    update(updates: GraphicsUpdate[]): void {
+      const message: UpdateMessage = {
+        type: MessageType.Update,
+        updates,
+      }
     },
   }
 }

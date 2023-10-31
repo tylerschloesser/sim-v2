@@ -54,8 +54,19 @@ export type InitGraphicsFn<T = InitGraphicsArgs> = (
   args: T,
 ) => Graphics
 
+export enum GraphicsUpdateType {
+  NewChunk = 'new-chunk',
+}
+
+export interface NewChunkGraphicsUpdate {
+  type: GraphicsUpdateType.NewChunk
+}
+
+export type GraphicsUpdate = NewChunkGraphicsUpdate
+
 export interface Graphics {
   setViewport(viewport: Viewport): void
   setCamera(camera: Camera): void
+  update(updates: GraphicsUpdate[]): void
   stop(): void
 }

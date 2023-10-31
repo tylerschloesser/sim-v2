@@ -1,6 +1,6 @@
-import { Vec2 } from '@sim-v2/math'
 import {
   Camera,
+  GraphicsUpdate,
   InitGraphicsArgs,
   InitGraphicsFn,
   Viewport,
@@ -206,6 +206,9 @@ export const initGpuGraphics: InitGraphicsFn<
       updateView()
     },
     setViewport(next: Viewport): void {
+      invariant(false, 'TODO')
+    },
+    update(updates: GraphicsUpdate[]): void {
       invariant(false, 'TODO')
     },
   }

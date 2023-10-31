@@ -3,6 +3,7 @@ import {
   InitGraphicsArgs,
   InitGraphicsFn,
   Viewport,
+  GraphicsUpdate,
 } from '@sim-v2/types'
 import invariant from 'tiny-invariant'
 import { getCpuContext } from './util.js'
@@ -85,6 +86,9 @@ export const initCpuGraphics: InitGraphicsFn<
       camera = next
     },
     setViewport(next: Viewport): void {
+      invariant(false, 'TODO')
+    },
+    update(updates: GraphicsUpdate[]): void {
       invariant(false, 'TODO')
     },
   }

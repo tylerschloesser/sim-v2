@@ -20,12 +20,32 @@ self.addEventListener('message', (e) => {
           ...message.camera,
           position: new Vec2(message.camera.position),
         },
+        viewport: {
+          ...message.viewport,
+          size: new Vec2(message.viewport.size),
+        },
       })
       break
     }
     case MessageType.SetCamera: {
       invariant(graphics)
-      graphics.setCamera(message.camera)
+      graphics.setCamera({
+        ...message.camera,
+        position: new Vec2(message.camera.position),
+      })
+      break
+    }
+    case MessageType.SetViewport: {
+      invariant(graphics)
+      graphics.setViewport({
+        ...message.viewport,
+        size: new Vec2(message.viewport.size),
+      })
+      break
+    }
+    case MessageType.Update: {
+      invariant(graphics)
+      graphics.update(message.updates)
       break
     }
     default: {
