@@ -1,4 +1,3 @@
-import { Vec2 } from '@sim-v2/math'
 import {
   Camera,
   InitGraphicsArgs,
@@ -26,10 +25,6 @@ export const initCpuGraphics: InitGraphicsFn<
   let prev = performance.now()
   let elapsed = 0
 
-  const size = new Vec2(
-    Math.min(viewport.size.x, viewport.size.y),
-  ).div(4)
-
   function render(time: number) {
     if (state === GraphicsState.Stopped) {
       return
@@ -55,14 +50,24 @@ export const initCpuGraphics: InitGraphicsFn<
     )
 
     context.translate(
-      viewport.size.x / 2 + camera.position.x - size.x / 2,
-      viewport.size.y / 2 + camera.position.y - size.y / 2,
+      viewport.size.x / 2 +
+        camera.position.x -
+        camera.tileSize / 2,
+      viewport.size.y / 2 +
+        camera.position.y -
+        camera.tileSize / 2,
     )
-    context.translate(size.x / 2, size.y / 2)
+    context.translate(
+      camera.tileSize / 2,
+      camera.tileSize / 2,
+    )
     context.rotate(time / 1000)
-    context.translate(-size.x / 2, -size.y / 2)
+    context.translate(
+      -camera.tileSize / 2,
+      -camera.tileSize / 2,
+    )
     context.fillStyle = 'blue'
-    context.fillRect(0, 0, size.x, size.y)
+    context.fillRect(0, 0, camera.tileSize, camera.tileSize)
 
     context.restore()
 
