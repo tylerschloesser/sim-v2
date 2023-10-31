@@ -1,4 +1,4 @@
-import { Vec2 } from '@sim-v2/math'
+import { SimpleVec2, Vec2 } from '@sim-v2/math'
 import {
   InitGraphicsArgs,
   InitGraphicsFn,
@@ -73,8 +73,11 @@ export const initCpuGraphics: InitGraphicsFn<
       invariant(state === GraphicsState.Started)
       state = GraphicsState.Stopped
     },
-    move(delta) {
+    move(delta: SimpleVec2) {
       camera.position.madd(delta)
+    },
+    zoom(delta: number) {
+      invariant(false, 'TODO')
     },
   }
 }

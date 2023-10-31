@@ -63,8 +63,10 @@ export async function initApp({
   const camera = initCamera({
     graphics,
     viewport,
-    position: new Vec2(0),
-    zoom: 0.5,
+    settings: {
+      position: new Vec2(0),
+      zoom: 0.5,
+    },
   })
 
   const simulator = initSimulator({

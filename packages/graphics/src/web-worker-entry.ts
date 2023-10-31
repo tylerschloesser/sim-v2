@@ -30,5 +30,13 @@ self.addEventListener('message', (e) => {
       graphics.move(message.payload.delta)
       break
     }
+    case MessageType.Zoom: {
+      invariant(graphics !== null)
+      graphics.zoom(message.payload.delta)
+      break
+    }
+    default: {
+      invariant(false)
+    }
   }
 })

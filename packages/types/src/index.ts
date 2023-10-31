@@ -51,5 +51,6 @@ export type InitGraphicsFn<T = InitGraphicsArgs> = (
 
 export interface Graphics {
   move(delta: SimpleVec2): void
+  zoom(delta: number): void
   stop(): void
 }

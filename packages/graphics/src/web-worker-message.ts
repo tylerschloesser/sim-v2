@@ -1,4 +1,4 @@
-import { SimpleVec2, Vec2 } from '@sim-v2/math'
+import { SimpleVec2 } from '@sim-v2/math'
 import {
   Camera,
   GraphicsStrategy,
@@ -8,6 +8,7 @@ import {
 export enum MessageType {
   Init = 'init',
   Move = 'move',
+  Zoom = 'zoom',
 }
 
 export interface InitMessage {
@@ -27,4 +28,12 @@ export interface MoveMessage {
   payload: { delta: SimpleVec2 }
 }
 
-export type Message = InitMessage | MoveMessage
+export interface ZoomMessage {
+  type: MessageType.Zoom
+  payload: { delta: number }
+}
+
+export type Message =
+  | InitMessage
+  | MoveMessage
+  | ZoomMessage
