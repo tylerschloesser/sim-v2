@@ -7,7 +7,7 @@ export const initSimulator: InitSimulatorFn = ({
   ...args
 }) => {
   switch (executor) {
-    case Executor.Main:
+    case Executor.Local:
       return initLocalSimulator(args)
     case Executor.WebWorker:
       return initWebWorkerSimulator(args)

@@ -8,7 +8,7 @@ export interface Viewport {
 }
 
 export enum Executor {
-  Main = 'main',
+  Local = 'main',
   WebWorker = 'web-worker',
 }
 

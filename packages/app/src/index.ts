@@ -11,8 +11,8 @@ const config: AppConfig = { dpr }
 
 const DEFAULT_SETTINGS: AppSettings = {
   executor: {
-    simulator: Executor.Main,
-    graphics: Executor.Main,
+    simulator: Executor.Local,
+    graphics: Executor.Local,
   },
   strategy: {
     graphics: GraphicsStrategy.Cpu,

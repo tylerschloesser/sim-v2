@@ -8,7 +8,7 @@ export const initGraphics: InitGraphicsFn = ({
   ...args
 }) => {
   switch (executor) {
-    case Executor.Main:
+    case Executor.Local:
       return initLocalGraphics(args)
     case Executor.WebWorker:
       invariant(args.canvas instanceof HTMLCanvasElement)
