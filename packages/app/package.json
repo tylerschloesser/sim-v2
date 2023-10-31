@@ -7,6 +7,7 @@
     "analyze": "NODE_NO_WARNINGS=1 NODE_OPTIONS=\"--loader ts-node/esm\" webpack --env analyze"
   },
   "dependencies": {
+    "@sim-v2/camera": "*",
     "@sim-v2/graphics": "*",
     "@sim-v2/simulator": "*",
     "@sim-v2/types": "*",

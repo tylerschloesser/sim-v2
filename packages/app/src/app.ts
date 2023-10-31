@@ -1,3 +1,4 @@
+import {initCamera} from '@sim-v2/camera'
 import { initGraphics } from '@sim-v2/graphics'
 import { Vec2 } from '@sim-v2/math'
 import { initSimulator } from '@sim-v2/simulator'
@@ -43,7 +44,7 @@ export async function initApp({
     scale: config.dpr,
   }
 
-  let graphics = initGraphics({
+  const graphics = initGraphics({
     canvas,
     executor: settings.executor.graphics,
     strategy: settings.strategy.graphics,
@@ -55,7 +56,9 @@ export async function initApp({
     },
   })
 
-  let simulator = initSimulator({
+  const camera = initCamera({ graphics })
+
+  const simulator = initSimulator({
     executor: settings.executor.simulator,
     viewport,
     // camera is mutable, don't share between graphics and simulator
@@ -74,8 +77,7 @@ export async function initApp({
           e.clientX - prev.clientX,
           e.clientY - prev.clientY,
         )
-        graphics.move(delta)
-        simulator.move(delta)
+        camera.move(delta)
       }
       prev = e
     }
