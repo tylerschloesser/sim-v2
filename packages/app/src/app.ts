@@ -54,9 +54,9 @@ export async function initApp({
   }
 
   const graphics = initGraphics({
-    canvas,
     executor: settings.executor.graphics,
     strategy: settings.strategy.graphics,
+    canvas,
     viewport,
     camera,
   })
