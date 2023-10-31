@@ -19,5 +19,11 @@ export const initLocalSimulator: InitSimulatorFn<
       invariant(state === SimulatorState.Started)
       state = SimulatorState.Stopped
     },
+    setCamera() {
+      invariant(false, 'TODO')
+    },
+    setViewport() {
+      invariant(false, 'TODO')
+    },
   }
 }

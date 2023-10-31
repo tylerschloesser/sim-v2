@@ -5,6 +5,8 @@ import {
 
 export enum MessageType {
   Init = 'init',
+  SetCamera = 'set-camera',
+  SetViewport = 'set-viewport',
 }
 
 export interface InitMessage {
@@ -13,4 +15,17 @@ export interface InitMessage {
   camera: TransferCamera
 }
 
-export type Message = InitMessage
+export interface SetCameraMessage {
+  type: MessageType.SetCamera
+  camera: TransferCamera
+}
+
+export interface SetViewportMessage {
+  type: MessageType.SetViewport
+  viewport: TransferViewport
+}
+
+export type Message =
+  | InitMessage
+  | SetCameraMessage
+  | SetViewportMessage

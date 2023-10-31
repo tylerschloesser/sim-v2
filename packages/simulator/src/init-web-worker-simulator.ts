@@ -1,10 +1,14 @@
 import {
+  Camera,
   InitSimulatorArgs,
   InitSimulatorFn,
+  Viewport,
 } from '@sim-v2/types'
 import {
   InitMessage,
   MessageType,
+  SetCameraMessage,
+  SetViewportMessage,
 } from './web-worker-message.js'
 
 export const initWebWorkerSimulator: InitSimulatorFn<
@@ -24,6 +28,20 @@ export const initWebWorkerSimulator: InitSimulatorFn<
   return {
     stop(): void {
       worker.terminate()
+    },
+    setCamera(camera: Camera): void {
+      const message: SetCameraMessage = {
+        type: MessageType.SetCamera,
+        camera,
+      }
+      worker.postMessage(message)
+    },
+    setViewport(viewport: Viewport): void {
+      const message: SetViewportMessage = {
+        type: MessageType.SetViewport,
+        viewport,
+      }
+      worker.postMessage(message)
     },
   }
 }

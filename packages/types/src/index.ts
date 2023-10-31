@@ -32,6 +32,8 @@ export type InitSimulatorFn<T = InitSimulatorArgs> = (
 ) => Simulator
 
 export interface Simulator {
+  setViewport(viewport: Viewport): void
+  setCamera(camera: Camera): void
   stop(): void
 }
 
