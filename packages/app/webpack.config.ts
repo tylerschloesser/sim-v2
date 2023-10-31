@@ -16,6 +16,8 @@ export default (
   const prod = argv.mode !== 'development'
   const mode = prod ? 'production' : 'development'
 
+  console.info(`mode: ${mode}`)
+
   invariant(!env.analyze || mode === 'production')
 
   const config: Configuration = {
@@ -89,8 +91,8 @@ export default (
           },
         ],
       }),
-      new MiniCssExtractPlugin(),
-      new WebpackManifestPlugin({}),
+      prod && new MiniCssExtractPlugin(),
+      prod && new WebpackManifestPlugin({}),
       env.analyze && new BundleAnalyzerPlugin(),
     ],
     devServer: {
