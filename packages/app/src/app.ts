@@ -1,5 +1,5 @@
 import { initGraphics } from '@sim-v2/graphics'
-import { Vec2 } from '@sim-v2/math'
+import { Vec2, clamp } from '@sim-v2/math'
 import { initSimulator } from '@sim-v2/simulator'
 import {
   Camera,
@@ -7,6 +7,7 @@ import {
   GraphicsStrategy,
   Viewport,
 } from '@sim-v2/types'
+import invariant from 'tiny-invariant'
 import { z } from 'zod'
 
 export const AppSettings = z.object({
@@ -47,6 +48,11 @@ export async function initApp({
     size: new Vec2(rect.width, rect.height),
     pixelRatio: config.pixelRatio,
   }
+
+  const minTileSize =
+    Math.min(viewport.size.x, viewport.size.y) * 0.05
+  const maxTileSize =
+    Math.min(viewport.size.x, viewport.size.y) * 0.5
 
   const camera: Camera = {
     position: new Vec2(0),
@@ -92,6 +98,16 @@ export async function initApp({
   canvas.addEventListener(
     'wheel',
     (e) => {
+      invariant(maxTileSize > minTileSize)
+      const range = maxTileSize - minTileSize
+      const delta = range * (-e.deltaY / viewport.size.y)
+      camera.tileSize = clamp(
+        camera.tileSize + delta,
+        minTileSize,
+        maxTileSize,
+      )
+      graphics.setCamera(camera)
+
       e.preventDefault()
     },
     { passive: false },
