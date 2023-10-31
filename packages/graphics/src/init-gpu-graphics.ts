@@ -1,7 +1,9 @@
-import { SimpleVec2, Vec2 } from '@sim-v2/math'
+import { Vec2 } from '@sim-v2/math'
 import {
+  Camera,
   InitGraphicsArgs,
   InitGraphicsFn,
+  Viewport,
 } from '@sim-v2/types'
 import { mat4, vec3 } from 'gl-matrix'
 import invariant from 'tiny-invariant'
@@ -45,7 +47,8 @@ enum GraphicsState {
 
 export const initGpuGraphics: InitGraphicsFn<
   Omit<InitGraphicsArgs, 'executor' | 'strategy'>
-> = ({ canvas, camera, viewport }) => {
+> = ({ canvas, ...args }) => {
+  let { viewport, camera } = args
   let state: GraphicsState = GraphicsState.Started
 
   const gl = getGpuContext(canvas)
@@ -202,11 +205,11 @@ export const initGpuGraphics: InitGraphicsFn<
       invariant(state === GraphicsState.Started)
       state = GraphicsState.Stopped
     },
-    move(delta: SimpleVec2) {
-      camera.position.madd(delta)
+    setCamera(next: Camera): void {
+      camera = next
       updateView()
     },
-    zoom(delta: number) {
+    setViewport(next: Viewport): void {
       invariant(false, 'TODO')
     },
   }

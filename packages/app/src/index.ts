@@ -7,7 +7,7 @@ import { getDevicePixelRatio } from './util.js'
 const dpr = getDevicePixelRatio()
 renderDpr()
 
-const config: AppConfig = { dpr }
+const config: AppConfig = { pixelRatio: dpr }
 
 const DEFAULT_SETTINGS: AppSettings = {
   executor: {

@@ -15,24 +15,17 @@ self.addEventListener('message', (e) => {
     case MessageType.Init: {
       invariant(graphics === null)
       graphics = initLocalGraphics({
-        ...message.payload,
+        ...message,
         camera: {
-          ...message.payload.camera,
-          position: new Vec2(
-            message.payload.camera.position,
-          ),
+          ...message.camera,
+          position: new Vec2(message.camera.position),
         },
       })
       break
     }
-    case MessageType.Move: {
-      invariant(graphics !== null)
-      graphics.move(message.payload.delta)
-      break
-    }
-    case MessageType.Zoom: {
-      invariant(graphics !== null)
-      graphics.zoom(message.payload.delta)
+    case MessageType.SetCamera: {
+      invariant(graphics)
+      graphics.setCamera(message.camera)
       break
     }
     default: {

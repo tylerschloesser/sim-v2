@@ -7,33 +7,22 @@ import {
 
 export enum MessageType {
   Init = 'init',
-  Move = 'move',
-  Zoom = 'zoom',
+  SetCamera = 'set-camera',
 }
 
 export interface InitMessage {
   type: MessageType.Init
-  payload: {
-    strategy: GraphicsStrategy
-    canvas: OffscreenCanvas
-    viewport: Viewport
-    camera: Omit<Camera, 'position'> & {
-      position: SimpleVec2
-    }
+  strategy: GraphicsStrategy
+  canvas: OffscreenCanvas
+  viewport: Viewport
+  camera: Omit<Camera, 'position'> & {
+    position: SimpleVec2
   }
 }
 
-export interface MoveMessage {
-  type: MessageType.Move
-  payload: { delta: SimpleVec2 }
+export interface SetCameraMessage {
+  type: MessageType.SetCamera
+  camera: Camera
 }
 
-export interface ZoomMessage {
-  type: MessageType.Zoom
-  payload: { delta: number }
-}
-
-export type Message =
-  | InitMessage
-  | MoveMessage
-  | ZoomMessage
+export type Message = InitMessage | SetCameraMessage

@@ -1,8 +1,8 @@
-import { initCamera } from '@sim-v2/camera'
 import { initGraphics } from '@sim-v2/graphics'
 import { Vec2 } from '@sim-v2/math'
 import { initSimulator } from '@sim-v2/simulator'
 import {
+  Camera,
   Executor,
   GraphicsStrategy,
   Viewport,
@@ -21,7 +21,7 @@ export const AppSettings = z.object({
 export type AppSettings = z.infer<typeof AppSettings>
 
 export interface AppConfig {
-  dpr: number
+  pixelRatio: number
 }
 
 export interface App {
@@ -40,12 +40,17 @@ export async function initApp({
 
   const rect = document.body.getBoundingClientRect()
 
-  canvas.width = rect.width * config.dpr
-  canvas.height = rect.height * config.dpr
+  canvas.width = rect.width * config.pixelRatio
+  canvas.height = rect.height * config.pixelRatio
 
   const viewport: Viewport = {
     size: new Vec2(rect.width, rect.height),
-    scale: config.dpr,
+    pixelRatio: config.pixelRatio,
+  }
+
+  const camera: Camera = {
+    position: new Vec2(0),
+    tileSize: 100,
   }
 
   const graphics = initGraphics({
@@ -53,30 +58,11 @@ export async function initApp({
     executor: settings.executor.graphics,
     strategy: settings.strategy.graphics,
     viewport,
-    // camera is mutable, don't share between graphics and simulator
-    camera: {
-      position: new Vec2(0),
-      zoom: 0.5,
-    },
-  })
-
-  const camera = initCamera({
-    graphics,
-    viewport,
-    settings: {
-      position: new Vec2(0),
-      zoom: 0.5,
-    },
+    camera,
   })
 
   const simulator = initSimulator({
     executor: settings.executor.simulator,
-    viewport,
-    // camera is mutable, don't share between graphics and simulator
-    camera: {
-      position: new Vec2(0),
-      zoom: 0.5,
-    },
   })
 
   let prev: PointerEvent | null = null
@@ -88,7 +74,8 @@ export async function initApp({
           e.clientX - prev.clientX,
           e.clientY - prev.clientY,
         )
-        camera.move(delta)
+        camera.position.madd(delta)
+        graphics.setCamera(camera)
       }
       prev = e
     }

@@ -1,11 +1,15 @@
-import { SimpleVec2 } from '@sim-v2/math'
-import { Graphics, InitGraphicsArgs } from '@sim-v2/types'
+import { Vec2 } from '@sim-v2/math'
+import {
+  Camera,
+  Graphics,
+  InitGraphicsArgs,
+  Viewport,
+} from '@sim-v2/types'
 import invariant from 'tiny-invariant'
 import {
   InitMessage,
   MessageType,
-  MoveMessage,
-  ZoomMessage,
+  SetCameraMessage,
 } from './web-worker-message.js'
 
 export function initWebWorkerGraphics(
@@ -19,28 +23,27 @@ export function initWebWorkerGraphics(
 
   const init: InitMessage = {
     type: MessageType.Init,
-    payload: args,
+    ...args,
   }
 
-  worker.postMessage(init, [init.payload.canvas])
+  worker.postMessage(init, [init.canvas])
 
   return {
     stop() {
       worker.terminate()
     },
-    move(delta: SimpleVec2) {
-      const message: MoveMessage = {
-        type: MessageType.Move,
-        payload: { delta },
+    setCamera(camera: Camera) {
+      const message: SetCameraMessage = {
+        type: MessageType.SetCamera,
+        camera: {
+          ...camera,
+          position: new Vec2(camera.position),
+        },
       }
       worker.postMessage(message)
     },
-    zoom(delta: number) {
-      const message: ZoomMessage = {
-        type: MessageType.Zoom,
-        payload: { delta },
-      }
-      worker.postMessage(message)
+    setViewport(viewport: Viewport): void {
+      invariant(false, 'TODO')
     },
   }
 }

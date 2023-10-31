@@ -1,7 +1,9 @@
-import { SimpleVec2, Vec2 } from '@sim-v2/math'
+import { Vec2 } from '@sim-v2/math'
 import {
+  Camera,
   InitGraphicsArgs,
   InitGraphicsFn,
+  Viewport,
 } from '@sim-v2/types'
 import invariant from 'tiny-invariant'
 import { getCpuContext } from './util.js'
@@ -13,11 +15,12 @@ enum GraphicsState {
 
 export const initCpuGraphics: InitGraphicsFn<
   Omit<InitGraphicsArgs, 'executor' | 'strategy'>
-> = ({ canvas, viewport, camera }) => {
+> = ({ canvas, ...args }) => {
+  let { viewport, camera } = args
   let state: GraphicsState = GraphicsState.Started
 
   const context = getCpuContext(canvas)
-  context.scale(viewport.scale, viewport.scale)
+  context.scale(viewport.pixelRatio, viewport.pixelRatio)
 
   let frames = 0
   let prev = performance.now()
@@ -73,10 +76,10 @@ export const initCpuGraphics: InitGraphicsFn<
       invariant(state === GraphicsState.Started)
       state = GraphicsState.Stopped
     },
-    move(delta: SimpleVec2) {
-      camera.position.madd(delta)
+    setCamera(next: Camera): void {
+      camera = next
     },
-    zoom(delta: number) {
+    setViewport(next: Viewport): void {
       invariant(false, 'TODO')
     },
   }
