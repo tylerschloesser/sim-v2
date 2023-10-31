@@ -1,5 +1,7 @@
 import { SimpleVec2, Vec2 } from '@sim-v2/math'
 
+export * from './world.js'
+
 export interface Viewport {
   size: Vec2
   scale: number
