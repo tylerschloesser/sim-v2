@@ -1,12 +1,10 @@
-import { Vec2 } from '@sim-v2/math'
 import {
   Camera,
   Graphics,
+  GraphicsUpdate,
   InitGraphicsArgs,
   Viewport,
-  GraphicsUpdate,
 } from '@sim-v2/types'
-import invariant from 'tiny-invariant'
 import {
   InitMessage,
   MessageType,
@@ -29,7 +27,10 @@ export function initWebWorkerGraphics(
     ...args,
   }
 
-  worker.postMessage(init, [init.canvas])
+  worker.postMessage(init, [
+    init.canvas,
+    init.simulatorPort,
+  ])
 
   return {
     stop() {

@@ -1,6 +1,8 @@
 import { getVisibleChunkIds } from '@sim-v2/camera'
 import {
   Camera,
+  GraphicsUpdate,
+  GraphicsUpdateType,
   InitSimulatorArgs,
   InitSimulatorFn,
 } from '@sim-v2/types'
@@ -21,6 +23,13 @@ export const initLocalSimulator: InitSimulatorFn<
     camera,
     viewport,
   })
+
+  const updates: GraphicsUpdate[] = []
+  for (const chunkId of visibleChunkIds) {
+    updates.push({
+      type: GraphicsUpdateType.NewChunk,
+    })
+  }
 
   return {
     stop(): void {

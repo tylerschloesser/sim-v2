@@ -25,6 +25,7 @@ export interface InitSimulatorArgs {
   executor: Executor
   viewport: Viewport
   camera: Camera
+  graphicsPort: MessagePort
 }
 
 export type InitSimulatorFn<T = InitSimulatorArgs> = (
@@ -48,6 +49,7 @@ export interface InitGraphicsArgs {
   canvas: HTMLCanvasElement | OffscreenCanvas
   viewport: Viewport
   camera: Camera
+  simulatorPort: MessagePort
 }
 
 export type InitGraphicsFn<T = InitGraphicsArgs> = (

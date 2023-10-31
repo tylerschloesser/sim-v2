@@ -59,18 +59,22 @@ export async function initApp({
     tileSize: 100,
   }
 
+  const channel = new MessageChannel()
+
   const graphics = initGraphics({
     executor: settings.executor.graphics,
     strategy: settings.strategy.graphics,
     canvas,
     viewport,
     camera,
+    simulatorPort: channel.port1,
   })
 
   const simulator = initSimulator({
     executor: settings.executor.simulator,
     viewport,
     camera,
+    graphicsPort: channel.port2,
   })
 
   let prev: PointerEvent | null = null

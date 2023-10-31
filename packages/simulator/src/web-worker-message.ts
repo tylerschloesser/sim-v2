@@ -13,6 +13,7 @@ export interface InitMessage {
   type: MessageType.Init
   viewport: TransferViewport
   camera: TransferCamera
+  graphicsPort: MessagePort
 }
 
 export interface SetCameraMessage {

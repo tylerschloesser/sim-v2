@@ -15,6 +15,7 @@ self.addEventListener('message', (e) => {
     case MessageType.Init: {
       invariant(simulator === null)
       simulator = initLocalSimulator({
+        ...message,
         camera: {
           ...message.camera,
           position: new Vec2(message.camera.position),

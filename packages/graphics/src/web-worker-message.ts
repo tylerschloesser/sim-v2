@@ -18,6 +18,7 @@ export interface InitMessage {
   canvas: OffscreenCanvas
   viewport: TransferViewport
   camera: TransferCamera
+  simulatorPort: MessagePort
 }
 
 export interface SetCameraMessage {
