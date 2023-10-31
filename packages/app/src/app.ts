@@ -69,6 +69,8 @@ export async function initApp({
 
   const simulator = initSimulator({
     executor: settings.executor.simulator,
+    viewport,
+    camera,
   })
 
   let prev: PointerEvent | null = null

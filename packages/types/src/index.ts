@@ -1,11 +1,20 @@
-import { Vec2 } from '@sim-v2/math'
+import { SimpleVec2, Vec2 } from '@sim-v2/math'
 
 export * from './world.js'
 
-export interface Viewport {
-  size: Vec2
+export interface Viewport<T = Vec2> {
+  size: T
   pixelRatio: number
 }
+
+export type TransferViewport = Viewport<SimpleVec2>
+
+export interface Camera<T = Vec2> {
+  position: T
+  tileSize: number
+}
+
+export type TransferCamera = Camera<SimpleVec2>
 
 export enum Executor {
   Local = 'main',
@@ -14,6 +23,8 @@ export enum Executor {
 
 export interface InitSimulatorArgs {
   executor: Executor
+  viewport: Viewport
+  camera: Camera
 }
 
 export type InitSimulatorFn<T = InitSimulatorArgs> = (
@@ -27,11 +38,6 @@ export interface Simulator {
 export enum GraphicsStrategy {
   Cpu = 'cpu',
   Gpu = 'gpu',
-}
-
-export interface Camera {
-  position: Vec2
-  tileSize: number
 }
 
 export interface InitGraphicsArgs {
