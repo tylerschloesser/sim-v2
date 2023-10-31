@@ -1,8 +1,12 @@
-import {initCamera} from '@sim-v2/camera'
+import { initCamera } from '@sim-v2/camera'
 import { initGraphics } from '@sim-v2/graphics'
 import { Vec2 } from '@sim-v2/math'
 import { initSimulator } from '@sim-v2/simulator'
-import { Executor, GraphicsStrategy } from '@sim-v2/types'
+import {
+  Executor,
+  GraphicsStrategy,
+  Viewport,
+} from '@sim-v2/types'
 import { z } from 'zod'
 
 export const AppSettings = z.object({
@@ -39,7 +43,7 @@ export async function initApp({
   canvas.width = rect.width * config.dpr
   canvas.height = rect.height * config.dpr
 
-  const viewport = {
+  const viewport: Viewport = {
     size: new Vec2(rect.width, rect.height),
     scale: config.dpr,
   }
@@ -56,7 +60,12 @@ export async function initApp({
     },
   })
 
-  const camera = initCamera({ graphics })
+  const camera = initCamera({
+    graphics,
+    viewport,
+    position: new Vec2(0),
+    zoom: 0.5,
+  })
 
   const simulator = initSimulator({
     executor: settings.executor.simulator,
