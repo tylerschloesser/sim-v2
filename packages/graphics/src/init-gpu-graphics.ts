@@ -131,10 +131,6 @@ export const initGpuGraphics: InitGraphicsFn<
     projection,
   )
 
-  const size = new Vec2(
-    Math.min(viewport.size.x, viewport.size.y),
-  ).div(4)
-
   const view = mat4.create()
 
   function updateView() {
@@ -163,7 +159,7 @@ export const initGpuGraphics: InitGraphicsFn<
     mat4.scale(
       view,
       view,
-      vec3.fromValues(size.x, size.y, 1),
+      vec3.fromValues(camera.tileSize, camera.tileSize, 1),
     )
   }
   updateView()
