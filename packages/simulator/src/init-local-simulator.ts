@@ -1,4 +1,6 @@
+import { getVisibleChunkIds } from '@sim-v2/camera'
 import {
+  Camera,
   InitSimulatorArgs,
   InitSimulatorFn,
 } from '@sim-v2/types'
@@ -11,16 +13,22 @@ export enum SimulatorState {
 
 export const initLocalSimulator: InitSimulatorFn<
   Omit<InitSimulatorArgs, 'executor'>
-> = () => {
+> = (args) => {
   let state: SimulatorState = SimulatorState.Started
+  let { camera, viewport } = args
+
+  let visibleChunkIds = getVisibleChunkIds({
+    camera,
+    viewport,
+  })
 
   return {
     stop(): void {
       invariant(state === SimulatorState.Started)
       state = SimulatorState.Stopped
     },
-    setCamera() {
-      invariant(false, 'TODO')
+    setCamera(next: Camera): void {
+      camera = next
     },
     setViewport() {
       invariant(false, 'TODO')
