@@ -1,8 +1,6 @@
 import { getVisibleChunkIds } from '@sim-v2/camera'
 import {
   Camera,
-  GraphicsUpdate,
-  GraphicsUpdateType,
   InitSimulatorArgs,
   InitSimulatorFn,
 } from '@sim-v2/types'
@@ -15,7 +13,7 @@ export enum SimulatorState {
 
 export const initLocalSimulator: InitSimulatorFn<
   Omit<InitSimulatorArgs, 'executor'>
-> = (args) => {
+> = ({ graphicsPort, ...args }) => {
   let state: SimulatorState = SimulatorState.Started
   let { camera, viewport } = args
 
@@ -24,12 +22,8 @@ export const initLocalSimulator: InitSimulatorFn<
     viewport,
   })
 
-  const updates: GraphicsUpdate[] = []
-  for (const chunkId of visibleChunkIds) {
-    updates.push({
-      type: GraphicsUpdateType.NewChunk,
-    })
-  }
+  console.log('testing message')
+  graphicsPort.postMessage('test')
 
   return {
     stop(): void {

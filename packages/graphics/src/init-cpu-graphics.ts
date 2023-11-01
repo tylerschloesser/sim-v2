@@ -3,7 +3,6 @@ import {
   InitGraphicsArgs,
   InitGraphicsFn,
   Viewport,
-  GraphicsUpdate,
 } from '@sim-v2/types'
 import invariant from 'tiny-invariant'
 import { getCpuContext } from './util.js'
@@ -15,9 +14,14 @@ enum GraphicsState {
 
 export const initCpuGraphics: InitGraphicsFn<
   Omit<InitGraphicsArgs, 'executor' | 'strategy'>
-> = ({ canvas, ...args }) => {
+> = ({ canvas, simulatorPort, ...args }) => {
   let { viewport, camera } = args
   let state: GraphicsState = GraphicsState.Started
+
+  simulatorPort.addEventListener('message', (e) => {
+    console.log(`graphics: ${e.data}`)
+  })
+  simulatorPort.start()
 
   const context = getCpuContext(canvas)
   context.scale(viewport.pixelRatio, viewport.pixelRatio)
@@ -86,9 +90,6 @@ export const initCpuGraphics: InitGraphicsFn<
       camera = next
     },
     setViewport(next: Viewport): void {
-      invariant(false, 'TODO')
-    },
-    update(updates: GraphicsUpdate[]): void {
       invariant(false, 'TODO')
     },
   }

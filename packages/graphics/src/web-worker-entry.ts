@@ -43,11 +43,6 @@ self.addEventListener('message', (e) => {
       })
       break
     }
-    case MessageType.Update: {
-      invariant(graphics)
-      graphics.update(message.updates)
-      break
-    }
     default: {
       invariant(false)
     }

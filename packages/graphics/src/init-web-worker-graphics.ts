@@ -1,7 +1,6 @@
 import {
   Camera,
   Graphics,
-  GraphicsUpdate,
   InitGraphicsArgs,
   Viewport,
 } from '@sim-v2/types'
@@ -10,7 +9,6 @@ import {
   MessageType,
   SetCameraMessage,
   SetViewportMessage,
-  UpdateMessage,
 } from './web-worker-message.js'
 
 export function initWebWorkerGraphics(
@@ -49,12 +47,6 @@ export function initWebWorkerGraphics(
         viewport,
       }
       worker.postMessage(message)
-    },
-    update(updates: GraphicsUpdate[]): void {
-      const message: UpdateMessage = {
-        type: MessageType.Update,
-        updates,
-      }
     },
   }
 }

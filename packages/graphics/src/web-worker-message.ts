@@ -1,6 +1,5 @@
 import {
   GraphicsStrategy,
-  GraphicsUpdate,
   TransferCamera,
   TransferViewport,
 } from '@sim-v2/types'
@@ -9,7 +8,6 @@ export enum MessageType {
   Init = 'init',
   SetCamera = 'set-camera',
   SetViewport = 'set-viewport',
-  Update = 'update',
 }
 
 export interface InitMessage {
@@ -31,13 +29,7 @@ export interface SetViewportMessage {
   viewport: TransferViewport
 }
 
-export interface UpdateMessage {
-  type: MessageType.Update
-  updates: GraphicsUpdate[]
-}
-
 export type Message =
   | InitMessage
   | SetCameraMessage
   | SetViewportMessage
-  | UpdateMessage
