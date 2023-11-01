@@ -1,5 +1,7 @@
 import { getVisibleChunkIds } from '@sim-v2/camera'
 import {
+  AppMessage,
+  AppMessageType,
   Camera,
   InitSimulatorArgs,
   InitSimulatorFn,
@@ -16,9 +18,23 @@ export enum SimulatorState {
 
 export const initLocalSimulator: InitSimulatorFn<
   Omit<InitSimulatorArgs, 'executor'>
-> = ({ graphicsPort, world, ...args }) => {
+> = ({ graphicsPort, appPort, world, ...args }) => {
   let state: SimulatorState = SimulatorState.Started
   let { camera, viewport } = args
+
+  appPort.addEventListener('message', (e) => {
+    const message = e.data as AppMessage
+    switch (message.type) {
+      case AppMessageType.LogWorld: {
+        console.log(world)
+        break
+      }
+      default: {
+        invariant(false)
+      }
+    }
+  })
+  appPort.start()
 
   let visibleChunkIds = getVisibleChunkIds({
     camera,

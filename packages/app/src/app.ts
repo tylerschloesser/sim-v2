@@ -2,6 +2,8 @@ import { initGraphics } from '@sim-v2/graphics'
 import { Vec2, clamp } from '@sim-v2/math'
 import { initSimulator } from '@sim-v2/simulator'
 import {
+  AppMessage,
+  AppMessageType,
   Camera,
   Executor,
   GraphicsMessage,
@@ -33,6 +35,7 @@ export interface AppConfig {
 
 export interface App {
   destroy(): void
+  logWorld(): void
 }
 
 export async function initApp({
@@ -89,6 +92,7 @@ export async function initApp({
     viewport,
     camera,
     graphicsPort: ports.simulator.graphicsPort,
+    appPort: ports.simulator.appPort,
   })
 
   ports.app.graphicsPort.addEventListener(
@@ -150,12 +154,20 @@ export async function initApp({
     { passive: false },
   )
 
+  function logWorld() {
+    const message: AppMessage = {
+      type: AppMessageType.LogWorld,
+    }
+    ports.app.simulatorPort.postMessage(message)
+  }
+
   return {
     destroy() {
       graphics.stop()
       simulator.stop()
       canvas.remove()
     },
+    logWorld,
   }
 }
 

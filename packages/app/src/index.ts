@@ -12,6 +12,7 @@ import { getPixelRatio } from './util.js'
 const elements = {
   fps: getSpan('.fps .value'),
   dpr: getSpan('.dpr .value'),
+  logWorld: getButton('button.log-world'),
 }
 
 const pixelRatio = getPixelRatio()
@@ -42,6 +43,9 @@ let settings: AppSettings = (() => {
 })()
 
 let app = await initApp({ settings, config })
+elements.logWorld.onclick = () => {
+  app.logWorld()
+}
 
 async function updateApp() {
   app.destroy()
@@ -52,6 +56,9 @@ async function updateApp() {
   )
   console.log('reloading app with', settings)
   app = await initApp({ settings, config })
+  elements.logWorld.onclick = () => {
+    app.logWorld()
+  }
 }
 
 document
@@ -109,5 +116,11 @@ document
 function getSpan(selector: string): HTMLSpanElement {
   const element = document.querySelector(selector)
   invariant(element instanceof HTMLSpanElement)
+  return element
+}
+
+function getButton(selector: string): HTMLButtonElement {
+  const element = document.querySelector(selector)
+  invariant(element instanceof HTMLButtonElement)
   return element
 }

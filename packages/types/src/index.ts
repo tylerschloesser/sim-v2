@@ -29,6 +29,7 @@ export interface InitSimulatorArgs {
   world: World
   camera: Camera
   graphicsPort: MessagePort
+  appPort: MessagePort
 }
 
 export type InitSimulatorFn<T = InitSimulatorArgs> = (
