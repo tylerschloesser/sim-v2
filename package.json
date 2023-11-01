@@ -12,7 +12,8 @@
     "packages/math",
     "packages/types",
     "packages/graphics",
-    "packages/camera"
+    "packages/camera",
+    "packages/world"
   ],
   "dependencies": {
     "@trivago/prettier-plugin-sort-imports": "^4.2.1",

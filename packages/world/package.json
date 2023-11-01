@@ -1,0 +1,6 @@
+{
+  "name": "@sim-v2/world",
+  "type": "module",
+  "exports": "./src/index.ts",
+  "sideEffects": false
+}
