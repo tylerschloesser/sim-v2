@@ -12,7 +12,13 @@ import { getCpuContext } from './util.js'
 
 export const initCpuGraphics: InitGraphicsFn<
   Omit<InitGraphicsArgs, 'executor' | 'strategy'>
-> = ({ canvas, simulatorPort, appPort, ...args }) => {
+> = ({
+  canvas,
+  simulatorPort,
+  appPort,
+  world,
+  ...args
+}) => {
   let { viewport, camera } = args
 
   const controller = new AbortController()
@@ -21,7 +27,7 @@ export const initCpuGraphics: InitGraphicsFn<
     const message = e.data as SimulatorMessage
     switch (message.type) {
       case SimulatorMessageType.SyncChunks: {
-        console.log('todo sync chunks', message.chunks)
+        world.chunks = message.chunks
         break
       }
       default: {

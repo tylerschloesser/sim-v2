@@ -1,4 +1,10 @@
-import { Chunk, ChunkId, Tile } from '@sim-v2/types'
+import { random } from '@sim-v2/math'
+import {
+  Chunk,
+  ChunkId,
+  Tile,
+  TileType,
+} from '@sim-v2/types'
 import invariant from 'tiny-invariant'
 
 export function generateChunk({
@@ -13,7 +19,9 @@ export function generateChunk({
   let i = 0
   for (let y = 0; y < chunkSize; y++) {
     for (let x = 0; x < chunkSize; x++) {
-      tiles[i++] = {}
+      tiles[i++] = {
+        type: random(Object.values(TileType)),
+      }
     }
   }
 

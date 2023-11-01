@@ -1,6 +1,7 @@
 import { SimpleVec2, Vec2 } from '@sim-v2/math'
-import { Chunk, ChunkId, World } from './world.js'
+import { World } from './world.js'
 
+export * from './message.js'
 export * from './world.js'
 
 export interface Viewport<T = Vec2> {
@@ -59,28 +60,6 @@ export interface InitGraphicsArgs {
 export type InitGraphicsFn<T = InitGraphicsArgs> = (
   args: T,
 ) => Graphics
-
-export enum SimulatorMessageType {
-  SyncChunks = 'sync-chunks',
-}
-
-export interface SyncChunksSimulatorMessage {
-  type: SimulatorMessageType.SyncChunks
-  chunks: Record<ChunkId, Chunk>
-}
-
-export type SimulatorMessage = SyncChunksSimulatorMessage
-
-export enum GraphicsMessageType {
-  Fps = 'fps',
-}
-
-export interface FpsGraphicsMessage {
-  type: GraphicsMessageType.Fps
-  fps: number
-}
-
-export type GraphicsMessage = FpsGraphicsMessage
 
 export interface Graphics {
   setViewport(viewport: Viewport): void
