@@ -11,29 +11,30 @@ import {
 import invariant from 'tiny-invariant'
 import { generateChunk } from './generate-chunk.js'
 
-export enum SimulatorState {
-  Stopped = 'stopped',
-  Started = 'started',
-}
-
 export const initLocalSimulator: InitSimulatorFn<
   Omit<InitSimulatorArgs, 'executor'>
 > = ({ graphicsPort, appPort, world, ...args }) => {
-  let state: SimulatorState = SimulatorState.Started
   let { camera, viewport } = args
 
-  appPort.addEventListener('message', (e) => {
-    const message = e.data as AppMessage
-    switch (message.type) {
-      case AppMessageType.LogWorld: {
-        console.log(world)
-        break
+  const controller = new AbortController()
+  const { signal } = controller
+
+  appPort.addEventListener(
+    'message',
+    (e) => {
+      const message = e.data as AppMessage
+      switch (message.type) {
+        case AppMessageType.LogWorld: {
+          console.log(world)
+          break
+        }
+        default: {
+          invariant(false)
+        }
       }
-      default: {
-        invariant(false)
-      }
-    }
-  })
+    },
+    { signal },
+  )
   appPort.start()
 
   let visibleChunkIds = getVisibleChunkIds({
@@ -58,8 +59,7 @@ export const initLocalSimulator: InitSimulatorFn<
 
   return {
     stop(): void {
-      invariant(state === SimulatorState.Started)
-      state = SimulatorState.Stopped
+      controller.abort()
     },
     setCamera(next: Camera): void {
       camera = next
