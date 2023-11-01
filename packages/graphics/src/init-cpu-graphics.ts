@@ -1,5 +1,7 @@
 import {
   Camera,
+  FpsGraphicsMessage,
+  GraphicsMessageType,
   InitGraphicsArgs,
   InitGraphicsFn,
   SimulatorMessage,
@@ -16,7 +18,7 @@ enum GraphicsState {
 
 export const initCpuGraphics: InitGraphicsFn<
   Omit<InitGraphicsArgs, 'executor' | 'strategy'>
-> = ({ canvas, simulatorPort, ...args }) => {
+> = ({ canvas, simulatorPort, appPort, ...args }) => {
   let { viewport, camera } = args
   let state: GraphicsState = GraphicsState.Started
 
@@ -51,6 +53,13 @@ export const initCpuGraphics: InitGraphicsFn<
     elapsed += delta
     if (elapsed >= 1000) {
       console.log('fps', frames)
+
+      const message: FpsGraphicsMessage = {
+        type: GraphicsMessageType.Fps,
+        fps: frames,
+      }
+      appPort.postMessage(message)
+
       elapsed = elapsed - 1000
       frames = 0
     }

@@ -53,6 +53,7 @@ export interface InitGraphicsArgs {
   viewport: Viewport
   camera: Camera
   simulatorPort: MessagePort
+  appPort: MessagePort
 }
 
 export type InitGraphicsFn<T = InitGraphicsArgs> = (
@@ -69,6 +70,17 @@ export interface SyncChunksSimulatorMessage {
 }
 
 export type SimulatorMessage = SyncChunksSimulatorMessage
+
+export enum GraphicsMessageType {
+  Fps = 'fps',
+}
+
+export interface FpsGraphicsMessage {
+  type: GraphicsMessageType.Fps
+  fps: number
+}
+
+export type GraphicsMessage = FpsGraphicsMessage
 
 export interface Graphics {
   setViewport(viewport: Viewport): void

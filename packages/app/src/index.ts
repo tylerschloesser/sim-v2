@@ -1,13 +1,25 @@
 import { Executor, GraphicsStrategy } from '@sim-v2/types'
 import invariant from 'tiny-invariant'
-import { AppConfig, AppSettings, initApp } from './app.js'
+import {
+  AppConfig,
+  AppSettings,
+  FpsCallbackFn,
+  initApp,
+} from './app.js'
 import './index.scss'
-import { getDevicePixelRatio } from './util.js'
+import { getPixelRatio } from './util.js'
 
-const dpr = getDevicePixelRatio()
+const pixelRatio = getPixelRatio()
 renderDpr()
 
-const config: AppConfig = { pixelRatio: dpr }
+const fpsCallback: FpsCallbackFn = (fps) => {
+  const element =
+    document.querySelector<HTMLSpanElement>('.fps .value')
+  invariant(element)
+  element.innerText = `${fps}`
+}
+
+const config: AppConfig = { pixelRatio, fpsCallback }
 
 const DEFAULT_SETTINGS: AppSettings = {
   executor: {
@@ -95,5 +107,5 @@ function renderDpr() {
   const element =
     document.querySelector<HTMLSpanElement>('.dpr .value')
   invariant(element)
-  element.innerText = `${dpr}`
+  element.innerText = `${pixelRatio}`
 }

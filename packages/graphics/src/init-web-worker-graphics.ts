@@ -28,6 +28,7 @@ export function initWebWorkerGraphics(
   worker.postMessage(init, [
     init.canvas,
     init.simulatorPort,
+    init.appPort,
   ])
 
   return {

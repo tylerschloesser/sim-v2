@@ -4,6 +4,8 @@ import { initSimulator } from '@sim-v2/simulator'
 import {
   Camera,
   Executor,
+  GraphicsMessage,
+  GraphicsMessageType,
   GraphicsStrategy,
   Viewport,
   World,
@@ -22,8 +24,11 @@ export const AppSettings = z.object({
 })
 export type AppSettings = z.infer<typeof AppSettings>
 
+export type FpsCallbackFn = (fps: number) => void
+
 export interface AppConfig {
   pixelRatio: number
+  fpsCallback?: FpsCallbackFn
 }
 
 export interface App {
@@ -60,12 +65,12 @@ export async function initApp({
     tileSize: 100,
   }
 
-  const channel = new MessageChannel()
-
   const world: World = {
     chunkSize: 32,
     chunks: {},
   }
+
+  const ports = getPorts()
 
   const graphics = initGraphics({
     executor: settings.executor.graphics,
@@ -74,7 +79,8 @@ export async function initApp({
     canvas,
     viewport,
     camera,
-    simulatorPort: channel.port1,
+    simulatorPort: ports.graphics.simulatorPort,
+    appPort: ports.graphics.appPort,
   })
 
   const simulator = initSimulator({
@@ -82,8 +88,25 @@ export async function initApp({
     world,
     viewport,
     camera,
-    graphicsPort: channel.port2,
+    graphicsPort: ports.simulator.graphicsPort,
   })
+
+  ports.app.graphicsPort.addEventListener(
+    'message',
+    (e) => {
+      const message = e.data as GraphicsMessage
+      switch (message.type) {
+        case GraphicsMessageType.Fps: {
+          config.fpsCallback?.(message.fps)
+          break
+        }
+        default: {
+          invariant(false)
+        }
+      }
+    },
+  )
+  ports.app.graphicsPort.start()
 
   let prev: PointerEvent | null = null
 
@@ -132,6 +155,24 @@ export async function initApp({
       graphics.stop()
       simulator.stop()
       canvas.remove()
+    },
+  }
+}
+
+function getPorts() {
+  const channel1 = new MessageChannel()
+  const channel2 = new MessageChannel()
+
+  return {
+    graphics: {
+      simulatorPort: channel2.port1,
+      appPort: channel1.port2,
+    },
+    simulator: {
+      graphicsPort: channel2.port2,
+    },
+    app: {
+      graphicsPort: channel1.port1,
     },
   }
 }
