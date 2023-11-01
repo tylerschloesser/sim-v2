@@ -37,6 +37,14 @@ export const initLocalSimulator: InitSimulatorFn<
   )
   appPort.start()
 
+  const interval = setInterval(() => {
+    console.debug('tick')
+  }, world.tickDuration)
+
+  signal.addEventListener('abort', () => {
+    clearInterval(interval)
+  })
+
   let visibleChunkIds = getVisibleChunkIds({
     camera,
     viewport,
