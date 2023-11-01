@@ -63,15 +63,6 @@ export const initCpuGraphics: InitGraphicsFn<
         camera.position.y -
         camera.tileSize / 2,
     )
-    context.translate(
-      camera.tileSize / 2,
-      camera.tileSize / 2,
-    )
-    context.rotate(time / 1000)
-    context.translate(
-      -camera.tileSize / 2,
-      -camera.tileSize / 2,
-    )
     context.fillStyle = 'blue'
     context.fillRect(0, 0, camera.tileSize, camera.tileSize)
 

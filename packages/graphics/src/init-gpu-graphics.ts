@@ -171,7 +171,6 @@ export const initGpuGraphics: InitGraphicsFn<
     gl.clear(gl.COLOR_BUFFER_BIT)
 
     mat4.identity(model)
-    mat4.rotateZ(model, model, time / 1000)
     mat4.translate(
       model,
       model,
