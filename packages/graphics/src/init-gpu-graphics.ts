@@ -6,6 +6,7 @@ import {
 } from '@sim-v2/types'
 import { mat4, vec3 } from 'gl-matrix'
 import invariant from 'tiny-invariant'
+import { measureFps } from './measure-fps.js'
 import frag from './shaders/frag.glsl'
 import vert from './shaders/vert.glsl'
 import { getGpuContext } from './util.js'
@@ -41,7 +42,7 @@ interface Context {
 
 export const initGpuGraphics: InitGraphicsFn<
   Omit<InitGraphicsArgs, 'executor' | 'strategy'>
-> = ({ canvas, ...args }) => {
+> = ({ canvas, appPort, ...args }) => {
   let { viewport, camera } = args
 
   const controller = new AbortController()
@@ -161,7 +162,7 @@ export const initGpuGraphics: InitGraphicsFn<
 
   const model = mat4.create()
 
-  function render(time: number) {
+  const render = measureFps(appPort, (time: number) => {
     if (controller.signal.aborted) {
       return
     }
@@ -188,7 +189,7 @@ export const initGpuGraphics: InitGraphicsFn<
     )
     gl.drawArrays(gl.TRIANGLE_STRIP, 0, 4)
     requestAnimationFrame(render)
-  }
+  })
   requestAnimationFrame(render)
 
   return {
