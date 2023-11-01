@@ -29,7 +29,7 @@ const inputLatencyCallback: InputLatencyCallback = (
 ) => {
   elements.inputLatency.innerText = `${inputLatency.toFixed(
     2,
-  )}`
+  )}ms`
 }
 
 const config: AppConfig = {
