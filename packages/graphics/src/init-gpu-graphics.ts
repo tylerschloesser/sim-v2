@@ -39,16 +39,12 @@ interface Context {
   }
 }
 
-enum GraphicsState {
-  Started = 'started',
-  Stopped = 'stopped',
-}
-
 export const initGpuGraphics: InitGraphicsFn<
   Omit<InitGraphicsArgs, 'executor' | 'strategy'>
 > = ({ canvas, ...args }) => {
   let { viewport, camera } = args
-  let state: GraphicsState = GraphicsState.Started
+
+  const controller = new AbortController()
 
   const gl = getGpuContext(canvas)
   invariant(gl)
@@ -166,7 +162,7 @@ export const initGpuGraphics: InitGraphicsFn<
   const model = mat4.create()
 
   function render(time: number) {
-    if (state === GraphicsState.Stopped) {
+    if (controller.signal.aborted) {
       return
     }
     gl.clearColor(1, 1, 1, 1)
@@ -197,8 +193,7 @@ export const initGpuGraphics: InitGraphicsFn<
 
   return {
     stop() {
-      invariant(state === GraphicsState.Started)
-      state = GraphicsState.Stopped
+      controller.abort()
     },
     setCamera(next: Camera): void {
       camera = next

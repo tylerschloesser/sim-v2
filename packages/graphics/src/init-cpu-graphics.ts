@@ -11,16 +11,12 @@ import {
 import invariant from 'tiny-invariant'
 import { getCpuContext } from './util.js'
 
-enum GraphicsState {
-  Started = 'started',
-  Stopped = 'stopped',
-}
-
 export const initCpuGraphics: InitGraphicsFn<
   Omit<InitGraphicsArgs, 'executor' | 'strategy'>
 > = ({ canvas, simulatorPort, appPort, ...args }) => {
   let { viewport, camera } = args
-  let state: GraphicsState = GraphicsState.Started
+
+  const controller = new AbortController()
 
   simulatorPort.addEventListener('message', (e) => {
     const message = e.data as SimulatorMessage
@@ -44,7 +40,7 @@ export const initCpuGraphics: InitGraphicsFn<
   let elapsed = 0
 
   function render(time: number) {
-    if (state === GraphicsState.Stopped) {
+    if (controller.signal.aborted) {
       return
     }
 
@@ -103,8 +99,7 @@ export const initCpuGraphics: InitGraphicsFn<
 
   return {
     stop() {
-      invariant(state === GraphicsState.Started)
-      state = GraphicsState.Stopped
+      controller.abort()
     },
     setCamera(next: Camera): void {
       camera = next
