@@ -9,14 +9,16 @@ import {
 import './index.scss'
 import { getPixelRatio } from './util.js'
 
+const elements = {
+  fps: getSpan('.fps .value'),
+  dpr: getSpan('.dpr .value'),
+}
+
 const pixelRatio = getPixelRatio()
-renderDpr()
+elements.dpr.innerText = `${pixelRatio}`
 
 const fpsCallback: FpsCallbackFn = (fps) => {
-  const element =
-    document.querySelector<HTMLSpanElement>('.fps .value')
-  invariant(element)
-  element.innerText = `${fps}`
+  elements.fps.innerText = `${fps}`
 }
 
 const config: AppConfig = { pixelRatio, fpsCallback }
@@ -103,9 +105,8 @@ document
     input.checked = input.value === value
   })
 
-function renderDpr() {
-  const element =
-    document.querySelector<HTMLSpanElement>('.dpr .value')
-  invariant(element)
-  element.innerText = `${pixelRatio}`
+function getSpan(selector: string): HTMLSpanElement {
+  const element = document.querySelector(selector)
+  invariant(element instanceof HTMLSpanElement)
+  return element
 }
