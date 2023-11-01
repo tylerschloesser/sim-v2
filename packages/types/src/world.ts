@@ -20,5 +20,6 @@ export interface Chunk {
 }
 
 export interface World {
+  chunkSize: number
   chunks: Record<ChunkId, Chunk>
 }

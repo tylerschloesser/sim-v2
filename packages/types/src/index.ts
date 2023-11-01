@@ -1,4 +1,5 @@
 import { SimpleVec2, Vec2 } from '@sim-v2/math'
+import { Chunk, ChunkId, World } from './world.js'
 
 export * from './world.js'
 
@@ -24,6 +25,7 @@ export enum Executor {
 export interface InitSimulatorArgs {
   executor: Executor
   viewport: Viewport
+  world: World
   camera: Camera
   graphicsPort: MessagePort
 }
@@ -46,6 +48,7 @@ export enum GraphicsStrategy {
 export interface InitGraphicsArgs {
   executor: Executor
   strategy: GraphicsStrategy
+  world: World
   canvas: HTMLCanvasElement | OffscreenCanvas
   viewport: Viewport
   camera: Camera
@@ -62,6 +65,7 @@ export enum SimulatorMessageType {
 
 export interface SyncChunksSimulatorMessage {
   type: SimulatorMessageType.SyncChunks
+  chunks: Record<ChunkId, Chunk>
 }
 
 export type SimulatorMessage = SyncChunksSimulatorMessage

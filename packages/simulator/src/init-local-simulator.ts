@@ -3,8 +3,11 @@ import {
   Camera,
   InitSimulatorArgs,
   InitSimulatorFn,
+  SimulatorMessageType,
+  SyncChunksSimulatorMessage,
 } from '@sim-v2/types'
 import invariant from 'tiny-invariant'
+import { generateChunk } from './generate-chunk.js'
 
 export enum SimulatorState {
   Stopped = 'stopped',
@@ -13,7 +16,7 @@ export enum SimulatorState {
 
 export const initLocalSimulator: InitSimulatorFn<
   Omit<InitSimulatorArgs, 'executor'>
-> = ({ graphicsPort, ...args }) => {
+> = ({ graphicsPort, world, ...args }) => {
   let state: SimulatorState = SimulatorState.Started
   let { camera, viewport } = args
 
@@ -22,8 +25,20 @@ export const initLocalSimulator: InitSimulatorFn<
     viewport,
   })
 
-  console.log('testing message')
-  graphicsPort.postMessage('test')
+  for (const chunkId of visibleChunkIds) {
+    if (!world.chunks[chunkId]) {
+      world.chunks[chunkId] = generateChunk({
+        chunkId,
+        chunkSize: world.chunkSize,
+      })
+    }
+  }
+
+  const message: SyncChunksSimulatorMessage = {
+    type: SimulatorMessageType.SyncChunks,
+    chunks: world.chunks,
+  }
+  graphicsPort.postMessage(message)
 
   return {
     stop(): void {

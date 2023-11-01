@@ -6,6 +6,7 @@ import {
   Executor,
   GraphicsStrategy,
   Viewport,
+  World,
 } from '@sim-v2/types'
 import invariant from 'tiny-invariant'
 import { z } from 'zod'
@@ -61,9 +62,15 @@ export async function initApp({
 
   const channel = new MessageChannel()
 
+  const world: World = {
+    chunkSize: 32,
+    chunks: {},
+  }
+
   const graphics = initGraphics({
     executor: settings.executor.graphics,
     strategy: settings.strategy.graphics,
+    world,
     canvas,
     viewport,
     camera,
@@ -72,6 +79,7 @@ export async function initApp({
 
   const simulator = initSimulator({
     executor: settings.executor.simulator,
+    world,
     viewport,
     camera,
     graphicsPort: channel.port2,

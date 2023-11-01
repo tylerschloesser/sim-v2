@@ -2,6 +2,8 @@ import {
   Camera,
   InitGraphicsArgs,
   InitGraphicsFn,
+  SimulatorMessage,
+  SimulatorMessageType,
   Viewport,
 } from '@sim-v2/types'
 import invariant from 'tiny-invariant'
@@ -19,7 +21,16 @@ export const initCpuGraphics: InitGraphicsFn<
   let state: GraphicsState = GraphicsState.Started
 
   simulatorPort.addEventListener('message', (e) => {
-    console.log(`graphics: ${e.data}`)
+    const message = e.data as SimulatorMessage
+    switch (message.type) {
+      case SimulatorMessageType.SyncChunks: {
+        console.log('todo sync chunks', message.chunks)
+        break
+      }
+      default: {
+        invariant(false)
+      }
+    }
   })
   simulatorPort.start()
 

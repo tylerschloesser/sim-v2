@@ -2,6 +2,7 @@ import {
   GraphicsStrategy,
   TransferCamera,
   TransferViewport,
+  World,
 } from '@sim-v2/types'
 
 export enum MessageType {
@@ -13,6 +14,7 @@ export enum MessageType {
 export interface InitMessage {
   type: MessageType.Init
   strategy: GraphicsStrategy
+  world: World
   canvas: OffscreenCanvas
   viewport: TransferViewport
   camera: TransferCamera

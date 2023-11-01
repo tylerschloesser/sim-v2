@@ -1,6 +1,7 @@
 import {
   TransferCamera,
   TransferViewport,
+  World,
 } from '@sim-v2/types'
 
 export enum MessageType {
@@ -11,6 +12,7 @@ export enum MessageType {
 
 export interface InitMessage {
   type: MessageType.Init
+  world: World
   viewport: TransferViewport
   camera: TransferCamera
   graphicsPort: MessagePort

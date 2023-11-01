@@ -7,5 +7,11 @@ export function getVisibleChunkIds({
   camera: Camera
   viewport: Viewport
 }): Set<ChunkId> {
-  return new Set()
+  const chunkIds = new Set<ChunkId>()
+  for (let y = -1; y <= 0; y++) {
+    for (let x = -1; x <= 0; x++) {
+      chunkIds.add(`${x}.${y}`)
+    }
+  }
+  return chunkIds
 }
