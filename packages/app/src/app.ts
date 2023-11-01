@@ -71,6 +71,7 @@ export async function initApp({
   const world: World = {
     tickDuration: 100,
     chunkSize: 32,
+    tick: 0,
     chunks: {},
   }
 

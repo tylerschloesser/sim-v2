@@ -31,5 +31,6 @@ export interface Chunk {
 export interface World {
   tickDuration: number
   chunkSize: number
+  tick: number
   chunks: Record<ChunkId, Chunk>
 }

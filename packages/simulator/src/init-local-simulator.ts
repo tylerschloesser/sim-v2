@@ -38,6 +38,7 @@ export const initLocalSimulator: InitSimulatorFn<
   appPort.start()
 
   const interval = setInterval(() => {
+    world.tick += 1
     console.debug('tick')
   }, world.tickDuration)
 
