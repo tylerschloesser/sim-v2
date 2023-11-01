@@ -25,6 +25,7 @@ export interface InitMessage {
 export interface SetCameraMessage {
   type: MessageType.SetCamera
   camera: TransferCamera
+  time: number
 }
 
 export interface SetViewportMessage {

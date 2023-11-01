@@ -4,6 +4,7 @@ import {
   AppConfig,
   AppSettings,
   FpsCallbackFn,
+  InputLatencyCallback,
   initApp,
 } from './app.js'
 import './index.scss'
@@ -12,6 +13,7 @@ import { getPixelRatio } from './util.js'
 const elements = {
   fps: getSpan('.fps .value'),
   dpr: getSpan('.dpr .value'),
+  inputLatency: getSpan('.input-latency .value'),
   logWorld: getButton('button.log-world'),
 }
 
@@ -22,7 +24,31 @@ const fpsCallback: FpsCallbackFn = (fps) => {
   elements.fps.innerText = `${fps}`
 }
 
-const config: AppConfig = { pixelRatio, fpsCallback }
+const inputLatencyCallback: InputLatencyCallback = (() => {
+  const count = 20
+  let i = 0
+  const prev = new Array<number | null>(count).fill(null)
+
+  return (inputLatency) => {
+    prev[i] = inputLatency
+    i = (i + 1) % count
+
+    const average =
+      prev
+        .filter((v): v is number => v !== null)
+        .reduce((acc, v) => acc + v, 0) / prev.length
+
+    elements.inputLatency.innerText = `${average.toFixed(
+      2,
+    )}`
+  }
+})()
+
+const config: AppConfig = {
+  pixelRatio,
+  fpsCallback,
+  inputLatencyCallback,
+}
 
 const DEFAULT_SETTINGS: AppSettings = {
   executor: {

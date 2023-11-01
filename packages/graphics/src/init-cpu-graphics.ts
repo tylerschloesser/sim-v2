@@ -7,6 +7,7 @@ import {
   Viewport,
 } from '@sim-v2/types'
 import invariant from 'tiny-invariant'
+import { checkInputLatency } from './check-input-latency.js'
 import { measureFps } from './measure-fps.js'
 import { getCpuContext } from './util.js'
 
@@ -85,7 +86,8 @@ export const initCpuGraphics: InitGraphicsFn<
     stop() {
       controller.abort()
     },
-    setCamera(next: Camera): void {
+    setCamera(next: Camera, time: number): void {
+      checkInputLatency(appPort, time)
       camera = next
     },
     setViewport(next: Viewport): void {

@@ -29,10 +29,13 @@ self.addEventListener('message', (e) => {
     }
     case MessageType.SetCamera: {
       invariant(graphics)
-      graphics.setCamera({
-        ...message.camera,
-        position: new Vec2(message.camera.position),
-      })
+      graphics.setCamera(
+        {
+          ...message.camera,
+          position: new Vec2(message.camera.position),
+        },
+        message.time,
+      )
       break
     }
     case MessageType.SetViewport: {

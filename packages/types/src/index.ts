@@ -63,6 +63,6 @@ export type InitGraphicsFn<T = InitGraphicsArgs> = (
 
 export interface Graphics {
   setViewport(viewport: Viewport): void
-  setCamera(camera: Camera): void
+  setCamera(camera: Camera, time: number): void
   stop(): void
 }

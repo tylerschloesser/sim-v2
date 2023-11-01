@@ -27,10 +27,14 @@ export const AppSettings = z.object({
 export type AppSettings = z.infer<typeof AppSettings>
 
 export type FpsCallbackFn = (fps: number) => void
+export type InputLatencyCallback = (
+  inputLatency: number,
+) => void
 
 export interface AppConfig {
   pixelRatio: number
   fpsCallback?: FpsCallbackFn
+  inputLatencyCallback?: InputLatencyCallback
 }
 
 export interface App {
@@ -106,6 +110,10 @@ export async function initApp({
           config.fpsCallback?.(message.fps)
           break
         }
+        case GraphicsMessageType.InputLatency: {
+          config.inputLatencyCallback?.(message.inputLatency)
+          break
+        }
         default: {
           invariant(false)
         }
@@ -124,7 +132,10 @@ export async function initApp({
           e.clientY - prev.clientY,
         )
         camera.position.madd(delta)
-        graphics.setCamera(camera)
+        graphics.setCamera(
+          camera,
+          performance.timeOrigin + e.timeStamp,
+        )
       }
       prev = e
     }
@@ -149,7 +160,7 @@ export async function initApp({
         minTileSize,
         maxTileSize,
       )
-      graphics.setCamera(camera)
+      graphics.setCamera(camera, e.timeStamp)
 
       e.preventDefault()
     },

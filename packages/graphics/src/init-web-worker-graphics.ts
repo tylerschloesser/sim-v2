@@ -35,10 +35,11 @@ export function initWebWorkerGraphics(
     stop() {
       worker.terminate()
     },
-    setCamera(camera: Camera) {
+    setCamera(camera: Camera, time: number) {
       const message: SetCameraMessage = {
         type: MessageType.SetCamera,
         camera,
+        time,
       }
       worker.postMessage(message)
     },
