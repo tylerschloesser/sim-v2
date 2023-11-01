@@ -1,7 +1,5 @@
 import {
   Camera,
-  FpsGraphicsMessage,
-  GraphicsMessageType,
   InitGraphicsArgs,
   InitGraphicsFn,
   SimulatorMessage,
@@ -9,6 +7,7 @@ import {
   Viewport,
 } from '@sim-v2/types'
 import invariant from 'tiny-invariant'
+import { measureFps } from './measure-fps.js'
 import { getCpuContext } from './util.js'
 
 export const initCpuGraphics: InitGraphicsFn<
@@ -35,31 +34,10 @@ export const initCpuGraphics: InitGraphicsFn<
   const context = getCpuContext(canvas)
   context.scale(viewport.pixelRatio, viewport.pixelRatio)
 
-  let frames = 0
-  let prev = performance.now()
-  let elapsed = 0
-
-  function render(time: number) {
+  const render = measureFps(appPort, (time: number) => {
     if (controller.signal.aborted) {
       return
     }
-
-    const delta = time - prev
-    prev = time
-    elapsed += delta
-    if (elapsed >= 1000) {
-      console.log('fps', frames)
-
-      const message: FpsGraphicsMessage = {
-        type: GraphicsMessageType.Fps,
-        fps: frames,
-      }
-      appPort.postMessage(message)
-
-      elapsed = elapsed - 1000
-      frames = 0
-    }
-    frames += 1
 
     context.save()
 
@@ -93,7 +71,7 @@ export const initCpuGraphics: InitGraphicsFn<
     context.restore()
 
     requestAnimationFrame(render)
-  }
+  })
 
   requestAnimationFrame(render)
 

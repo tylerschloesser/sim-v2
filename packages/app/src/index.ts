@@ -45,6 +45,7 @@ let app = await initApp({ settings, config })
 
 async function updateApp() {
   app.destroy()
+  elements.fps.innerText = ''
   localStorage.setItem(
     'settings',
     JSON.stringify(settings, null, 2),
