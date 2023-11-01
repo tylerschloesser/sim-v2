@@ -101,6 +101,23 @@ export async function initApp({
     appPort: ports.simulator.appPort,
   })
 
+  // report the input latency as the average of the last N values
+  //
+  const averageInputLatency = (() => {
+    const count = 20
+    let i = 0
+    const prev = new Array<number | null>(count).fill(null)
+    return (inputLatency: number) => {
+      prev[i] = inputLatency
+      i = (i + 1) % count
+      const average =
+        prev
+          .filter((v): v is number => v !== null)
+          .reduce((acc, v) => acc + v, 0) / prev.length
+      return average
+    }
+  })()
+
   ports.app.graphicsPort.addEventListener(
     'message',
     (e) => {
@@ -111,7 +128,9 @@ export async function initApp({
           break
         }
         case GraphicsMessageType.InputLatency: {
-          config.inputLatencyCallback?.(message.inputLatency)
+          config.inputLatencyCallback?.(
+            averageInputLatency(message.inputLatency),
+          )
           break
         }
         default: {
