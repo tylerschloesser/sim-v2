@@ -4,7 +4,7 @@ import {
   ChunkId,
   Tile,
   TileType,
-} from '@sim-v2/types'
+} from '@sim-v2/world'
 import invariant from 'tiny-invariant'
 
 export function generateChunk({

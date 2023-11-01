@@ -7,9 +7,8 @@ import {
   InitSimulatorFn,
   SimulatorMessageType,
   SyncChunksSimulatorMessage,
-  WorldUpdate,
-  WorldUpdateType,
 } from '@sim-v2/types'
+import { WorldUpdate, WorldUpdateType } from '@sim-v2/world'
 import invariant from 'tiny-invariant'
 import { generateChunk } from './generate-chunk.js'
 

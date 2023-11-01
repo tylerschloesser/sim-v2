@@ -1,4 +1,4 @@
-import { Chunk, ChunkId } from './world.js'
+import { Chunk, ChunkId } from '@sim-v2/world'
 
 export enum SimulatorMessageType {
   SyncChunks = 'sync-chunks',

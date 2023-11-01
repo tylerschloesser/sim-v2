@@ -2,8 +2,8 @@ import {
   GraphicsStrategy,
   TransferCamera,
   TransferViewport,
-  World,
 } from '@sim-v2/types'
+import { World } from '@sim-v2/world'
 
 export enum MessageType {
   Init = 'init',

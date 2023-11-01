@@ -10,8 +10,8 @@ import {
   GraphicsMessageType,
   GraphicsStrategy,
   Viewport,
-  World,
 } from '@sim-v2/types'
+import { World } from '@sim-v2/world'
 import invariant from 'tiny-invariant'
 import { z } from 'zod'
 

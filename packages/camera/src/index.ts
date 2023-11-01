@@ -1,4 +1,5 @@
-import { Camera, ChunkId, Viewport } from '@sim-v2/types'
+import { Camera, Viewport } from '@sim-v2/types'
+import { ChunkId } from '@sim-v2/world'
 
 export function getVisibleChunkIds({
   camera,

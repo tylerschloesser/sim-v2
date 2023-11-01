@@ -1,8 +1,7 @@
 import { SimpleVec2, Vec2 } from '@sim-v2/math'
-import { World } from './world.js'
+import { World } from '@sim-v2/world'
 
 export * from './message.js'
-export * from './world.js'
 
 export interface Viewport<T = Vec2> {
   size: T
