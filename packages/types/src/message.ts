@@ -21,3 +21,13 @@ export interface FpsGraphicsMessage {
 }
 
 export type GraphicsMessage = FpsGraphicsMessage
+
+export enum AppMessageType {
+  LogWorld = 'log-world',
+}
+
+export interface LogWorldAppMessage {
+  type: AppMessageType.LogWorld
+}
+
+export type AppMessage = LogWorldAppMessage
