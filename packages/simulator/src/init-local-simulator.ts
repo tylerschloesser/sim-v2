@@ -8,7 +8,11 @@ import {
   SimulatorMessageType,
   SyncChunksSimulatorMessage,
 } from '@sim-v2/types'
-import { WorldUpdate, WorldUpdateType } from '@sim-v2/world'
+import {
+  WorldUpdate,
+  WorldUpdateType,
+  applyWorldUpdates,
+} from '@sim-v2/world'
 import invariant from 'tiny-invariant'
 import { generateChunk } from './generate-chunk.js'
 
@@ -46,7 +50,7 @@ export const initLocalSimulator: InitSimulatorFn<
       tick: world.tick + 1,
     })
 
-    console.debug('tick')
+    applyWorldUpdates(world, updates)
   }, world.tickDuration)
 
   signal.addEventListener('abort', () => {
