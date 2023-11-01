@@ -7,6 +7,8 @@ import {
   InitSimulatorFn,
   SimulatorMessageType,
   SyncChunksSimulatorMessage,
+  WorldUpdate,
+  WorldUpdateType,
 } from '@sim-v2/types'
 import invariant from 'tiny-invariant'
 import { generateChunk } from './generate-chunk.js'
@@ -38,7 +40,13 @@ export const initLocalSimulator: InitSimulatorFn<
   appPort.start()
 
   const interval = setInterval(() => {
-    world.tick += 1
+    const updates: WorldUpdate[] = []
+
+    updates.push({
+      type: WorldUpdateType.Tick,
+      tick: world.tick + 1,
+    })
+
     console.debug('tick')
   }, world.tickDuration)
 

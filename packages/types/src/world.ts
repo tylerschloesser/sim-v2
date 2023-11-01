@@ -34,3 +34,14 @@ export interface World {
   tick: number
   chunks: Record<ChunkId, Chunk>
 }
+
+export enum WorldUpdateType {
+  Tick = 'tick',
+}
+
+export interface TickWorldUpdate {
+  type: WorldUpdateType.Tick
+  tick: number
+}
+
+export type WorldUpdate = TickWorldUpdate
