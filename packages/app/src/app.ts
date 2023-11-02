@@ -64,11 +64,6 @@ export async function initApp({
     pixelRatio: config.pixelRatio,
   }
 
-  // const minTileSize =
-  //   Math.min(viewport.size.x, viewport.size.y) * 0.05
-  // const maxTileSize =
-  //   Math.min(viewport.size.x, viewport.size.y) * 0.5
-
   const camera: Camera = {
     position: new Vec2(0),
     zoom: 0.25,
