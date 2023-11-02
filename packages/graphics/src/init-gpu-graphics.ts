@@ -12,7 +12,10 @@ import { mat4, vec3 } from 'gl-matrix'
 import invariant from 'tiny-invariant'
 import { checkInputLatency } from './check-input-latency.js'
 import { colorStringToArray } from './color.js'
-import { initSimulatorMessageHandler } from './init-simulator-message-handler.js'
+import {
+  SyncChunkCallbackFn,
+  initSimulatorMessageHandler,
+} from './init-simulator-message-handler.js'
 import { initWebGL } from './init-webgl.js'
 import { measureFps } from './measure-fps.js'
 import { getGpuContext } from './util.js'
@@ -35,9 +38,19 @@ export const initGpuGraphics: InitGraphicsFn<
 
   const state = initWebGL(gl, world.chunkSize)
 
+  const syncChunkCallback: SyncChunkCallbackFn = (
+    chunk,
+  ) => {
+    console.log(
+      'TODO create color buffer for chunk',
+      chunk.id,
+    )
+  }
+
   initSimulatorMessageHandler({
     world,
     simulatorPort,
+    syncChunkCallback,
   })
 
   gl.bindBuffer(gl.ARRAY_BUFFER, state.buffers.square)

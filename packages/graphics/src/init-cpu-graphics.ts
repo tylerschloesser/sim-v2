@@ -2,8 +2,6 @@ import {
   Camera,
   InitGraphicsArgs,
   InitGraphicsFn,
-  SimulatorMessage,
-  SimulatorMessageType,
   Viewport,
 } from '@sim-v2/types'
 import {

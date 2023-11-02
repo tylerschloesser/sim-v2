@@ -13,7 +13,7 @@ type Shaders = {
 
 type WebGLAttributeLocation = number
 
-interface WebGLState {
+export interface WebGLState {
   programs: {
     main: {
       program: WebGLProgram
