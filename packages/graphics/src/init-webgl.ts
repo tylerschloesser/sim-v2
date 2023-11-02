@@ -1,3 +1,4 @@
+import { ChunkId } from '@sim-v2/world'
 import invariant from 'tiny-invariant'
 import frag from './shaders/frag.glsl'
 import vert from './shaders/vert.glsl'
@@ -33,6 +34,7 @@ interface State {
       vertex: WebGLBuffer
       index: WebGLBuffer
     }
+    color: Record<ChunkId, WebGLBuffer>
   }
 }
 
@@ -69,6 +71,7 @@ export function initWebgl(
     buffers: {
       square: initSquareBuffer(gl),
       chunk: initChunkBuffer(gl, chunkSize),
+      color: {},
     },
   }
 

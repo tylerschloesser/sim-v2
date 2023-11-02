@@ -30,15 +30,15 @@ export const initGpuGraphics: InitGraphicsFn<
 
   const controller = new AbortController()
 
-  initSimulatorMessageHandler({
-    world,
-    simulatorPort,
-  })
-
   const gl = getGpuContext(canvas)
   invariant(gl)
 
   const state = initWebgl(gl, world.chunkSize)
+
+  initSimulatorMessageHandler({
+    world,
+    simulatorPort,
+  })
 
   gl.bindBuffer(gl.ARRAY_BUFFER, state.buffers.square)
   gl.vertexAttribPointer(
