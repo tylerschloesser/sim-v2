@@ -37,13 +37,13 @@ export const initGpuGraphics: InitGraphicsFn<
   const gl = getGpuContext(canvas)
   invariant(gl)
 
-  const state = initWebGL(gl, chunkSize)
+  const state = initWebGL({ gl, chunkSize })
 
   const syncChunkCallback: SyncChunkCallbackFn = (
     chunk,
   ) => {
     invariant(state.buffers.color[chunk.id] === undefined)
-    const buffer = initColorBuffer(gl, chunkSize, chunk)
+    const buffer = initColorBuffer({ gl, chunkSize, chunk })
     state.buffers.color[chunk.id] = buffer
   }
 

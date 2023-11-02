@@ -38,10 +38,13 @@ export interface WebGLState {
   }
 }
 
-export function initWebGL(
-  gl: WebGL2RenderingContext,
-  chunkSize: number,
-): WebGLState {
+export function initWebGL({
+  gl,
+  chunkSize,
+}: {
+  gl: WebGL2RenderingContext
+  chunkSize: number
+}): WebGLState {
   const shaders: Shaders = {
     vert: initShader(gl, gl.VERTEX_SHADER, vert),
     frag: initShader(gl, gl.FRAGMENT_SHADER, frag),
@@ -155,11 +158,15 @@ function initChunkBuffer(
   }
 }
 
-export function initColorBuffer(
-  gl: WebGL2RenderingContext,
-  chunkSize: number,
-  chunk: Chunk,
-): WebGLBuffer {
+export function initColorBuffer({
+  gl,
+  chunkSize,
+  chunk,
+}: {
+  gl: WebGL2RenderingContext
+  chunkSize: number
+  chunk: Chunk
+}): WebGLBuffer {
   const buffer = gl.createBuffer()
   invariant(buffer)
 
