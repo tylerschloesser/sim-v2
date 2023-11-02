@@ -186,6 +186,8 @@ export const initGpuGraphics: InitGraphicsFn<
   updateView()
 
   const model = mat4.create()
+  const translate = vec3.create()
+
   const render = measureFps(appPort, (_time: number) => {
     if (controller.signal.aborted) {
       return
@@ -205,12 +207,11 @@ export const initGpuGraphics: InitGraphicsFn<
           ...colorStringToArray(color)
         )
 
+        translate[0] = position.x
+        translate[1] = position.y
+
         mat4.identity(model)
-        mat4.translate(
-          model,
-          model,
-          vec3.fromValues(position.x, position.y, 0),
-        )
+        mat4.translate(model, model, translate)
 
         gl.uniformMatrix4fv(
           context.programs.main.uniforms.model,
