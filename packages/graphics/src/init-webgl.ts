@@ -13,7 +13,7 @@ type Shaders = {
 
 type WebGLAttributeLocation = number
 
-interface State {
+interface WebGLState {
   programs: {
     main: {
       program: WebGLProgram
@@ -41,7 +41,7 @@ interface State {
 export function initWebGL(
   gl: WebGL2RenderingContext,
   chunkSize: number,
-): State {
+): WebGLState {
   const shaders: Shaders = {
     vert: initShader(gl, gl.VERTEX_SHADER, vert),
     frag: initShader(gl, gl.FRAGMENT_SHADER, frag),
@@ -49,7 +49,7 @@ export function initWebGL(
 
   const program = initProgram(gl, shaders)
 
-  const state: State = {
+  const state: WebGLState = {
     programs: {
       main: {
         program,
@@ -104,7 +104,7 @@ function initSquareBuffer(
 function initChunkBuffer(
   gl: WebGL2RenderingContext,
   chunkSize: number,
-): State['buffers']['chunk'] {
+): WebGLState['buffers']['chunk'] {
   const vertexBuffer = gl.createBuffer()
   invariant(vertexBuffer)
   gl.bindBuffer(gl.ARRAY_BUFFER, vertexBuffer)
