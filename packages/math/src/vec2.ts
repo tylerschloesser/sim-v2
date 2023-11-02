@@ -8,10 +8,6 @@ export class Vec2 {
     if (typeof x === 'number') {
       this.x = x
       this.y = y ?? x
-    } else if (Array.isArray(x)) {
-      invariant(x.length === 2)
-      this.x = x[0]
-      this.y = x[1]
     } else {
       this.x = x.x
       this.y = x.y
@@ -22,16 +18,8 @@ export class Vec2 {
   }
 
   madd(v: Vec2 | SimpleVec2): void {
-    if (Array.isArray(v)) {
-      invariant(v.length === 2)
-      invariant(typeof v[0] === 'number')
-      invariant(typeof v[1] === 'number')
-      this.x += v[0]
-      this.x += v[1]
-    } else {
-      this.x += v.x
-      this.y += v.y
-    }
+    this.x += v.x
+    this.y += v.y
   }
 
   len(): number {
@@ -39,7 +27,14 @@ export class Vec2 {
   }
 
   simple(): SimpleVec2 {
-    return [this.x, this.y]
+    return {
+      x: this.x,
+      y: this.y,
+    }
+  }
+
+  mul(s: number): Vec2 {
+    return new Vec2(this.x * s, this.y * s)
   }
 
   div(s: number): Vec2 {
@@ -48,9 +43,7 @@ export class Vec2 {
   }
 }
 
-export type SimpleVec2 =
-  | {
-      x: number
-      y: number
-    }
-  | [number, number]
+export type SimpleVec2 = {
+  x: number
+  y: number
+}

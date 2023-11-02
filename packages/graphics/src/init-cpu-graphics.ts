@@ -6,6 +6,7 @@ import {
   SimulatorMessageType,
   Viewport,
 } from '@sim-v2/types'
+import { getPosition, iterateTiles } from '@sim-v2/world'
 import invariant from 'tiny-invariant'
 import { checkInputLatency } from './check-input-latency.js'
 import { measureFps } from './measure-fps.js'
@@ -63,6 +64,22 @@ export const initCpuGraphics: InitGraphicsFn<
         camera.position.y -
         camera.tileSize / 2,
     )
+
+    for (const chunk of Object.values(world.chunks)) {
+      for (let { position, tile } of iterateTiles(
+        chunk,
+        world,
+      )) {
+        context.fillStyle = 'pink'
+        context.fillRect(
+          position.x * camera.tileSize,
+          position.y * camera.tileSize,
+          camera.tileSize,
+          camera.tileSize,
+        )
+      }
+    }
+
     context.fillStyle = 'blue'
     context.fillRect(0, 0, camera.tileSize, camera.tileSize)
 
