@@ -33,6 +33,7 @@ interface Context {
         model: WebGLUniformLocation
         view: WebGLUniformLocation
         projection: WebGLUniformLocation
+        color: WebGLUniformLocation
       }
     }
   }
@@ -73,6 +74,7 @@ export const initGpuGraphics: InitGraphicsFn<
             program,
             'uProjection',
           ),
+          color: getUniformLocation(gl, program, 'uColor'),
         },
       },
     },
@@ -160,6 +162,14 @@ export const initGpuGraphics: InitGraphicsFn<
     )
   }
   updateView()
+
+  gl.uniform4f(
+    context.programs.main.uniforms.color,
+    0,
+    0,
+    1,
+    1,
+  )
 
   const model = mat4.create()
 
