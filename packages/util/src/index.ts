@@ -16,10 +16,10 @@ export function random<T>(arr: Array<T>): T {
   return value
 }
 
-export function memo<T extends string, U>(
+export function memo<T, U>(
   fn: (key: T) => U,
 ): (key: T) => U {
-  const cache = new Map<string, U>()
+  const cache = new Map<T, U>()
   return (key: T) => {
     let value = cache.get(key)
     if (value !== undefined) {
