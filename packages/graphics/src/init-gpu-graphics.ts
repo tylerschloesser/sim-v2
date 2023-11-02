@@ -38,6 +38,8 @@ export const initGpuGraphics: InitGraphicsFn<
   const syncChunkCallback: SyncChunkCallbackFn = (
     chunk,
   ) => {
+    // TODO move this to another task/thread
+
     invariant(state.buffers.color[chunk.id] === undefined)
     const buffer = initColorBuffer({ gl, chunkSize, chunk })
     state.buffers.color[chunk.id] = buffer
