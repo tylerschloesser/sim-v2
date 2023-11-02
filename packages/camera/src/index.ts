@@ -18,14 +18,21 @@ export function getVisibleChunkIds({
   return chunkIds
 }
 
+// as a function of the smallest viewport dimension
+//
+const MIN_TILE_SIZE_FACTOR = 0.025
+const MAX_TILE_SIZE_FACTOR = 0.25
+
 export function getTileSize(
   camera: Camera,
   viewport: Viewport,
 ): number {
   const minTileSize =
-    Math.min(viewport.size.x, viewport.size.y) * 0.05
+    Math.min(viewport.size.x, viewport.size.y) *
+    MIN_TILE_SIZE_FACTOR
   const maxTileSize =
-    Math.min(viewport.size.x, viewport.size.y) * 0.5
+    Math.min(viewport.size.x, viewport.size.y) *
+    MAX_TILE_SIZE_FACTOR
 
   invariant(camera.zoom >= 0)
   invariant(camera.zoom <= 1)
