@@ -69,8 +69,14 @@ export async function initApp({
 
   const camera: Camera = {
     position: new Vec2(0),
-    tileSize: 100,
+    tileSize: minTileSize + (maxTileSize - minTileSize) / 4,
   }
+
+  console.debug({
+    minTileSize,
+    maxTileSize,
+    initialTileSize: camera.tileSize,
+  })
 
   const world: World = {
     tickDuration: 100,
