@@ -179,7 +179,10 @@ export async function initApp({
         minTileSize,
         maxTileSize,
       )
-      graphics.setCamera(camera, e.timeStamp)
+      graphics.setCamera(
+        camera,
+        performance.timeOrigin + e.timeStamp,
+      )
 
       e.preventDefault()
     },
