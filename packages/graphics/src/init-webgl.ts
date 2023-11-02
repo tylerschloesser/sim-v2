@@ -30,7 +30,6 @@ export interface WebGLState {
         model: WebGLUniformLocation
         view: WebGLUniformLocation
         projection: WebGLUniformLocation
-        // color: WebGLUniformLocation
       }
     }
   }
