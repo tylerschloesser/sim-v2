@@ -1,4 +1,4 @@
-import { random } from '@sim-v2/math'
+import { random } from '@sim-v2/util'
 import {
   Chunk,
   ChunkId,

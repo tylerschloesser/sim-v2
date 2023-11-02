@@ -1,14 +1,13 @@
-import { random } from '@sim-v2/math'
 import {
   Camera,
   InitGraphicsArgs,
   InitGraphicsFn,
   Viewport,
 } from '@sim-v2/types'
+import { random } from '@sim-v2/util'
 import {
   TILE_TYPE_TO_COLOR,
   getPosition,
-  iterateTiles,
 } from '@sim-v2/world'
 import { mat4, vec3 } from 'gl-matrix'
 import invariant from 'tiny-invariant'

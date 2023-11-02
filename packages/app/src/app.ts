@@ -1,5 +1,5 @@
 import { initGraphics } from '@sim-v2/graphics'
-import { Vec2, clamp } from '@sim-v2/math'
+import { Vec2 } from '@sim-v2/math'
 import { initSimulator } from '@sim-v2/simulator'
 import {
   AppMessage,
@@ -11,6 +11,7 @@ import {
   GraphicsStrategy,
   Viewport,
 } from '@sim-v2/types'
+import { clamp } from '@sim-v2/util'
 import { World } from '@sim-v2/world'
 import invariant from 'tiny-invariant'
 import { z } from 'zod'
