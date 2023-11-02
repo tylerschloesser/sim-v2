@@ -52,12 +52,13 @@ export const initCpuGraphics: InitGraphicsFn<
     )
 
     context.translate(
-      viewport.size.x / 2 +
-        camera.position.x -
-        camera.tileSize / 2,
-      viewport.size.y / 2 +
-        camera.position.y -
-        camera.tileSize / 2,
+      viewport.size.x / 2,
+      viewport.size.y / 2,
+    )
+
+    context.translate(
+      camera.position.x * camera.tileSize,
+      camera.position.y * camera.tileSize,
     )
 
     for (const chunk of Object.values(world.chunks)) {

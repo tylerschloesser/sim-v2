@@ -146,11 +146,11 @@ export async function initApp({
   canvas.addEventListener('pointermove', (e) => {
     if (e.buttons === 1) {
       if (prev) {
-        const delta = new Vec2(
-          e.clientX - prev.clientX,
-          e.clientY - prev.clientY,
-        )
-        camera.position.madd(delta)
+        camera.position.x +=
+          (e.clientX - prev.clientX) / camera.tileSize
+        camera.position.y +=
+          (e.clientY - prev.clientY) / camera.tileSize
+
         graphics.setCamera(
           camera,
           performance.timeOrigin + e.timeStamp,
