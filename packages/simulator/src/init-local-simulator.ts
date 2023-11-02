@@ -15,11 +15,14 @@ import {
 } from '@sim-v2/world'
 import invariant from 'tiny-invariant'
 import { generateChunk } from './generate-chunk.js'
+import { initGeneratorContext } from './init-generator-context.js'
 
 export const initLocalSimulator: InitSimulatorFn<
   Omit<InitSimulatorArgs, 'executor'>
 > = ({ graphicsPort, appPort, world, ...args }) => {
   let { camera, viewport } = args
+
+  const generator = initGeneratorContext(world.seed)
 
   const controller = new AbortController()
   const { signal } = controller
@@ -67,6 +70,7 @@ export const initLocalSimulator: InitSimulatorFn<
       world.chunks[chunkId] = generateChunk({
         chunkId,
         chunkSize: world.chunkSize,
+        generator,
       })
     }
   }
