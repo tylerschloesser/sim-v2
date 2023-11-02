@@ -72,7 +72,6 @@ export function initWebGL({
             program,
             'uProjection',
           ),
-          // color: getUniformLocation(gl, program, 'uColor'),
         },
       },
     },
