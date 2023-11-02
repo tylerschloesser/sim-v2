@@ -153,7 +153,7 @@ export const initGpuGraphics: InitGraphicsFn<
     0,
   )
 
-  const getRandomColor = memo((key: string) => {
+  const getRandomColor = memo((_key: string) => {
     return random(Object.values(TILE_TYPE_TO_COLOR))
   })
 
