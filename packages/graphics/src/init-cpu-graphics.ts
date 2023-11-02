@@ -1,3 +1,4 @@
+import { getTileSize } from '@sim-v2/camera'
 import {
   Camera,
   InitGraphicsArgs,
@@ -24,6 +25,7 @@ export const initCpuGraphics: InitGraphicsFn<
   ...args
 }) => {
   let { viewport, camera } = args
+  let tileSize = getTileSize(camera, viewport)
 
   const controller = new AbortController()
 
@@ -55,8 +57,8 @@ export const initCpuGraphics: InitGraphicsFn<
     )
 
     context.translate(
-      camera.position.x * camera.tileSize,
-      camera.position.y * camera.tileSize,
+      camera.position.x * tileSize,
+      camera.position.y * tileSize,
     )
 
     for (const chunk of Object.values(world.chunks)) {
@@ -66,10 +68,10 @@ export const initCpuGraphics: InitGraphicsFn<
       )) {
         context.fillStyle = TILE_TYPE_TO_COLOR[tile.type]
         context.fillRect(
-          position.x * camera.tileSize,
-          position.y * camera.tileSize,
-          camera.tileSize,
-          camera.tileSize,
+          position.x * tileSize,
+          position.y * tileSize,
+          tileSize,
+          tileSize,
         )
       }
     }

@@ -1,5 +1,6 @@
 import { Camera, Viewport } from '@sim-v2/types'
 import { ChunkId } from '@sim-v2/world'
+import invariant from 'tiny-invariant'
 
 export function getVisibleChunkIds({
   camera,
@@ -15,4 +16,21 @@ export function getVisibleChunkIds({
     }
   }
   return chunkIds
+}
+
+export function getTileSize(
+  camera: Camera,
+  viewport: Viewport,
+): number {
+  const minTileSize =
+    Math.min(viewport.size.x, viewport.size.y) * 0.05
+  const maxTileSize =
+    Math.min(viewport.size.x, viewport.size.y) * 0.5
+
+  invariant(camera.zoom >= 0)
+  invariant(camera.zoom <= 1)
+
+  return (
+    minTileSize + (maxTileSize - minTileSize) * camera.zoom
+  )
 }

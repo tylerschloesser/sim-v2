@@ -1,3 +1,4 @@
+import { getTileSize } from '@sim-v2/camera'
 import { initGraphics } from '@sim-v2/graphics'
 import { Vec2 } from '@sim-v2/math'
 import { initSimulator } from '@sim-v2/simulator'
@@ -11,7 +12,6 @@ import {
   GraphicsStrategy,
   Viewport,
 } from '@sim-v2/types'
-import { clamp } from '@sim-v2/util'
 import { World } from '@sim-v2/world'
 import invariant from 'tiny-invariant'
 import { z } from 'zod'
@@ -63,21 +63,17 @@ export async function initApp({
     pixelRatio: config.pixelRatio,
   }
 
-  const minTileSize =
-    Math.min(viewport.size.x, viewport.size.y) * 0.05
-  const maxTileSize =
-    Math.min(viewport.size.x, viewport.size.y) * 0.5
+  // const minTileSize =
+  //   Math.min(viewport.size.x, viewport.size.y) * 0.05
+  // const maxTileSize =
+  //   Math.min(viewport.size.x, viewport.size.y) * 0.5
 
   const camera: Camera = {
     position: new Vec2(0),
-    tileSize: minTileSize + (maxTileSize - minTileSize) / 4,
+    zoom: 0.25,
   }
 
-  console.debug({
-    minTileSize,
-    maxTileSize,
-    initialTileSize: camera.tileSize,
-  })
+  let tileSize = getTileSize(camera, viewport)
 
   const world: World = {
     tickDuration: 100,
@@ -154,9 +150,9 @@ export async function initApp({
     if (e.buttons === 1) {
       if (prev) {
         camera.position.x +=
-          (e.clientX - prev.clientX) / camera.tileSize
+          (e.clientX - prev.clientX) / tileSize
         camera.position.y +=
-          (e.clientY - prev.clientY) / camera.tileSize
+          (e.clientY - prev.clientY) / tileSize
 
         graphics.setCamera(
           camera,
@@ -178,18 +174,18 @@ export async function initApp({
   canvas.addEventListener(
     'wheel',
     (e) => {
-      invariant(maxTileSize > minTileSize)
-      const range = maxTileSize - minTileSize
-      const delta = range * (-e.deltaY / viewport.size.y)
-      camera.tileSize = clamp(
-        camera.tileSize + delta,
-        minTileSize,
-        maxTileSize,
-      )
-      graphics.setCamera(
-        camera,
-        performance.timeOrigin + e.timeStamp,
-      )
+      // invariant(maxTileSize > minTileSize)
+      // const range = maxTileSize - minTileSize
+      // const delta = range * (-e.deltaY / viewport.size.y)
+      // camera.tileSize = clamp(
+      //   camera.tileSize + delta,
+      //   minTileSize,
+      //   maxTileSize,
+      // )
+      // graphics.setCamera(
+      //   camera,
+      //   performance.timeOrigin + e.timeStamp,
+      // )
 
       e.preventDefault()
     },

@@ -1,3 +1,4 @@
+import { getTileSize } from '@sim-v2/camera'
 import {
   Camera,
   InitGraphicsArgs,
@@ -27,6 +28,8 @@ export const initGpuGraphics: InitGraphicsFn<
 }) => {
   let { viewport, camera } = args
   const { chunkSize } = world
+
+  let tileSize = getTileSize(camera, viewport)
 
   const controller = new AbortController()
 
@@ -101,7 +104,7 @@ export const initGpuGraphics: InitGraphicsFn<
     mat4.scale(
       view,
       view,
-      vec3.fromValues(camera.tileSize, camera.tileSize, 1),
+      vec3.fromValues(tileSize, tileSize, 1),
     )
 
     mat4.translate(

@@ -12,7 +12,7 @@ export type TransferViewport = Viewport<SimpleVec2>
 
 export interface Camera<T = Vec2> {
   position: T
-  tileSize: number
+  zoom: number
 }
 
 export type TransferCamera = Camera<SimpleVec2>
