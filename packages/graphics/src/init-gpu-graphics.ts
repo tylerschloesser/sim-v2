@@ -28,7 +28,7 @@ type Shaders = {
 
 type WebGLAttributeLocation = number
 
-interface Context {
+interface State {
   programs: {
     main: {
       program: WebGLProgram
@@ -76,7 +76,7 @@ export const initGpuGraphics: InitGraphicsFn<
 
   const program = initProgram(gl, shaders)
 
-  const context: Context = {
+  const state: State = {
     programs: {
       main: {
         program,
@@ -100,9 +100,9 @@ export const initGpuGraphics: InitGraphicsFn<
     },
   }
 
-  gl.bindBuffer(gl.ARRAY_BUFFER, context.buffers.square)
+  gl.bindBuffer(gl.ARRAY_BUFFER, state.buffers.square)
   gl.vertexAttribPointer(
-    context.programs.main.attributes.vertex,
+    state.programs.main.attributes.vertex,
     2,
     gl.FLOAT,
     false,
@@ -111,10 +111,10 @@ export const initGpuGraphics: InitGraphicsFn<
   )
   // TODO study this and figure out where it should go
   gl.enableVertexAttribArray(
-    context.programs.main.attributes.vertex,
+    state.programs.main.attributes.vertex,
   )
 
-  gl.useProgram(context.programs.main.program)
+  gl.useProgram(state.programs.main.program)
 
   const projection = mat4.create()
   mat4.scale(
@@ -142,7 +142,7 @@ export const initGpuGraphics: InitGraphicsFn<
     ),
   )
   gl.uniformMatrix4fv(
-    context.programs.main.uniforms.projection,
+    state.programs.main.uniforms.projection,
     false,
     projection,
   )
@@ -178,7 +178,7 @@ export const initGpuGraphics: InitGraphicsFn<
     )
 
     gl.uniformMatrix4fv(
-      context.programs.main.uniforms.view,
+      state.programs.main.uniforms.view,
       false,
       view,
     )
@@ -203,7 +203,7 @@ export const initGpuGraphics: InitGraphicsFn<
         const color = TILE_TYPE_TO_COLOR[tile.type]
         // prettier-ignore
         gl.uniform4f(
-          context.programs.main.uniforms.color,
+          state.programs.main.uniforms.color,
           ...colorStringToArray(color)
         )
 
@@ -214,7 +214,7 @@ export const initGpuGraphics: InitGraphicsFn<
         mat4.translate(model, model, translate)
 
         gl.uniformMatrix4fv(
-          context.programs.main.uniforms.model,
+          state.programs.main.uniforms.model,
           false,
           model,
         )
