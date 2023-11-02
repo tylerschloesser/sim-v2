@@ -24,6 +24,7 @@ export interface WebGLState {
       program: WebGLProgram
       attributes: {
         vertex: WebGLAttributeLocation
+        color: WebGLAttributeLocation
       }
       uniforms: {
         model: WebGLUniformLocation
@@ -63,6 +64,7 @@ export function initWebGL({
         program,
         attributes: {
           vertex: getAttribLocation(gl, program, 'aVertex'),
+          color: getAttribLocation(gl, program, 'aColor'),
         },
         uniforms: {
           model: getUniformLocation(gl, program, 'uModel'),
