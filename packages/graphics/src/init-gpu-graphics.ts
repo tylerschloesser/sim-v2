@@ -4,9 +4,14 @@ import {
   InitGraphicsFn,
   Viewport,
 } from '@sim-v2/types'
+import {
+  TILE_TYPE_TO_COLOR,
+  iterateTiles,
+} from '@sim-v2/world'
 import { mat4, vec3 } from 'gl-matrix'
 import invariant from 'tiny-invariant'
 import { checkInputLatency } from './check-input-latency.js'
+import { colorStringToArray } from './color.js'
 import { measureFps } from './measure-fps.js'
 import frag from './shaders/frag.glsl'
 import vert from './shaders/vert.glsl'
@@ -44,7 +49,7 @@ interface Context {
 
 export const initGpuGraphics: InitGraphicsFn<
   Omit<InitGraphicsArgs, 'executor' | 'strategy'>
-> = ({ canvas, appPort, ...args }) => {
+> = ({ canvas, appPort, world, ...args }) => {
   let { viewport, camera } = args
 
   const controller = new AbortController()
@@ -168,14 +173,6 @@ export const initGpuGraphics: InitGraphicsFn<
   }
   updateView()
 
-  gl.uniform4f(
-    context.programs.main.uniforms.color,
-    0,
-    0,
-    1,
-    1,
-  )
-
   const model = mat4.create()
   const render = measureFps(appPort, (_time: number) => {
     if (controller.signal.aborted) {
@@ -184,15 +181,34 @@ export const initGpuGraphics: InitGraphicsFn<
     gl.clearColor(1, 1, 1, 1)
     gl.clear(gl.COLOR_BUFFER_BIT)
 
-    mat4.identity(model)
-    mat4.translate(model, model, vec3.fromValues(0, 0, 0))
+    for (const chunk of Object.values(world.chunks)) {
+      for (let { position, tile } of iterateTiles(
+        chunk,
+        world,
+      )) {
+        const color = TILE_TYPE_TO_COLOR[tile.type]
+        // prettier-ignore
+        gl.uniform4f(
+          context.programs.main.uniforms.color,
+          ...colorStringToArray(color)
+        )
 
-    gl.uniformMatrix4fv(
-      context.programs.main.uniforms.model,
-      false,
-      model,
-    )
-    gl.drawArrays(gl.TRIANGLE_STRIP, 0, 4)
+        mat4.identity(model)
+        mat4.translate(
+          model,
+          model,
+          vec3.fromValues(position.x, position.y, 0),
+        )
+
+        gl.uniformMatrix4fv(
+          context.programs.main.uniforms.model,
+          false,
+          model,
+        )
+        gl.drawArrays(gl.TRIANGLE_STRIP, 0, 4)
+      }
+    }
+
     requestAnimationFrame(render)
   })
   requestAnimationFrame(render)

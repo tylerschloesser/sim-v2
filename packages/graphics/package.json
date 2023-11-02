@@ -6,7 +6,9 @@
   "dependencies": {
     "@sim-v2/math": "*",
     "@sim-v2/types": "*",
+    "@types/color": "^3.0.5",
     "@types/gl-matrix": "^3.2.0",
+    "color": "^4.2.3",
     "gl-matrix": "^3.4.3"
   }
 }
