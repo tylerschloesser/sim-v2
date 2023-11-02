@@ -7,6 +7,7 @@ import {
 import { memo, random } from '@sim-v2/util'
 import {
   TILE_TYPE_TO_COLOR,
+  TileType,
   getPosition,
 } from '@sim-v2/world'
 import { mat4, vec3 } from 'gl-matrix'
@@ -152,6 +153,10 @@ export const initGpuGraphics: InitGraphicsFn<
     0,
   )
 
+  const getRandomColor = memo((key: string) => {
+    return random(Object.values(TILE_TYPE_TO_COLOR))
+  })
+
   const render = measureFps(appPort, (_time: number) => {
     if (controller.signal.aborted) {
       return
@@ -166,9 +171,7 @@ export const initGpuGraphics: InitGraphicsFn<
       //   continue
       // }
 
-      const color = memo(`${chunk.id}.color`, () =>
-        random(Object.values(TILE_TYPE_TO_COLOR)),
-      )
+      const color = getRandomColor(chunk.id)
       gl.uniform4f(
         state.programs.main.uniforms.color,
         ...colorStringToArray(color),

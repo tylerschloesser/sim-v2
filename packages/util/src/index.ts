@@ -18,8 +18,15 @@ export function random<T>(arr: Array<T>): T {
 
 export function memo<T extends string, U>(
   fn: (key: T) => U,
-) {
+): (key: T) => U {
+  const cache = new Map<string, U>()
   return (key: T) => {
-    return fn(key)
+    let value = cache.get(key)
+    if (value !== undefined) {
+      return value
+    }
+    value = fn(key)
+    cache.set(key, value)
+    return value
   }
 }
