@@ -203,6 +203,7 @@ export const initGpuGraphics: InitGraphicsFn<
     setCamera(next: Camera, time: number): void {
       checkInputLatency(appPort, time)
       camera = next
+      tileSize = getTileSize(camera, viewport)
       updateView()
     },
     setViewport(_next: Viewport): void {

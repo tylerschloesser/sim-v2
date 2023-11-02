@@ -90,6 +90,7 @@ export const initCpuGraphics: InitGraphicsFn<
     setCamera(next: Camera, time: number): void {
       checkInputLatency(appPort, time)
       camera = next
+      tileSize = getTileSize(camera, viewport)
     },
     setViewport(_next: Viewport): void {
       invariant(false, 'TODO')

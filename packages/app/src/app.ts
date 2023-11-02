@@ -12,6 +12,7 @@ import {
   GraphicsStrategy,
   Viewport,
 } from '@sim-v2/types'
+import { clamp } from '@sim-v2/util'
 import { World } from '@sim-v2/world'
 import invariant from 'tiny-invariant'
 import { z } from 'zod'
@@ -174,18 +175,16 @@ export async function initApp({
   canvas.addEventListener(
     'wheel',
     (e) => {
-      // invariant(maxTileSize > minTileSize)
-      // const range = maxTileSize - minTileSize
-      // const delta = range * (-e.deltaY / viewport.size.y)
-      // camera.tileSize = clamp(
-      //   camera.tileSize + delta,
-      //   minTileSize,
-      //   maxTileSize,
-      // )
-      // graphics.setCamera(
-      //   camera,
-      //   performance.timeOrigin + e.timeStamp,
-      // )
+      camera.zoom = clamp(
+        camera.zoom + -e.deltaY / viewport.size.y,
+        0,
+        1,
+      )
+      tileSize = getTileSize(camera, viewport)
+      graphics.setCamera(
+        camera,
+        performance.timeOrigin + e.timeStamp,
+      )
 
       e.preventDefault()
     },
