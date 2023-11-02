@@ -1,0 +1,20 @@
+diff --git a/node_modules/prando/package.json b/node_modules/prando/package.json
+index 84da13a..7512aa0 100644
+--- a/node_modules/prando/package.json
++++ b/node_modules/prando/package.json
+@@ -1,10 +1,15 @@
+ {
+ 	"name": "prando",
++  "type": "module",
+ 	"version": "6.0.1",
+ 	"description": "Deterministic pseudo-random number generator for JavaScript and TypeScript",
+ 	"main": "./dist/Prando.umd.js",
+ 	"module": "./dist/Prando.es.js",
+ 	"types": "./dist/Prando.d.ts",
++  "exports": {
++    "types": "./dist/Prando.d.ts",
++    "default": "./dist/Prando.es.js"
++  },
+ 	"scripts": {
+ 		"build": "rimraf dist && rollup -c",
+ 		"build:declarations": "tsc -d",
