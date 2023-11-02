@@ -38,7 +38,7 @@ export const initGpuGraphics: InitGraphicsFn<
   const gl = getGpuContext(canvas)
   invariant(gl)
 
-  const state = initWebgl(gl)
+  const state = initWebgl(gl, world.chunkSize)
 
   gl.bindBuffer(gl.ARRAY_BUFFER, state.buffers.square)
   gl.vertexAttribPointer(

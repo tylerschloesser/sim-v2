@@ -38,6 +38,7 @@ interface State {
 
 export function initWebgl(
   gl: WebGL2RenderingContext,
+  chunkSize: number,
 ): State {
   const shaders: Shaders = {
     vert: initShader(gl, gl.VERTEX_SHADER, vert),
@@ -67,7 +68,7 @@ export function initWebgl(
     },
     buffers: {
       square: initSquareBuffer(gl),
-      chunk: initChunkBuffer(gl),
+      chunk: initChunkBuffer(gl, chunkSize),
     },
   }
 
@@ -99,18 +100,55 @@ function initSquareBuffer(
 
 function initChunkBuffer(
   gl: WebGL2RenderingContext,
+  chunkSize: number,
 ): State['buffers']['chunk'] {
-  const vertex = gl.createBuffer()
-  invariant(vertex)
-  gl.bindBuffer(gl.ARRAY_BUFFER, vertex)
+  const vertexBuffer = gl.createBuffer()
+  invariant(vertexBuffer)
+  gl.bindBuffer(gl.ARRAY_BUFFER, vertexBuffer)
 
-  const index = gl.createBuffer()
-  invariant(index)
-  gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER, vertex)
+  const vertexes = new Float32Array(
+    (chunkSize + 1) ** 2 * 2,
+  )
+
+  for (let x = 0, i = 0; x < chunkSize + 1; x++) {
+    for (let y = 0; y < chunkSize + 1; y++) {
+      vertexes[i++] = x
+      vertexes[i++] = y
+    }
+  }
+
+  invariant(vertexes.length === (chunkSize + 1) ** 2 * 2)
+  invariant(vertexes.every((v) => typeof v === 'number'))
+
+  gl.bufferData(gl.ARRAY_BUFFER, vertexes, gl.STATIC_DRAW)
+
+  const indexBuffer = gl.createBuffer()
+  invariant(indexBuffer)
+  gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER, indexBuffer)
+
+  const indexes = new Uint8Array(chunkSize ** 2 * 4)
+  for (let i = 0; i < chunkSize ** 2; ) {
+    let x = i % chunkSize
+    let y = Math.floor(i / chunkSize)
+
+    indexes[i++] = y * chunkSize + x
+    indexes[i++] = y * chunkSize + x + 1
+    indexes[i++] = (y + 1) * chunkSize + x
+    indexes[i++] = (y + 1) * chunkSize + x + 1
+  }
+
+  invariant(indexes.length === chunkSize ** 2 * 4)
+  invariant(indexes.every((v) => typeof v === 'number'))
+
+  gl.bufferData(
+    gl.ELEMENT_ARRAY_BUFFER,
+    indexes,
+    gl.STATIC_DRAW,
+  )
 
   return {
-    vertex,
-    index,
+    vertex: vertexBuffer,
+    index: indexBuffer,
   }
 }
 
