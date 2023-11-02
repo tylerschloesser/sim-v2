@@ -29,6 +29,7 @@ export interface Chunk {
 }
 
 export interface World {
+  seed: string
   tickDuration: number
   chunkSize: number
   tick: number

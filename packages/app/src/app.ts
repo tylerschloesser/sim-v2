@@ -72,6 +72,7 @@ export async function initApp({
   let tileSize = getTileSize(camera, viewport)
 
   const world: World = {
+    seed: `${0}`,
     tickDuration: 100,
     chunkSize: 32,
     tick: 0,
