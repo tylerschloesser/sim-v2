@@ -12,6 +12,7 @@ import { mat4, vec3 } from 'gl-matrix'
 import invariant from 'tiny-invariant'
 import { checkInputLatency } from './check-input-latency.js'
 import { colorStringToArray } from './color.js'
+import { initSimulatorMessageHandler } from './init-simulator-message-handler.js'
 import { measureFps } from './measure-fps.js'
 import frag from './shaders/frag.glsl'
 import vert from './shaders/vert.glsl'
@@ -49,10 +50,21 @@ interface Context {
 
 export const initGpuGraphics: InitGraphicsFn<
   Omit<InitGraphicsArgs, 'executor' | 'strategy'>
-> = ({ canvas, appPort, world, ...args }) => {
+> = ({
+  canvas,
+  simulatorPort,
+  appPort,
+  world,
+  ...args
+}) => {
   let { viewport, camera } = args
 
   const controller = new AbortController()
+
+  initSimulatorMessageHandler({
+    world,
+    simulatorPort,
+  })
 
   const gl = getGpuContext(canvas)
   invariant(gl)

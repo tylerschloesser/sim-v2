@@ -8,11 +8,11 @@ import {
 } from '@sim-v2/types'
 import {
   TILE_TYPE_TO_COLOR,
-  getPosition,
   iterateTiles,
 } from '@sim-v2/world'
 import invariant from 'tiny-invariant'
 import { checkInputLatency } from './check-input-latency.js'
+import { initSimulatorMessageHandler } from './init-simulator-message-handler.js'
 import { measureFps } from './measure-fps.js'
 import { getCpuContext } from './util.js'
 
@@ -29,24 +29,15 @@ export const initCpuGraphics: InitGraphicsFn<
 
   const controller = new AbortController()
 
-  simulatorPort.addEventListener('message', (e) => {
-    const message = e.data as SimulatorMessage
-    switch (message.type) {
-      case SimulatorMessageType.SyncChunks: {
-        world.chunks = message.chunks
-        break
-      }
-      default: {
-        invariant(false)
-      }
-    }
+  initSimulatorMessageHandler({
+    world,
+    simulatorPort,
   })
-  simulatorPort.start()
 
   const context = getCpuContext(canvas)
   context.scale(viewport.pixelRatio, viewport.pixelRatio)
 
-  const render = measureFps(appPort, (time: number) => {
+  const render = measureFps(appPort, (_time: number) => {
     if (controller.signal.aborted) {
       return
     }
@@ -99,7 +90,7 @@ export const initCpuGraphics: InitGraphicsFn<
       checkInputLatency(appPort, time)
       camera = next
     },
-    setViewport(next: Viewport): void {
+    setViewport(_next: Viewport): void {
       invariant(false, 'TODO')
     },
   }
