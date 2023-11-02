@@ -4,7 +4,7 @@ import {
   InitGraphicsFn,
   Viewport,
 } from '@sim-v2/types'
-import { random } from '@sim-v2/util'
+import { memo, random } from '@sim-v2/util'
 import {
   TILE_TYPE_TO_COLOR,
   getPosition,
@@ -166,8 +166,8 @@ export const initGpuGraphics: InitGraphicsFn<
       //   continue
       // }
 
-      const color = random(
-        Object.values(TILE_TYPE_TO_COLOR),
+      const color = memo(`${chunk.id}.color`, () =>
+        random(Object.values(TILE_TYPE_TO_COLOR)),
       )
       gl.uniform4f(
         state.programs.main.uniforms.color,

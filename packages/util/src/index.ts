@@ -15,3 +15,11 @@ export function random<T>(arr: Array<T>): T {
   invariant(typeof value !== 'undefined')
   return value
 }
+
+export function memo<T extends string, U>(
+  fn: (key: T) => U,
+) {
+  return (key: T) => {
+    return fn(key)
+  }
+}
