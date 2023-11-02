@@ -181,10 +181,23 @@ export function initColorBuffer({
   invariant(buffer)
   gl.bindBuffer(gl.ARRAY_BUFFER, buffer)
 
-  const values = new Float32Array(chunkSize ** 2 * 4)
+  const values = new Float32Array((chunkSize + 1) ** 2 * 4)
 
-  let i = 0
-  for (const tile of chunk.tiles) {
+  for (let i = 0; i < values.length; ) {
+    const x = Math.floor(i / 4) % (chunkSize + 1)
+    const y = Math.floor(i / 4 / (chunkSize + 1))
+
+    if (x === chunkSize || y === chunkSize) {
+      i += 4
+      continue
+    }
+
+    invariant(x < chunkSize)
+    invariant(y < chunkSize)
+
+    const tile = chunk.tiles[y * chunkSize + x]
+    invariant(tile)
+
     const color = TILE_TYPE_TO_COLOR[tile.type]
     const [r, g, b, a] = colorStringToArray(color)
     values[i++] = r
@@ -193,7 +206,6 @@ export function initColorBuffer({
     values[i++] = a
   }
 
-  invariant(i === chunkSize ** 2 * 4)
   gl.bufferData(gl.ARRAY_BUFFER, values, gl.STATIC_DRAW)
   return buffer
 }
