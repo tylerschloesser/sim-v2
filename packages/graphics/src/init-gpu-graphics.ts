@@ -173,7 +173,7 @@ export const initGpuGraphics: InitGraphicsFn<
 
   const model = mat4.create()
 
-  const render = measureFps(appPort, (time: number) => {
+  const render = measureFps(appPort, (_time: number) => {
     if (controller.signal.aborted) {
       return
     }
@@ -207,7 +207,7 @@ export const initGpuGraphics: InitGraphicsFn<
       camera = next
       updateView()
     },
-    setViewport(next: Viewport): void {
+    setViewport(_next: Viewport): void {
       invariant(false, 'TODO')
     },
   }
