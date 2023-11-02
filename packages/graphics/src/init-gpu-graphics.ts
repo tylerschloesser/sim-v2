@@ -53,16 +53,6 @@ export const initGpuGraphics: InitGraphicsFn<
     syncChunkCallback,
   })
 
-  gl.bindBuffer(gl.ARRAY_BUFFER, state.buffers.chunk.index)
-  gl.vertexAttribPointer(
-    state.programs.main.attributes.vertex,
-    2,
-    gl.FLOAT,
-    false,
-    0,
-    0,
-  )
-
   gl.useProgram(state.programs.main.program)
 
   const projection = mat4.create()
@@ -137,10 +127,21 @@ export const initGpuGraphics: InitGraphicsFn<
   const model = mat4.create()
   const translate = vec3.create()
 
+  gl.bindBuffer(gl.ARRAY_BUFFER, state.buffers.square)
+  gl.vertexAttribPointer(
+    state.programs.main.attributes.vertex,
+    2,
+    gl.FLOAT,
+    false,
+    0,
+    0,
+  )
+
   const render = measureFps(appPort, (_time: number) => {
     if (controller.signal.aborted) {
       return
     }
+
     gl.clearColor(1, 1, 1, 1)
     gl.clear(gl.COLOR_BUFFER_BIT)
 
@@ -150,27 +151,31 @@ export const initGpuGraphics: InitGraphicsFn<
         continue
       }
 
-      // for (let { position, tile } of iterateTiles(
-      //   chunk,
-      //   world,
-      // )) {
-      //   const color = TILE_TYPE_TO_COLOR[tile.type]
-      //   // prettier-ignore
-      //   gl.uniform4f(
-      //     state.programs.main.uniforms.color,
-      //     ...colorStringToArray(color)
-      //   )
-      //   translate[0] = position.x
-      //   translate[1] = position.y
-      //   mat4.identity(model)
-      //   mat4.translate(model, model, translate)
-      //   gl.uniformMatrix4fv(
-      //     state.programs.main.uniforms.model,
-      //     false,
-      //     model,
-      //   )
-      //   gl.drawArrays(gl.TRIANGLE_STRIP, 0, 4)
-      // }
+      // gl.drawElements(
+      //   gl.TRIANGLE_STRIP,
+      //   0,
+
+      for (let { position, tile } of iterateTiles(
+        chunk,
+        world,
+      )) {
+        const color = TILE_TYPE_TO_COLOR[tile.type]
+        // prettier-ignore
+        gl.uniform4f(
+          state.programs.main.uniforms.color,
+          ...colorStringToArray(color)
+        )
+        translate[0] = position.x
+        translate[1] = position.y
+        mat4.identity(model)
+        mat4.translate(model, model, translate)
+        gl.uniformMatrix4fv(
+          state.programs.main.uniforms.model,
+          false,
+          model,
+        )
+        gl.drawArrays(gl.TRIANGLE_STRIP, 0, 4)
+      }
     }
 
     requestAnimationFrame(render)
