@@ -171,11 +171,7 @@ export const initGpuGraphics: InitGraphicsFn<
     gl.clear(gl.COLOR_BUFFER_BIT)
 
     mat4.identity(model)
-    mat4.translate(
-      model,
-      model,
-      vec3.fromValues(-0.5, -0.5, 0),
-    )
+    mat4.translate(model, model, vec3.fromValues(0, 0, 0))
 
     gl.uniformMatrix4fv(
       context.programs.main.uniforms.view,
