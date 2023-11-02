@@ -6,7 +6,11 @@ import {
   SimulatorMessageType,
   Viewport,
 } from '@sim-v2/types'
-import { getPosition, iterateTiles } from '@sim-v2/world'
+import {
+  TILE_TYPE_TO_COLOR,
+  getPosition,
+  iterateTiles,
+} from '@sim-v2/world'
 import invariant from 'tiny-invariant'
 import { checkInputLatency } from './check-input-latency.js'
 import { measureFps } from './measure-fps.js'
@@ -70,7 +74,7 @@ export const initCpuGraphics: InitGraphicsFn<
         chunk,
         world,
       )) {
-        context.fillStyle = 'pink'
+        context.fillStyle = TILE_TYPE_TO_COLOR[tile.type]
         context.fillRect(
           position.x * camera.tileSize,
           position.y * camera.tileSize,
@@ -79,9 +83,6 @@ export const initCpuGraphics: InitGraphicsFn<
         )
       }
     }
-
-    context.fillStyle = 'blue'
-    context.fillRect(0, 0, camera.tileSize, camera.tileSize)
 
     context.restore()
 
