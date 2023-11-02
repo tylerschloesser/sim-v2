@@ -13,7 +13,7 @@ import invariant from 'tiny-invariant'
 import { checkInputLatency } from './check-input-latency.js'
 import { colorStringToArray } from './color.js'
 import { initSimulatorMessageHandler } from './init-simulator-message-handler.js'
-import { initWebgl } from './init-webgl.js'
+import { initWebGL } from './init-webgl.js'
 import { measureFps } from './measure-fps.js'
 import { getGpuContext } from './util.js'
 
@@ -33,7 +33,7 @@ export const initGpuGraphics: InitGraphicsFn<
   const gl = getGpuContext(canvas)
   invariant(gl)
 
-  const state = initWebgl(gl, world.chunkSize)
+  const state = initWebGL(gl, world.chunkSize)
 
   initSimulatorMessageHandler({
     world,

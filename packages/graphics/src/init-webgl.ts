@@ -38,7 +38,7 @@ interface State {
   }
 }
 
-export function initWebgl(
+export function initWebGL(
   gl: WebGL2RenderingContext,
   chunkSize: number,
 ): State {
