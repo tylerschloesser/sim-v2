@@ -112,17 +112,31 @@ function initChunkBuffer(
   invariant(indexBuffer)
   gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER, indexBuffer)
 
-  const indexes = new Uint8Array(chunkSize ** 2 * 6)
+  const indexes = new Uint16Array(chunkSize ** 2 * 6)
 
   for (let y = 0, i = 0; y < chunkSize; y++) {
     for (let x = 0; x < chunkSize; x++) {
-      indexes[i++] = (y + 1) * (chunkSize + 1) + x
-      indexes[i++] = (y + 1) * (chunkSize + 1) + x + 1
-      indexes[i++] = y * (chunkSize + 1) + x
+      let a = (y + 1) * (chunkSize + 1) + x
+      let b = (y + 1) * (chunkSize + 1) + x + 1
+      let c = y * (chunkSize + 1) + x
 
-      indexes[i++] = y * (chunkSize + 1) + x + 1
-      indexes[i++] = (y + 1) * (chunkSize + 1) + x + 1
-      indexes[i++] = y * (chunkSize + 1) + x
+      let d = y * (chunkSize + 1) + x + 1
+      let e = (y + 1) * (chunkSize + 1) + x + 1
+      let f = y * (chunkSize + 1) + x
+
+      invariant(a >= 0 && a < 2 ** 16)
+      invariant(b >= 0 && b < 2 ** 16)
+      invariant(c >= 0 && c < 2 ** 16)
+      invariant(d >= 0 && d < 2 ** 16)
+      invariant(e >= 0 && e < 2 ** 16)
+      invariant(f >= 0 && f < 2 ** 16)
+
+      indexes[i++] = a
+      indexes[i++] = b
+      indexes[i++] = c
+      indexes[i++] = d
+      indexes[i++] = e
+      indexes[i++] = f
     }
   }
 

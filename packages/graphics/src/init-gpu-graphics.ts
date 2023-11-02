@@ -182,7 +182,7 @@ export const initGpuGraphics: InitGraphicsFn<
       gl.drawElements(
         gl.TRIANGLES,
         chunkSize ** 2 * 6,
-        gl.UNSIGNED_BYTE,
+        gl.UNSIGNED_SHORT,
         0,
       )
     }
