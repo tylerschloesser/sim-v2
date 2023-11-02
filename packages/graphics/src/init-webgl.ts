@@ -126,8 +126,8 @@ function initChunkBuffer(
     (chunkSize + 1) ** 2 * 2,
   )
 
-  for (let x = 0, i = 0; x < chunkSize + 1; x++) {
-    for (let y = 0; y < chunkSize + 1; y++) {
+  for (let y = 0, i = 0; y < chunkSize + 1; y++) {
+    for (let x = 0; x < chunkSize + 1; x++) {
       vertexes[i++] = x
       vertexes[i++] = y
     }
@@ -143,21 +143,21 @@ function initChunkBuffer(
   gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER, indexBuffer)
 
   const indexes = new Uint8Array(chunkSize ** 2 * 6)
-  for (let i = 0; i < chunkSize ** 2; ) {
-    let x = i % chunkSize
-    let y = Math.floor(i / chunkSize)
 
-    indexes[i++] = (y + 1) * (chunkSize + 1) + x
-    indexes[i++] = (y + 1) * (chunkSize + 1) + x + 1
-    indexes[i++] = y * (chunkSize + 1) + x
+  for (let y = 0, i = 0; y < chunkSize; y++) {
+    for (let x = 0; x < chunkSize; x++) {
+      indexes[i++] = (y + 1) * (chunkSize + 1) + x
+      indexes[i++] = (y + 1) * (chunkSize + 1) + x + 1
+      indexes[i++] = y * (chunkSize + 1) + x
 
-    indexes[i++] = y * (chunkSize + 1) + x + 1
-    indexes[i++] = (y + 1) * (chunkSize + 1) + x + 1
-    indexes[i++] = y * (chunkSize + 1) + x
+      indexes[i++] = y * (chunkSize + 1) + x + 1
+      indexes[i++] = (y + 1) * (chunkSize + 1) + x + 1
+      indexes[i++] = y * (chunkSize + 1) + x
+    }
   }
 
   invariant(indexes.length === chunkSize ** 2 * 6)
-  invariant(indexes.every((v) => typeof v === 'number'))
+  invariant(indexes.every((v) => v < vertexes.length / 2))
 
   gl.bufferData(
     gl.ELEMENT_ARRAY_BUFFER,
