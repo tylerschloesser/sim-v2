@@ -155,16 +155,6 @@ export const initGpuGraphics: InitGraphicsFn<
       view,
       view,
       vec3.fromValues(
-        camera.position.x,
-        camera.position.y,
-        0,
-      ),
-    )
-
-    mat4.translate(
-      view,
-      view,
-      vec3.fromValues(
         viewport.size.x / 2,
         viewport.size.y / 2,
         0,
@@ -175,6 +165,16 @@ export const initGpuGraphics: InitGraphicsFn<
       view,
       view,
       vec3.fromValues(camera.tileSize, camera.tileSize, 1),
+    )
+
+    mat4.translate(
+      view,
+      view,
+      vec3.fromValues(
+        camera.position.x,
+        camera.position.y,
+        0,
+      ),
     )
 
     gl.uniformMatrix4fv(
