@@ -16,7 +16,7 @@ import {
   SyncChunkCallbackFn,
   initSimulatorMessageHandler,
 } from './init-simulator-message-handler.js'
-import { initWebGL } from './init-webgl.js'
+import { initColorBuffer, initWebGL } from './init-webgl.js'
 import { measureFps } from './measure-fps.js'
 import { getGpuContext } from './util.js'
 
@@ -30,21 +30,21 @@ export const initGpuGraphics: InitGraphicsFn<
   ...args
 }) => {
   let { viewport, camera } = args
+  const { chunkSize } = world
 
   const controller = new AbortController()
 
   const gl = getGpuContext(canvas)
   invariant(gl)
 
-  const state = initWebGL(gl, world.chunkSize)
+  const state = initWebGL(gl, chunkSize)
 
   const syncChunkCallback: SyncChunkCallbackFn = (
     chunk,
   ) => {
-    console.log(
-      'TODO create color buffer for chunk',
-      chunk.id,
-    )
+    invariant(state.buffers.color[chunk.id] === undefined)
+    const buffer = initColorBuffer(gl, chunkSize, chunk)
+    state.buffers.color[chunk.id] = buffer
   }
 
   initSimulatorMessageHandler({

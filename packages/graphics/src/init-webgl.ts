@@ -1,4 +1,4 @@
-import { ChunkId } from '@sim-v2/world'
+import { Chunk, ChunkId } from '@sim-v2/world'
 import invariant from 'tiny-invariant'
 import frag from './shaders/frag.glsl'
 import vert from './shaders/vert.glsl'
@@ -153,6 +153,19 @@ function initChunkBuffer(
     vertex: vertexBuffer,
     index: indexBuffer,
   }
+}
+
+export function initColorBuffer(
+  gl: WebGL2RenderingContext,
+  chunkSize: number,
+  chunk: Chunk,
+): WebGLBuffer {
+  const buffer = gl.createBuffer()
+  invariant(buffer)
+
+  const values = new Float32Array()
+
+  return buffer
 }
 
 function initProgram(
