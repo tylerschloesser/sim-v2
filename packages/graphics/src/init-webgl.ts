@@ -29,6 +29,10 @@ interface State {
   }
   buffers: {
     square: WebGLBuffer
+    chunk: {
+      vertex: WebGLBuffer
+      index: WebGLBuffer
+    }
   }
 }
 
@@ -62,14 +66,15 @@ export function initWebgl(
       },
     },
     buffers: {
-      square: initBuffer(gl),
+      square: initSquareBuffer(gl),
+      chunk: initChunkBuffer(gl),
     },
   }
 
   return state
 }
 
-function initBuffer(
+function initSquareBuffer(
   gl: WebGL2RenderingContext,
 ): WebGLBuffer {
   const buffer = gl.createBuffer()
@@ -90,6 +95,23 @@ function initBuffer(
     gl.STATIC_DRAW,
   )
   return buffer
+}
+
+function initChunkBuffer(
+  gl: WebGL2RenderingContext,
+): State['buffers']['chunk'] {
+  const vertex = gl.createBuffer()
+  invariant(vertex)
+  gl.bindBuffer(gl.ARRAY_BUFFER, vertex)
+
+  const index = gl.createBuffer()
+  invariant(index)
+  gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER, vertex)
+
+  return {
+    vertex,
+    index,
+  }
 }
 
 function initProgram(
