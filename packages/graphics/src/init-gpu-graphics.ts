@@ -130,8 +130,9 @@ export const initGpuGraphics: InitGraphicsFn<
     projection,
   )
 
+  const view = mat4.create()
   function updateView() {
-    const view = mat4.create()
+    mat4.identity(view)
 
     mat4.translate(
       view,
@@ -175,8 +176,6 @@ export const initGpuGraphics: InitGraphicsFn<
     1,
   )
 
-  const model = mat4.create()
-
   const render = measureFps(appPort, (_time: number) => {
     if (controller.signal.aborted) {
       return
@@ -184,6 +183,7 @@ export const initGpuGraphics: InitGraphicsFn<
     gl.clearColor(1, 1, 1, 1)
     gl.clear(gl.COLOR_BUFFER_BIT)
 
+    const model = mat4.create()
     mat4.identity(model)
     mat4.translate(model, model, vec3.fromValues(0, 0, 0))
 
