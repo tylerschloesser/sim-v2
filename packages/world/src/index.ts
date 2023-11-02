@@ -55,6 +55,10 @@ export function* iterateTiles(chunk: Chunk, world: World) {
   const position = getPosition(chunk, world)
 
   invariant(chunk.tiles[0])
+
+  // reuse the object to minimize garbage collection
+  // because this is called every frame
+  //
   const current = {
     position: position.simple(),
     tile: chunk.tiles[0],
