@@ -130,10 +130,8 @@ export const initGpuGraphics: InitGraphicsFn<
     projection,
   )
 
-  const view = mat4.create()
-
   function updateView() {
-    mat4.identity(view)
+    const view = mat4.create()
 
     mat4.translate(
       view,
@@ -160,6 +158,12 @@ export const initGpuGraphics: InitGraphicsFn<
       view,
       vec3.fromValues(camera.tileSize, camera.tileSize, 1),
     )
+
+    gl.uniformMatrix4fv(
+      context.programs.main.uniforms.view,
+      false,
+      view,
+    )
   }
   updateView()
 
@@ -183,11 +187,6 @@ export const initGpuGraphics: InitGraphicsFn<
     mat4.identity(model)
     mat4.translate(model, model, vec3.fromValues(0, 0, 0))
 
-    gl.uniformMatrix4fv(
-      context.programs.main.uniforms.view,
-      false,
-      view,
-    )
     gl.uniformMatrix4fv(
       context.programs.main.uniforms.model,
       false,
