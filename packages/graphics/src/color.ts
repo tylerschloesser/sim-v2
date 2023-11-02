@@ -2,6 +2,7 @@ import Color from 'color'
 
 type ColorArray = [number, number, number, number]
 
+// TODO refactor to common memo function
 const cache = new Map<string, ColorArray>()
 
 export function colorStringToArray(
