@@ -85,11 +85,6 @@ export function initWebGL({
     },
   }
 
-  // TODO this assumes we'll only every have this single attribute
-  gl.enableVertexAttribArray(
-    state.programs.main.attributes.vertex,
-  )
-
   return state
 }
 

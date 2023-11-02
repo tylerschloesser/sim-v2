@@ -144,6 +144,9 @@ export const initGpuGraphics: InitGraphicsFn<
     gl.ELEMENT_ARRAY_BUFFER,
     state.buffers.chunk.index,
   )
+  gl.enableVertexAttribArray(
+    state.programs.main.attributes.vertex,
+  )
   gl.vertexAttribPointer(
     state.programs.main.attributes.vertex,
     2,
