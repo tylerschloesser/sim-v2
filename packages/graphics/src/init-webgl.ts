@@ -1,5 +1,10 @@
-import { Chunk, ChunkId } from '@sim-v2/world'
+import {
+  Chunk,
+  ChunkId,
+  TILE_TYPE_TO_COLOR,
+} from '@sim-v2/world'
 import invariant from 'tiny-invariant'
+import { colorStringToArray } from './color.js'
 import frag from './shaders/frag.glsl'
 import vert from './shaders/vert.glsl'
 
@@ -77,6 +82,11 @@ export function initWebGL({
       color: {},
     },
   }
+
+  // TODO this assumes we'll only every have this single attribute
+  gl.enableVertexAttribArray(
+    state.programs.main.attributes.vertex,
+  )
 
   return state
 }
@@ -169,9 +179,22 @@ export function initColorBuffer({
 }): WebGLBuffer {
   const buffer = gl.createBuffer()
   invariant(buffer)
+  gl.bindBuffer(gl.ARRAY_BUFFER, buffer)
 
-  const values = new Float32Array()
+  const values = new Float32Array(chunkSize ** 2 * 4)
 
+  let i = 0
+  for (const tile of chunk.tiles) {
+    const color = TILE_TYPE_TO_COLOR[tile.type]
+    const [r, g, b, a] = colorStringToArray(color)
+    values[i++] = r
+    values[i++] = g
+    values[i++] = b
+    values[i++] = a
+  }
+
+  invariant(i === chunkSize ** 2 * 4)
+  gl.bufferData(gl.ARRAY_BUFFER, values, gl.STATIC_DRAW)
   return buffer
 }
 

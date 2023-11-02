@@ -53,7 +53,7 @@ export const initGpuGraphics: InitGraphicsFn<
     syncChunkCallback,
   })
 
-  gl.bindBuffer(gl.ARRAY_BUFFER, state.buffers.square)
+  gl.bindBuffer(gl.ARRAY_BUFFER, state.buffers.chunk.index)
   gl.vertexAttribPointer(
     state.programs.main.attributes.vertex,
     2,
@@ -61,10 +61,6 @@ export const initGpuGraphics: InitGraphicsFn<
     false,
     0,
     0,
-  )
-  // TODO study this and figure out where it should go
-  gl.enableVertexAttribArray(
-    state.programs.main.attributes.vertex,
   )
 
   gl.useProgram(state.programs.main.program)
@@ -149,30 +145,32 @@ export const initGpuGraphics: InitGraphicsFn<
     gl.clear(gl.COLOR_BUFFER_BIT)
 
     for (const chunk of Object.values(world.chunks)) {
-      for (let { position, tile } of iterateTiles(
-        chunk,
-        world,
-      )) {
-        const color = TILE_TYPE_TO_COLOR[tile.type]
-        // prettier-ignore
-        gl.uniform4f(
-          state.programs.main.uniforms.color,
-          ...colorStringToArray(color)
-        )
-
-        translate[0] = position.x
-        translate[1] = position.y
-
-        mat4.identity(model)
-        mat4.translate(model, model, translate)
-
-        gl.uniformMatrix4fv(
-          state.programs.main.uniforms.model,
-          false,
-          model,
-        )
-        gl.drawArrays(gl.TRIANGLE_STRIP, 0, 4)
+      const color = state.buffers.color[chunk.id]
+      if (!color) {
+        continue
       }
+
+      // for (let { position, tile } of iterateTiles(
+      //   chunk,
+      //   world,
+      // )) {
+      //   const color = TILE_TYPE_TO_COLOR[tile.type]
+      //   // prettier-ignore
+      //   gl.uniform4f(
+      //     state.programs.main.uniforms.color,
+      //     ...colorStringToArray(color)
+      //   )
+      //   translate[0] = position.x
+      //   translate[1] = position.y
+      //   mat4.identity(model)
+      //   mat4.translate(model, model, translate)
+      //   gl.uniformMatrix4fv(
+      //     state.programs.main.uniforms.model,
+      //     false,
+      //     model,
+      //   )
+      //   gl.drawArrays(gl.TRIANGLE_STRIP, 0, 4)
+      // }
     }
 
     requestAnimationFrame(render)
