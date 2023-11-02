@@ -1,6 +1,11 @@
-// TODO why does this not work if "mediump" is not specified?
-uniform mediump vec4 uColor;
+#version 300 es
+
+// TODO figure out why I need this
+precision mediump float;
+
+flat in vec4 vColor;
+out vec4 color;
 
 void main() {
-  gl_FragColor = uColor;
+  color = vColor;
 }

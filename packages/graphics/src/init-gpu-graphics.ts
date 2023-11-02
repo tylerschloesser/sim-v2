@@ -7,13 +7,11 @@ import {
 import { memo, random } from '@sim-v2/util'
 import {
   TILE_TYPE_TO_COLOR,
-  TileType,
   getPosition,
 } from '@sim-v2/world'
 import { mat4, vec3 } from 'gl-matrix'
 import invariant from 'tiny-invariant'
 import { checkInputLatency } from './check-input-latency.js'
-import { colorStringToArray } from './color.js'
 import {
   SyncChunkCallbackFn,
   initSimulatorMessageHandler,
@@ -169,16 +167,29 @@ export const initGpuGraphics: InitGraphicsFn<
     gl.clear(gl.COLOR_BUFFER_BIT)
 
     for (const chunk of Object.values(world.chunks)) {
-      // const color = state.buffers.color[chunk.id]
-      // if (!color) {
-      //   continue
-      // }
+      const color = state.buffers.color[chunk.id]
+      if (!color) {
+        continue
+      }
 
-      const color = getRandomColor(chunk.id)
-      gl.uniform4f(
-        state.programs.main.uniforms.color,
-        ...colorStringToArray(color),
+      gl.bindBuffer(gl.ARRAY_BUFFER, color)
+      gl.enableVertexAttribArray(
+        state.programs.main.attributes.color,
       )
+      gl.vertexAttribPointer(
+        state.programs.main.attributes.color,
+        4,
+        gl.FLOAT,
+        false,
+        0,
+        0,
+      )
+
+      // const color = getRandomColor(chunk.id)
+      // gl.uniform4f(
+      //   state.programs.main.uniforms.color,
+      //   ...colorStringToArray(color),
+      // )
 
       const position = getPosition(chunk, world)
       translate[0] = position.x
