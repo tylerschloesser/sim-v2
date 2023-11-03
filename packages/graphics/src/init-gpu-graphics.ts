@@ -142,6 +142,11 @@ export const initGpuGraphics: InitGraphicsFn<
       callbacks?.reportInputLatency?.(now - time)
       camera = next
       updateView(camera, viewport)
+      gl.uniformMatrix4fv(
+        state.programs.main.uniforms.view,
+        false,
+        view,
+      )
     },
     setViewport(_next: Viewport): void {
       invariant(false, 'TODO')
