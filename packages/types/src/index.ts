@@ -1,5 +1,6 @@
 import { SimpleVec2, Vec2 } from '@sim-v2/math'
 import { World } from '@sim-v2/world'
+import * as z from 'zod'
 
 export interface Viewport<V = Vec2> {
   size: V
@@ -10,6 +11,13 @@ export interface Camera<V = Vec2> {
   position: V
   zoom: number
 }
+
+export const SimpleCamera = z.object({
+  position: SimpleVec2,
+  zoom: z.number(),
+})
+
+export type SimpleCamera = z.infer<typeof SimpleCamera>
 
 export enum Executor {
   Local = 'main',

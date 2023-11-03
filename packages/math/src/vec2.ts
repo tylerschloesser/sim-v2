@@ -1,4 +1,12 @@
 import invariant from 'tiny-invariant'
+import * as z from 'zod'
+
+export const SimpleVec2 = z.object({
+  x: z.number(),
+  y: z.number(),
+})
+
+export type SimpleVec2 = z.infer<typeof SimpleVec2>
 
 export class Vec2 {
   x: number
@@ -41,9 +49,4 @@ export class Vec2 {
     invariant(s !== 0)
     return new Vec2(this.x / s, this.y / s)
   }
-}
-
-export type SimpleVec2 = {
-  x: number
-  y: number
 }
