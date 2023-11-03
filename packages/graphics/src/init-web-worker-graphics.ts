@@ -48,6 +48,12 @@ export function initWebWorkerGraphics({
           callbacks?.reportFps?.(message.fps)
           break
         }
+        case CallbackMessageType.ReportInputLatency: {
+          callbacks?.reportInputLatency?.(
+            message.inputLatency,
+          )
+          break
+        }
         default: {
           invariant(false)
         }

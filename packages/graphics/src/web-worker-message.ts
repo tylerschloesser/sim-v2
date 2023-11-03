@@ -40,6 +40,7 @@ export type Message =
 
 export enum CallbackMessageType {
   ReportFps = 'report-fps',
+  ReportInputLatency = 'report-input-latency',
 }
 
 export interface ReportFpsCallbackMessage {
@@ -47,4 +48,11 @@ export interface ReportFpsCallbackMessage {
   fps: number
 }
 
-export type CallbackMessage = ReportFpsCallbackMessage
+export interface ReportInputLatencyCallbackMessage {
+  type: CallbackMessageType.ReportInputLatency
+  inputLatency: number
+}
+
+export type CallbackMessage =
+  | ReportFpsCallbackMessage
+  | ReportInputLatencyCallbackMessage

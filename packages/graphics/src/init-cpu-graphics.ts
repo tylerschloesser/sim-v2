@@ -10,7 +10,6 @@ import {
   iterateTiles,
 } from '@sim-v2/world'
 import invariant from 'tiny-invariant'
-import { checkInputLatency } from './check-input-latency.js'
 import { initSimulatorMessageHandler } from './init-simulator-message-handler.js'
 import { measureFps } from './measure-fps.js'
 import { getCpuContext } from './util.js'
@@ -92,7 +91,8 @@ export const initCpuGraphics: InitGraphicsFn<
       controller.abort()
     },
     setCamera(next: Camera, time: number): void {
-      checkInputLatency(appPort, time)
+      const now = performance.timeOrigin + performance.now()
+      callbacks?.reportInputLatency?.(now - time)
       camera = next
       tileSize = getTileSize(camera, viewport)
     },

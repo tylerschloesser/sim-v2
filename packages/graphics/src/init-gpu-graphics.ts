@@ -6,7 +6,6 @@ import {
 } from '@sim-v2/types'
 import { getPosition } from '@sim-v2/world'
 import invariant from 'tiny-invariant'
-import { checkInputLatency } from './check-input-latency.js'
 import { initMatrices } from './init-matricies.js'
 import {
   SyncChunkCallbackFn,
@@ -139,7 +138,8 @@ export const initGpuGraphics: InitGraphicsFn<
       controller.abort()
     },
     setCamera(next: Camera, time: number): void {
-      checkInputLatency(appPort, time)
+      const now = performance.timeOrigin + performance.now()
+      callbacks?.reportInputLatency?.(now - time)
       camera = next
       updateView(camera, viewport)
     },

@@ -2,16 +2,16 @@ import {
   Executor,
   GraphicsStrategy,
   ReportFpsFn,
+  ReportInputLatencyFn,
 } from '@sim-v2/types'
 import invariant from 'tiny-invariant'
 import { initApp } from './app.js'
 import './index.scss'
+import { AppConfig, AppSettings } from './types.js'
 import {
-  AppConfig,
-  AppSettings,
-  InputLatencyCallback,
-} from './types.js'
-import { getPixelRatio } from './util.js'
+  averageInputLatency,
+  getPixelRatio,
+} from './util.js'
 
 const elements = {
   fps: getSpan('.fps .value'),
@@ -27,18 +27,18 @@ const reportFps: ReportFpsFn = (fps) => {
   elements.fps.innerText = `${fps}`
 }
 
-const inputLatencyCallback: InputLatencyCallback = (
+const reportInputLatency: ReportInputLatencyFn = (
   inputLatency,
 ) => {
-  elements.inputLatency.innerText = `${inputLatency.toFixed(
-    2,
-  )}ms`
+  elements.inputLatency.innerText = `${averageInputLatency(
+    inputLatency,
+  ).toFixed(2)}ms`
 }
 
 const config: AppConfig = {
   pixelRatio,
   reportFps,
-  inputLatencyCallback,
+  reportInputLatency,
 }
 
 const DEFAULT_SETTINGS: AppSettings = {

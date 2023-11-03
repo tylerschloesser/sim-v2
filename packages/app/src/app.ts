@@ -5,7 +5,6 @@ import { initSimulator } from '@sim-v2/simulator'
 import { Camera, Viewport } from '@sim-v2/types'
 import { World } from '@sim-v2/world'
 import { initCanvasEventListeners } from './init-canvas-event-listeners.js'
-import { initGraphicsMessageHandler } from './init-graphics-message-handler.js'
 import { App, AppConfig, AppSettings } from './types.js'
 
 export async function initApp({
@@ -56,6 +55,7 @@ export async function initApp({
     appPort: ports.graphics.appPort,
     callbacks: {
       reportFps: config.reportFps,
+      reportInputLatency: config.reportInputLatency,
     },
   })
 
@@ -66,11 +66,6 @@ export async function initApp({
     camera,
     graphicsPort: ports.simulator.graphicsPort,
     appPort: ports.simulator.appPort,
-  })
-
-  initGraphicsMessageHandler({
-    config,
-    graphicsPort: ports.app.graphicsPort,
   })
 
   initCanvasEventListeners({

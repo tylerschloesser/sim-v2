@@ -7,6 +7,7 @@ import {
   Message,
   MessageType,
   ReportFpsCallbackMessage,
+  ReportInputLatencyCallbackMessage,
 } from './web-worker-message.js'
 
 let graphics: Graphics | null = null
@@ -23,6 +24,14 @@ self.addEventListener('message', (e) => {
             type: CallbackMessageType.ReportFps,
             fps,
           }
+          self.postMessage(message)
+        },
+        reportInputLatency(inputLatency) {
+          const message: ReportInputLatencyCallbackMessage =
+            {
+              type: CallbackMessageType.ReportInputLatency,
+              inputLatency,
+            }
           self.postMessage(message)
         },
       }
