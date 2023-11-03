@@ -65,6 +65,28 @@ export const initGpuGraphics: InitGraphicsFn<
     2, gl.FLOAT, false, 0, 0,
   )
 
+  const animate: Record<
+    ChunkId,
+    {
+      start: number
+      duration: number
+    }
+  > = {}
+
+  function addChunk(chunk: Chunk): void {
+    invariant(!world.chunks[chunk.id])
+    invariant(!state.buffers.color[chunk.id])
+    invariant(!animate[chunk.id])
+
+    const buffer = initColorBuffer({
+      gl,
+      chunkSize,
+      chunk,
+    })
+    state.buffers.color[chunk.id] = buffer
+    world.chunks[chunk.id] = chunk
+  }
+
   const render = measureFps(
     callbacks?.reportFps,
     (_time: number) => {
@@ -137,14 +159,7 @@ export const initGpuGraphics: InitGraphicsFn<
     syncChunks(chunks: Record<ChunkId, Chunk>): void {
       for (const chunk of Object.values(chunks)) {
         if (!world.chunks[chunk.id]) {
-          invariant(!state.buffers.color[chunk.id])
-          const buffer = initColorBuffer({
-            gl,
-            chunkSize,
-            chunk,
-          })
-          state.buffers.color[chunk.id] = buffer
-          world.chunks[chunk.id] = chunk
+          addChunk(chunk)
         }
       }
     },
