@@ -92,9 +92,9 @@ export const initCpuGraphics: InitGraphicsFn<
       for (const [chunkId, chunk] of Object.entries(
         chunks,
       )) {
-        invariant(!world.chunks[chunkId])
-        console.log('synced', chunkId)
-        world.chunks[chunkId] = chunk
+        if (!world.chunks[chunkId]) {
+          world.chunks[chunkId] = chunk
+        }
       }
     },
   }
