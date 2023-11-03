@@ -3,10 +3,9 @@ import { InitSimulatorArgs, Simulator } from '@sim-v2/types'
 import invariant from 'tiny-invariant'
 import { initLocalSimulator } from './init-local-simulator.js'
 import {
-  CallbackMessageType,
+  InitResponseMessage,
   Message,
   MessageType,
-  SetWorldCallbackMessage,
 } from './web-worker-message.js'
 
 let simulator: Simulator | null = null
@@ -15,7 +14,7 @@ self.addEventListener('message', async (e) => {
   const message = e.data as Message
 
   switch (message.type) {
-    case MessageType.Init: {
+    case MessageType.InitRequest: {
       invariant(simulator === null)
 
       const callbacks = initCallbacks()
@@ -33,7 +32,11 @@ self.addEventListener('message', async (e) => {
         callbacks,
       })
 
-      callbacks.setWorld(simulator.world)
+      const response: InitResponseMessage = {
+        type: MessageType.InitResponse,
+        world: simulator.world,
+      }
+      self.postMessage(response)
 
       break
     }
@@ -49,13 +52,5 @@ self.addEventListener('message', async (e) => {
 })
 
 function initCallbacks(): InitSimulatorArgs['callbacks'] {
-  return {
-    setWorld(world) {
-      const message: SetWorldCallbackMessage = {
-        type: CallbackMessageType.SetWorld,
-        world,
-      }
-      self.postMessage(message)
-    },
-  }
+  return {}
 }

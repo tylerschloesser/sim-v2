@@ -2,6 +2,10 @@
   font-family: system-ui;
 }
 
+:root {
+  --background-panel: hsla(0, 0%, 100%, 0.5);
+}
+
 body {
   margin: 0;
 }
@@ -17,10 +21,12 @@ canvas {
   width: 100dvw;
   display: flex;
   justify-content: space-between;
+  background: var(--background-panel);
 }
 
 .info {
   position: fixed;
   width: 100dvw;
   bottom: env(safe-area-inset-bottom);
+  background: var(--background-panel);
 }

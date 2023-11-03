@@ -7,13 +7,13 @@ import {
 import { World } from '@sim-v2/world'
 import invariant from 'tiny-invariant'
 import {
-  CallbackMessage,
-  CallbackMessageType,
-  InitMessage,
+  InitRequestMessage,
   LogWorldMessage,
+  Message,
   MessageType,
   SetCameraMessage,
   SetViewportMessage,
+  StartMessage,
 } from './web-worker-message.js'
 
 export const initWebWorkerSimulator: InitSimulatorFn<
@@ -26,58 +26,41 @@ export const initWebWorkerSimulator: InitSimulatorFn<
   const controller = new AbortController()
   const { signal } = controller
 
-  const init: InitMessage = {
-    type: MessageType.Init,
+  const init: InitRequestMessage = {
+    type: MessageType.InitRequest,
     ...args,
   }
 
-  const promise = new Promise<World>((resolve) => {
+  const world = new Promise<World>((resolve, reject) => {
+    const timeout = setTimeout(() => {
+      reject('timeout')
+    }, 1000)
     worker.addEventListener(
       'message',
       (e) => {
-        const message = e.data as CallbackMessage
-        invariant(
-          message.type === CallbackMessageType.SetWorld,
-        )
+        clearTimeout(timeout)
+        const message = e.data as Message
+        invariant(message.type === MessageType.InitResponse)
         resolve(message.world)
       },
       { once: true, signal },
     )
   })
 
-  let first: boolean = true
-  worker.addEventListener(
-    'message',
-    (e) => {
-      if (first) {
-        // ignore the first message, it's handled above
-        first = false
-        return
-      }
-      const message = e.data as CallbackMessage
-      switch (message.type) {
-        case CallbackMessageType.SetWorld: {
-          callbacks.setWorld(world)
-          break
-        }
-        default: {
-          invariant(false)
-        }
-      }
-    },
-    { signal },
-  )
+  worker.postMessage(init)
 
   signal.addEventListener('abort', () => {
     worker.terminate()
   })
 
-  worker.postMessage(init)
-
-  let world = await promise
-
   return {
-    world,
+    world: await world,
+    start(): void {
+      const message: StartMessage = {
+        type: MessageType.Start,
+      }
+      worker.postMessage(message)
+    },
     stop(): void {
       controller.abort()
     },

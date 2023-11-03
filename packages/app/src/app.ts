@@ -39,11 +39,7 @@ export async function initApp({
     executor: settings.executor.simulator,
     viewport,
     camera,
-    callbacks: {
-      setWorld(_world) {
-        invariant(false, 'TODO')
-      },
-    },
+    callbacks: {},
   })
 
   let { world } = simulator

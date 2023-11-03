@@ -7,18 +7,29 @@ import {
 import { World } from '@sim-v2/world'
 
 export enum MessageType {
-  Init = 'init',
+  InitRequest = 'init-request',
+  InitResponse = 'init-response',
+  Start = 'start',
   SetCamera = 'set-camera',
   SetViewport = 'set-viewport',
   LogWorld = 'log-world',
 }
 
-export type InitMessage = {
-  type: MessageType.Init
+export type InitRequestMessage = {
+  type: MessageType.InitRequest
 } & Omit<
   InitSimulatorArgs<SimpleVec2>,
   'executor' | 'callbacks'
 >
+
+export interface InitResponseMessage {
+  type: MessageType.InitResponse
+  world: World
+}
+
+export interface StartMessage {
+  type: MessageType.Start
+}
 
 export interface SetCameraMessage {
   type: MessageType.SetCamera
@@ -35,18 +46,9 @@ export interface LogWorldMessage {
 }
 
 export type Message =
-  | InitMessage
+  | InitRequestMessage
+  | InitResponseMessage
+  | StartMessage
   | SetCameraMessage
   | SetViewportMessage
   | LogWorldMessage
-
-export enum CallbackMessageType {
-  SetWorld = 'set-world',
-}
-
-export interface SetWorldCallbackMessage {
-  type: CallbackMessageType.SetWorld
-  world: World
-}
-
-export type CallbackMessage = SetWorldCallbackMessage

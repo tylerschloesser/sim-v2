@@ -20,9 +20,7 @@ export interface InitSimulatorArgs<V = Vec2> {
   executor: Executor
   viewport: Viewport<V>
   camera: Camera<V>
-  callbacks: {
-    setWorld(world: World): void
-  }
+  callbacks: {}
 }
 
 export type InitSimulatorFn<T = InitSimulatorArgs> = (
@@ -31,6 +29,7 @@ export type InitSimulatorFn<T = InitSimulatorArgs> = (
 
 export interface Simulator {
   world: World
+  start(): void
   setViewport(viewport: Viewport): void
   setCamera(camera: Camera): void
   logWorld(): void

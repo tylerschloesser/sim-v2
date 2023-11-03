@@ -1,7 +1,7 @@
 import {
-  Camera,
   InitSimulatorArgs,
   InitSimulatorFn,
+  Simulator,
 } from '@sim-v2/types'
 import {
   WorldUpdate,
@@ -13,9 +13,7 @@ import { generateWorld } from './generate-world.js'
 
 export const initLocalSimulator: InitSimulatorFn<
   Omit<InitSimulatorArgs, 'executor'>
-> = async ({ ...args }) => {
-  let { camera, viewport } = args
-
+> = async () => {
   const world = generateWorld({
     id: 'test',
     seed: `${0}`,
@@ -24,28 +22,36 @@ export const initLocalSimulator: InitSimulatorFn<
   const controller = new AbortController()
   const { signal } = controller
 
-  const interval = setInterval(() => {
-    const updates: WorldUpdate[] = []
+  let started: boolean = false
+  let interval: number | undefined
 
-    updates.push({
-      type: WorldUpdateType.Tick,
-      tick: world.tick + 1,
-    })
+  const start: Simulator['start'] = () => {
+    invariant(started === false)
+    started = true
+    interval = self.setInterval(() => {
+      const updates: WorldUpdate[] = []
 
-    applyWorldUpdates(world, updates)
-  }, world.tickDuration)
+      updates.push({
+        type: WorldUpdateType.Tick,
+        tick: world.tick + 1,
+      })
+
+      applyWorldUpdates(world, updates)
+    }, world.tickDuration)
+  }
 
   signal.addEventListener('abort', () => {
-    clearInterval(interval)
+    self.clearInterval(interval)
   })
 
   return {
     world,
+    start,
     stop(): void {
       controller.abort()
     },
-    setCamera(next: Camera): void {
-      camera = next
+    setCamera(): void {
+      invariant(false, 'TODO')
     },
     setViewport() {
       invariant(false, 'TODO')
