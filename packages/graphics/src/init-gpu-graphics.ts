@@ -130,7 +130,16 @@ export const initGpuGraphics: InitGraphicsFn<
       invariant(false, 'TODO')
     },
     syncChunks(chunks: Record<ChunkId, Chunk>): void {
-      console.log('TODO')
+      for (const chunk of Object.values(chunks)) {
+        if (!state.buffers.color[chunk.id]) {
+          const buffer = initColorBuffer({
+            gl,
+            chunkSize,
+            chunk,
+          })
+          state.buffers.color[chunk.id] = buffer
+        }
+      }
     },
   }
 }
