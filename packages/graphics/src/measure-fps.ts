@@ -1,10 +1,7 @@
-import {
-  FpsGraphicsMessage,
-  GraphicsMessageType,
-} from '@sim-v2/types'
+import { ReportFpsFn } from '@sim-v2/types'
 
 export function measureFps(
-  appPort: MessagePort,
+  reportFps: ReportFpsFn | undefined,
   renderFn: (time: number) => void,
 ) {
   let frames = 0
@@ -16,12 +13,7 @@ export function measureFps(
     prev = time
     elapsed += delta
     if (elapsed >= 1000) {
-      const message: FpsGraphicsMessage = {
-        type: GraphicsMessageType.Fps,
-        fps: frames,
-      }
-      appPort.postMessage(message)
-
+      reportFps?.(frames)
       elapsed = elapsed - 1000
       frames = 0
     }

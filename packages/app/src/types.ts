@@ -3,6 +3,7 @@ import {
   Camera,
   Executor,
   GraphicsStrategy,
+  ReportFpsFn,
   Viewport,
 } from '@sim-v2/types'
 import { z } from 'zod'
@@ -18,14 +19,13 @@ export const AppSettings = z.object({
 })
 export type AppSettings = z.infer<typeof AppSettings>
 
-export type FpsCallbackFn = (fps: number) => void
 export type InputLatencyCallback = (
   inputLatency: number,
 ) => void
 
 export interface AppConfig {
   pixelRatio: number
-  fpsCallback?: FpsCallbackFn
+  reportFps?: ReportFpsFn
   inputLatencyCallback?: InputLatencyCallback
 }
 

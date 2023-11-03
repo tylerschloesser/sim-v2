@@ -23,6 +23,7 @@ export const initGpuGraphics: InitGraphicsFn<
   simulatorPort,
   appPort,
   world,
+  callbacks,
   ...args
 }) => {
   let { viewport, camera } = args
@@ -87,47 +88,50 @@ export const initGpuGraphics: InitGraphicsFn<
     2, gl.FLOAT, false, 0, 0,
   )
 
-  const render = measureFps(appPort, (_time: number) => {
-    if (controller.signal.aborted) {
-      return
-    }
-
-    gl.clearColor(1, 1, 1, 1)
-    gl.clear(gl.COLOR_BUFFER_BIT)
-
-    for (const chunk of Object.values(world.chunks)) {
-      const color = state.buffers.color[chunk.id]
-      if (!color) {
-        continue
+  const render = measureFps(
+    callbacks?.reportFps,
+    (_time: number) => {
+      if (controller.signal.aborted) {
+        return
       }
 
-      gl.bindBuffer(gl.ARRAY_BUFFER, color)
-      gl.enableVertexAttribArray(
-        state.programs.main.attributes.color,
-      )
-      // prettier-ignore
-      gl.vertexAttribPointer(
+      gl.clearColor(1, 1, 1, 1)
+      gl.clear(gl.COLOR_BUFFER_BIT)
+
+      for (const chunk of Object.values(world.chunks)) {
+        const color = state.buffers.color[chunk.id]
+        if (!color) {
+          continue
+        }
+
+        gl.bindBuffer(gl.ARRAY_BUFFER, color)
+        gl.enableVertexAttribArray(
+          state.programs.main.attributes.color,
+        )
+        // prettier-ignore
+        gl.vertexAttribPointer(
         state.programs.main.attributes.color,
         4, gl.FLOAT, false, 0, 0,
       )
 
-      updateModel(getPosition(chunk, world))
-      gl.uniformMatrix4fv(
-        state.programs.main.uniforms.model,
-        false,
-        model,
-      )
+        updateModel(getPosition(chunk, world))
+        gl.uniformMatrix4fv(
+          state.programs.main.uniforms.model,
+          false,
+          model,
+        )
 
-      gl.drawElements(
-        gl.TRIANGLES,
-        chunkSize ** 2 * 6,
-        gl.UNSIGNED_SHORT,
-        0,
-      )
-    }
+        gl.drawElements(
+          gl.TRIANGLES,
+          chunkSize ** 2 * 6,
+          gl.UNSIGNED_SHORT,
+          0,
+        )
+      }
 
-    requestAnimationFrame(render)
-  })
+      requestAnimationFrame(render)
+    },
+  )
   requestAnimationFrame(render)
 
   return {

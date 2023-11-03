@@ -4,21 +4,29 @@ import {
   InitGraphicsArgs,
   Viewport,
 } from '@sim-v2/types'
+import invariant from 'tiny-invariant'
 import {
+  CallbackMessage,
+  CallbackMessageType,
   InitMessage,
   MessageType,
   SetCameraMessage,
   SetViewportMessage,
 } from './web-worker-message.js'
 
-export function initWebWorkerGraphics(
-  args: Omit<InitGraphicsArgs, 'executor' | 'canvas'> & {
-    canvas: OffscreenCanvas
-  },
-): Graphics {
+export function initWebWorkerGraphics({
+  callbacks,
+  ...args
+}: Omit<
+  InitGraphicsArgs<OffscreenCanvas>,
+  'executor'
+>): Graphics {
   const worker = new Worker(
     new URL('./web-worker-entry.js', import.meta.url),
   )
+
+  const controller = new AbortController()
+  const { signal } = controller
 
   const init: InitMessage = {
     type: MessageType.Init,
@@ -31,9 +39,30 @@ export function initWebWorkerGraphics(
     init.appPort,
   ])
 
+  worker.addEventListener(
+    'message',
+    (e) => {
+      const message = e.data as CallbackMessage
+      switch (message.type) {
+        case CallbackMessageType.ReportFps: {
+          callbacks?.reportFps?.(message.fps)
+          break
+        }
+        default: {
+          invariant(false)
+        }
+      }
+    },
+    { signal },
+  )
+
+  signal.addEventListener('abort', () => {
+    worker.terminate()
+  })
+
   return {
     stop() {
-      worker.terminate()
+      controller.abort()
     },
     setCamera(camera: Camera, time: number) {
       const message: SetCameraMessage = {

@@ -37,3 +37,14 @@ export type Message =
   | InitMessage
   | SetCameraMessage
   | SetViewportMessage
+
+export enum CallbackMessageType {
+  ReportFps = 'report-fps',
+}
+
+export interface ReportFpsCallbackMessage {
+  type: CallbackMessageType.ReportFps
+  fps: number
+}
+
+export type CallbackMessage = ReportFpsCallbackMessage

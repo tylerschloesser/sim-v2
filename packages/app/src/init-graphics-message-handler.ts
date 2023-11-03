@@ -32,10 +32,6 @@ export function initGraphicsMessageHandler({
   graphicsPort.addEventListener('message', (e) => {
     const message = e.data as GraphicsMessage
     switch (message.type) {
-      case GraphicsMessageType.Fps: {
-        config.fpsCallback?.(message.fps)
-        break
-      }
       case GraphicsMessageType.InputLatency: {
         config.inputLatencyCallback?.(
           averageInputLatency(message.inputLatency),

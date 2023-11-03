@@ -1,11 +1,14 @@
-import { Executor, GraphicsStrategy } from '@sim-v2/types'
+import {
+  Executor,
+  GraphicsStrategy,
+  ReportFpsFn,
+} from '@sim-v2/types'
 import invariant from 'tiny-invariant'
 import { initApp } from './app.js'
 import './index.scss'
 import {
   AppConfig,
   AppSettings,
-  FpsCallbackFn,
   InputLatencyCallback,
 } from './types.js'
 import { getPixelRatio } from './util.js'
@@ -20,7 +23,7 @@ const elements = {
 const pixelRatio = getPixelRatio()
 elements.dpr.innerText = `${pixelRatio}`
 
-const fpsCallback: FpsCallbackFn = (fps) => {
+const reportFps: ReportFpsFn = (fps) => {
   elements.fps.innerText = `${fps}`
 }
 
@@ -34,7 +37,7 @@ const inputLatencyCallback: InputLatencyCallback = (
 
 const config: AppConfig = {
   pixelRatio,
-  fpsCallback,
+  reportFps,
   inputLatencyCallback,
 }
 

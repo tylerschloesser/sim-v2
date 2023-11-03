@@ -47,15 +47,26 @@ export enum GraphicsStrategy {
   Gpu = 'gpu',
 }
 
-export interface InitGraphicsArgs {
+export type ReportFpsFn = (fps: number) => void
+export type ReportInputLatencyFn = (
+  inputLatency: number,
+) => void
+
+export interface InitGraphicsArgs<
+  T = HTMLCanvasElement | OffscreenCanvas,
+> {
   executor: Executor
   strategy: GraphicsStrategy
   world: World
-  canvas: HTMLCanvasElement | OffscreenCanvas
+  canvas: T
   viewport: Viewport
   camera: Camera
   simulatorPort: MessagePort
   appPort: MessagePort
+  callbacks?: {
+    reportFps?: ReportFpsFn
+    reportInputLatency?: ReportInputLatencyFn
+  }
 }
 
 export type InitGraphicsFn<T = InitGraphicsArgs> = (

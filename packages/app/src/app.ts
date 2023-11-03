@@ -54,6 +54,9 @@ export async function initApp({
     camera,
     simulatorPort: ports.graphics.simulatorPort,
     appPort: ports.graphics.appPort,
+    callbacks: {
+      reportFps: config.reportFps,
+    },
   })
 
   const simulator = initSimulator({

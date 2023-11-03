@@ -12,13 +12,7 @@ export interface SyncChunksSimulatorMessage {
 export type SimulatorMessage = SyncChunksSimulatorMessage
 
 export enum GraphicsMessageType {
-  Fps = 'fps',
   InputLatency = 'input-latency',
-}
-
-export interface FpsGraphicsMessage {
-  type: GraphicsMessageType.Fps
-  fps: number
 }
 
 export interface InputLatencyGraphicsMessage {
@@ -26,6 +20,4 @@ export interface InputLatencyGraphicsMessage {
   inputLatency: number
 }
 
-export type GraphicsMessage =
-  | FpsGraphicsMessage
-  | InputLatencyGraphicsMessage
+export type GraphicsMessage = InputLatencyGraphicsMessage

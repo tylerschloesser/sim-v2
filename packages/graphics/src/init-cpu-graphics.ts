@@ -22,6 +22,7 @@ export const initCpuGraphics: InitGraphicsFn<
   simulatorPort,
   appPort,
   world,
+  callbacks,
   ...args
 }) => {
   let { viewport, camera } = args
@@ -37,49 +38,52 @@ export const initCpuGraphics: InitGraphicsFn<
   const context = getCpuContext(canvas)
   context.scale(viewport.pixelRatio, viewport.pixelRatio)
 
-  const render = measureFps(appPort, (_time: number) => {
-    if (controller.signal.aborted) {
-      return
-    }
-
-    context.save()
-
-    context.clearRect(
-      0,
-      0,
-      viewport.size.x,
-      viewport.size.y,
-    )
-
-    context.translate(
-      viewport.size.x / 2,
-      viewport.size.y / 2,
-    )
-
-    context.translate(
-      camera.position.x * tileSize,
-      camera.position.y * tileSize,
-    )
-
-    for (const chunk of Object.values(world.chunks)) {
-      for (let { position, tile } of iterateTiles(
-        chunk,
-        world,
-      )) {
-        context.fillStyle = TILE_TYPE_TO_COLOR[tile.type]
-        context.fillRect(
-          position.x * tileSize,
-          position.y * tileSize,
-          tileSize,
-          tileSize,
-        )
+  const render = measureFps(
+    callbacks?.reportFps,
+    (_time: number) => {
+      if (controller.signal.aborted) {
+        return
       }
-    }
 
-    context.restore()
+      context.save()
 
-    requestAnimationFrame(render)
-  })
+      context.clearRect(
+        0,
+        0,
+        viewport.size.x,
+        viewport.size.y,
+      )
+
+      context.translate(
+        viewport.size.x / 2,
+        viewport.size.y / 2,
+      )
+
+      context.translate(
+        camera.position.x * tileSize,
+        camera.position.y * tileSize,
+      )
+
+      for (const chunk of Object.values(world.chunks)) {
+        for (let { position, tile } of iterateTiles(
+          chunk,
+          world,
+        )) {
+          context.fillStyle = TILE_TYPE_TO_COLOR[tile.type]
+          context.fillRect(
+            position.x * tileSize,
+            position.y * tileSize,
+            tileSize,
+            tileSize,
+          )
+        }
+      }
+
+      context.restore()
+
+      requestAnimationFrame(render)
+    },
+  )
 
   requestAnimationFrame(render)
 
