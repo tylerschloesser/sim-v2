@@ -9,6 +9,8 @@ import {
 } from '@sim-v2/types'
 import { z } from 'zod'
 
+export type ReportCameraFn = (camera: Camera) => void
+
 export const AppSettings = z.object({
   executor: z.object({
     simulator: z.nativeEnum(Executor),
@@ -24,6 +26,7 @@ export interface AppConfig {
   pixelRatio: number
   reportFps: ReportFpsFn
   reportInputLatency: ReportInputLatencyFn
+  reportCamera: ReportCameraFn
 }
 
 export interface App {

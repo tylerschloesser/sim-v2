@@ -7,7 +7,11 @@ import {
 import invariant from 'tiny-invariant'
 import { initApp } from './app.js'
 import './index.scss'
-import { AppConfig, AppSettings } from './types.js'
+import {
+  AppConfig,
+  AppSettings,
+  ReportCameraFn,
+} from './types.js'
 import { getPixelRatio } from './util.js'
 
 const elements = {
@@ -15,6 +19,11 @@ const elements = {
   dpr: getSpan('.dpr .value'),
   inputLatency: getSpan('.input-latency .value'),
   logWorld: getButton('button.log-world'),
+  camera: {
+    x: getSpan('.camera .x .value'),
+    y: getSpan('.camera .y .value'),
+    zoom: getSpan('.camera .zoom .value'),
+  },
 }
 
 const pixelRatio = getPixelRatio()
@@ -32,10 +41,23 @@ const reportInputLatency: ReportInputLatencyFn = (
   )}ms`
 }
 
+const reportCamera: ReportCameraFn = (camera) => {
+  elements.camera.x.innerText = `${camera.position.x.toFixed(
+    2,
+  )}`
+  elements.camera.y.innerText = `${camera.position.y.toFixed(
+    2,
+  )}`
+  elements.camera.zoom.innerText = `${camera.zoom.toFixed(
+    2,
+  )}`
+}
+
 const config: AppConfig = {
   pixelRatio,
   reportFps,
   reportInputLatency,
+  reportCamera,
 }
 
 const DEFAULT_SETTINGS: AppSettings = {

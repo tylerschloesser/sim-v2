@@ -35,3 +35,12 @@ canvas {
   bottom: env(safe-area-inset-bottom);
   background: var(--background-panel);
 }
+
+.camera {
+  display: flex;
+  flex-direction: column;
+
+  & > div {
+    padding-left: 1em;
+  }
+}

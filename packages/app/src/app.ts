@@ -30,6 +30,7 @@ export async function initApp({
   }
 
   const camera = loadCamera()
+  config.reportCamera(camera)
 
   let tileSize = getTileSize(camera, viewport)
 
@@ -76,6 +77,8 @@ export async function initApp({
       throttle(simulator.setCamera, 200)(camera)
 
       throttle(saveCamera, 1000)(camera)
+
+      config.reportCamera(camera)
     },
   })
 
