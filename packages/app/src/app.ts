@@ -8,8 +8,8 @@ import {
   Camera,
   Viewport,
 } from '@sim-v2/types'
-import { clamp } from '@sim-v2/util'
 import { World } from '@sim-v2/world'
+import { initCanvasEventListeners } from './init-canvas-event-listeners.js'
 import { initGraphicsMessageHandler } from './init-graphics-message-handler.js'
 import { App, AppConfig, AppSettings } from './types.js'
 
@@ -70,62 +70,23 @@ export async function initApp({
     appPort: ports.simulator.appPort,
   })
 
-  function setCamera(camera: Camera<Vec2>, time: number) {
-    // TODO only do this if zoom/viewport changes?
-    tileSize = getTileSize(camera, viewport)
-
-    graphics.setCamera(camera, time)
-  }
-
   initGraphicsMessageHandler({
     config,
     graphicsPort: ports.app.graphicsPort,
   })
 
-  let prev: PointerEvent | null = null
+  initCanvasEventListeners({
+    camera,
+    canvas,
+    getTileSize: () => tileSize,
+    getViewport: () => viewport,
+    setCamera(camera, time) {
+      // TODO only do this if zoom/viewport changes?
+      tileSize = getTileSize(camera, viewport)
 
-  canvas.addEventListener('pointermove', (e) => {
-    if (e.buttons === 1) {
-      if (prev) {
-        camera.position.x +=
-          (e.clientX - prev.clientX) / tileSize
-        camera.position.y +=
-          (e.clientY - prev.clientY) / tileSize
-
-        setCamera(
-          camera,
-          performance.timeOrigin + e.timeStamp,
-        )
-      }
-      prev = e
-    }
-  })
-
-  canvas.addEventListener('pointerup', () => {
-    prev = null
-  })
-
-  canvas.addEventListener('touchstart', (e) => {
-    e.preventDefault()
-  })
-
-  canvas.addEventListener(
-    'wheel',
-    (e) => {
-      camera.zoom = clamp(
-        camera.zoom + -e.deltaY / viewport.size.y,
-        0,
-        1,
-      )
-      setCamera(
-        camera,
-        performance.timeOrigin + e.timeStamp,
-      )
-
-      e.preventDefault()
+      graphics.setCamera(camera, time)
     },
-    { passive: false },
-  )
+  })
 
   function logWorld() {
     const message: AppMessage = {
