@@ -65,8 +65,6 @@ export const initGpuGraphics: InitGraphicsFn<
     2, gl.FLOAT, false, 0, 0,
   )
 
-  gl.uniform1f(state.programs.main.uniforms.alpha, 1.0)
-
   const render = measureFps(
     callbacks?.reportFps,
     (_time: number) => {
@@ -82,6 +80,11 @@ export const initGpuGraphics: InitGraphicsFn<
         if (!color) {
           continue
         }
+
+        gl.uniform1f(
+          state.programs.main.uniforms.alpha,
+          1.0,
+        )
 
         gl.bindBuffer(gl.ARRAY_BUFFER, color)
         gl.enableVertexAttribArray(
