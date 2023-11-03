@@ -6,6 +6,7 @@ import { Camera, Viewport } from '@sim-v2/types'
 import { World } from '@sim-v2/world'
 import { initCanvasEventListeners } from './init-canvas-event-listeners.js'
 import { App, AppConfig, AppSettings } from './types.js'
+import { averageInputLatency } from './util.js'
 
 export async function initApp({
   settings,
@@ -55,7 +56,11 @@ export async function initApp({
     appPort: ports.graphics.appPort,
     callbacks: {
       reportFps: config.reportFps,
-      reportInputLatency: config.reportInputLatency,
+      reportInputLatency(inputLatency) {
+        config.reportInputLatency?.(
+          averageInputLatency(inputLatency),
+        )
+      },
     },
   })
 

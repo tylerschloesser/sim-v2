@@ -8,10 +8,7 @@ import invariant from 'tiny-invariant'
 import { initApp } from './app.js'
 import './index.scss'
 import { AppConfig, AppSettings } from './types.js'
-import {
-  averageInputLatency,
-  getPixelRatio,
-} from './util.js'
+import { getPixelRatio } from './util.js'
 
 const elements = {
   fps: getSpan('.fps .value'),
@@ -30,9 +27,9 @@ const reportFps: ReportFpsFn = (fps) => {
 const reportInputLatency: ReportInputLatencyFn = (
   inputLatency,
 ) => {
-  elements.inputLatency.innerText = `${averageInputLatency(
-    inputLatency,
-  ).toFixed(2)}ms`
+  elements.inputLatency.innerText = `${inputLatency.toFixed(
+    2,
+  )}ms`
 }
 
 const config: AppConfig = {
