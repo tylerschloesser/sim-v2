@@ -19,6 +19,9 @@ export async function initApp({
   const canvas = document.createElement('canvas')
   document.body.appendChild(canvas)
 
+  const controller = new AbortController()
+  const { signal } = controller
+
   const rect = document.body.getBoundingClientRect()
 
   canvas.width = rect.width * config.pixelRatio
@@ -80,15 +83,20 @@ export async function initApp({
 
       config.reportCamera(camera)
     },
+    signal,
   })
 
   simulator.start()
 
+  signal.addEventListener('abort', () => {
+    graphics.stop()
+    simulator.stop()
+    canvas.remove()
+  })
+
   return {
     destroy() {
-      graphics.stop()
-      simulator.stop()
-      canvas.remove()
+      controller.abort()
     },
     logWorld: simulator.logWorld,
   }
