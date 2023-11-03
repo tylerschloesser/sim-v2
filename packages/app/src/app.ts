@@ -69,6 +69,7 @@ export async function initApp({
     viewport,
     camera,
     graphicsPort: ports.simulator.graphicsPort,
+    callbacks: {},
   })
 
   initCanvasEventListeners({

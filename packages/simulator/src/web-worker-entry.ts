@@ -24,6 +24,7 @@ self.addEventListener('message', (e) => {
           ...message.viewport,
           size: new Vec2(message.viewport.size),
         },
+        callbacks: {},
       })
       break
     }
