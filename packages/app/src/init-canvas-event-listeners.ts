@@ -38,6 +38,23 @@ export function initCanvasEventListeners({
   getTileSize: GetTileSizeFn
   signal: AbortSignal
 }): void {
+  function handlePointerOne(
+    prev: PointerEvent,
+    next: PointerEvent,
+  ): void {
+    const tileSize = getTileSize()
+
+    camera.position.x +=
+      (prev.clientX - next.clientX) / tileSize
+    camera.position.y +=
+      (prev.clientY - next.clientY) / tileSize
+
+    setCamera(
+      camera,
+      performance.timeOrigin + next.timeStamp,
+    )
+  }
+
   canvas.addEventListener(
     'pointermove',
     (e) => {
@@ -50,17 +67,7 @@ export function initCanvasEventListeners({
 
       switch (pointerCache.size) {
         case 1: {
-          const tileSize = getTileSize()
-
-          camera.position.x +=
-            (prev.clientX - e.clientX) / tileSize
-          camera.position.y +=
-            (prev.clientY - e.clientY) / tileSize
-
-          setCamera(
-            camera,
-            performance.timeOrigin + e.timeStamp,
-          )
+          handlePointerOne(prev, e)
           break
         }
         case 2: {
