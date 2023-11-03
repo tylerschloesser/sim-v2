@@ -10,14 +10,3 @@ export interface SyncChunksSimulatorMessage {
 }
 
 export type SimulatorMessage = SyncChunksSimulatorMessage
-
-export enum GraphicsMessageType {
-  InputLatency = 'input-latency',
-}
-
-export interface InputLatencyGraphicsMessage {
-  type: GraphicsMessageType.InputLatency
-  inputLatency: number
-}
-
-export type GraphicsMessage = InputLatencyGraphicsMessage
