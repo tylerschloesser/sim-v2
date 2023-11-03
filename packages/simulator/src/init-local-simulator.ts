@@ -1,7 +1,5 @@
 import { getVisibleChunkIds } from '@sim-v2/camera'
 import {
-  AppMessage,
-  AppMessageType,
   Camera,
   InitSimulatorArgs,
   InitSimulatorFn,
@@ -26,24 +24,6 @@ export const initLocalSimulator: InitSimulatorFn<
 
   const controller = new AbortController()
   const { signal } = controller
-
-  appPort.addEventListener(
-    'message',
-    (e) => {
-      const message = e.data as AppMessage
-      switch (message.type) {
-        case AppMessageType.LogWorld: {
-          console.log(world)
-          break
-        }
-        default: {
-          invariant(false)
-        }
-      }
-    },
-    { signal },
-  )
-  appPort.start()
 
   const interval = setInterval(() => {
     const updates: WorldUpdate[] = []
@@ -90,6 +70,9 @@ export const initLocalSimulator: InitSimulatorFn<
     },
     setViewport() {
       invariant(false, 'TODO')
+    },
+    logWorld() {
+      console.log(world)
     },
   }
 }

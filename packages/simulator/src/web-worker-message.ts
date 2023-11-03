@@ -8,6 +8,7 @@ export enum MessageType {
   Init = 'init',
   SetCamera = 'set-camera',
   SetViewport = 'set-viewport',
+  LogWorld = 'log-world',
 }
 
 export interface InitMessage {
@@ -29,7 +30,12 @@ export interface SetViewportMessage {
   viewport: TransferViewport
 }
 
+export interface LogWorldMessage {
+  type: MessageType.LogWorld
+}
+
 export type Message =
   | InitMessage
   | SetCameraMessage
   | SetViewportMessage
+  | LogWorldMessage

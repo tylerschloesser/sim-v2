@@ -6,6 +6,7 @@ import {
 } from '@sim-v2/types'
 import {
   InitMessage,
+  LogWorldMessage,
   MessageType,
   SetCameraMessage,
   SetViewportMessage,
@@ -43,6 +44,12 @@ export const initWebWorkerSimulator: InitSimulatorFn<
       const message: SetViewportMessage = {
         type: MessageType.SetViewport,
         viewport,
+      }
+      worker.postMessage(message)
+    },
+    logWorld(): void {
+      const message: LogWorldMessage = {
+        type: MessageType.LogWorld,
       }
       worker.postMessage(message)
     },

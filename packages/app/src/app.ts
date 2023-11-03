@@ -2,12 +2,7 @@ import { getTileSize } from '@sim-v2/camera'
 import { initGraphics } from '@sim-v2/graphics'
 import { Vec2 } from '@sim-v2/math'
 import { initSimulator } from '@sim-v2/simulator'
-import {
-  AppMessage,
-  AppMessageType,
-  Camera,
-  Viewport,
-} from '@sim-v2/types'
+import { Camera, Viewport } from '@sim-v2/types'
 import { World } from '@sim-v2/world'
 import { initCanvasEventListeners } from './init-canvas-event-listeners.js'
 import { initGraphicsMessageHandler } from './init-graphics-message-handler.js'
@@ -88,20 +83,13 @@ export async function initApp({
     },
   })
 
-  function logWorld() {
-    const message: AppMessage = {
-      type: AppMessageType.LogWorld,
-    }
-    ports.app.simulatorPort.postMessage(message)
-  }
-
   return {
     destroy() {
       graphics.stop()
       simulator.stop()
       canvas.remove()
     },
-    logWorld,
+    logWorld: simulator.logWorld,
   }
 }
 

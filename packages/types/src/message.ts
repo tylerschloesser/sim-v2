@@ -29,13 +29,3 @@ export interface InputLatencyGraphicsMessage {
 export type GraphicsMessage =
   | FpsGraphicsMessage
   | InputLatencyGraphicsMessage
-
-export enum AppMessageType {
-  LogWorld = 'log-world',
-}
-
-export interface LogWorldAppMessage {
-  type: AppMessageType.LogWorld
-}
-
-export type AppMessage = LogWorldAppMessage

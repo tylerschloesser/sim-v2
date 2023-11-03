@@ -27,6 +27,11 @@ self.addEventListener('message', (e) => {
       })
       break
     }
+    case MessageType.LogWorld: {
+      invariant(simulator)
+      simulator.logWorld()
+      break
+    }
     default: {
       invariant(false)
     }
