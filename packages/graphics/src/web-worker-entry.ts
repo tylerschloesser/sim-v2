@@ -3,7 +3,6 @@ import { Graphics, InitGraphicsArgs } from '@sim-v2/types'
 import invariant from 'tiny-invariant'
 import { initLocalGraphics } from './init-local-graphics.js'
 import {
-  CallbackMessageType,
   Message,
   MessageType,
   ReportFpsCallbackMessage,
@@ -64,14 +63,14 @@ function initCallbacks(): InitGraphicsArgs['callbacks'] {
   return {
     reportFps(fps) {
       const message: ReportFpsCallbackMessage = {
-        type: CallbackMessageType.ReportFps,
+        type: MessageType.ReportFpsCallback,
         fps,
       }
       self.postMessage(message)
     },
     reportInputLatency(inputLatency) {
       const message: ReportInputLatencyCallbackMessage = {
-        type: CallbackMessageType.ReportInputLatency,
+        type: MessageType.ReportInputLatencyCallback,
         inputLatency,
       }
       self.postMessage(message)

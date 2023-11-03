@@ -9,6 +9,8 @@ export enum MessageType {
   Init = 'init',
   SetCamera = 'set-camera',
   SetViewport = 'set-viewport',
+  ReportFpsCallback = 'report-fps-callback',
+  ReportInputLatencyCallback = 'report-input-latency-callback',
 }
 
 export type InitMessage = {
@@ -29,26 +31,19 @@ export interface SetViewportMessage {
   viewport: Viewport<SimpleVec2>
 }
 
-export type Message =
-  | InitMessage
-  | SetCameraMessage
-  | SetViewportMessage
-
-export enum CallbackMessageType {
-  ReportFps = 'report-fps',
-  ReportInputLatency = 'report-input-latency',
-}
-
 export interface ReportFpsCallbackMessage {
-  type: CallbackMessageType.ReportFps
+  type: MessageType.ReportFpsCallback
   fps: number
 }
 
 export interface ReportInputLatencyCallbackMessage {
-  type: CallbackMessageType.ReportInputLatency
+  type: MessageType.ReportInputLatencyCallback
   inputLatency: number
 }
 
-export type CallbackMessage =
+export type Message =
+  | InitMessage
+  | SetCameraMessage
+  | SetViewportMessage
   | ReportFpsCallbackMessage
   | ReportInputLatencyCallbackMessage

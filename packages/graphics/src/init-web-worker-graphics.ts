@@ -6,9 +6,8 @@ import {
 } from '@sim-v2/types'
 import invariant from 'tiny-invariant'
 import {
-  CallbackMessage,
-  CallbackMessageType,
   InitMessage,
+  Message,
   MessageType,
   SetCameraMessage,
   SetViewportMessage,
@@ -31,13 +30,13 @@ export function initWebWorkerGraphics({
   worker.addEventListener(
     'message',
     (e) => {
-      const message = e.data as CallbackMessage
+      const message = e.data as Message
       switch (message.type) {
-        case CallbackMessageType.ReportFps: {
+        case MessageType.ReportFpsCallback: {
           callbacks?.reportFps?.(message.fps)
           break
         }
-        case CallbackMessageType.ReportInputLatency: {
+        case MessageType.ReportInputLatencyCallback: {
           callbacks?.reportInputLatency?.(
             message.inputLatency,
           )
