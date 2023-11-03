@@ -36,3 +36,21 @@ export function timeout(ms: number): Promise<void> {
     setTimeout(reject, ms)
   })
 }
+
+export function throttle<A extends Array<unknown>>(
+  fn: (...args: A) => void,
+  ms: number,
+): (...args: A) => void {
+  let timeout: number | undefined
+  let use: A
+
+  return (...args: A) => {
+    use = args
+    if (!timeout) {
+      timeout = self.setTimeout(() => {
+        fn(...use)
+        timeout = undefined
+      }, ms)
+    }
+  }
+}
