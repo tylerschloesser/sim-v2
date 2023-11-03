@@ -1,9 +1,9 @@
+import { SimpleVec2 } from '@sim-v2/math'
 import {
-  GraphicsStrategy,
-  TransferCamera,
-  TransferViewport,
+  Camera,
+  InitGraphicsArgs,
+  Viewport,
 } from '@sim-v2/types'
-import { World } from '@sim-v2/world'
 
 export enum MessageType {
   Init = 'init',
@@ -11,25 +11,22 @@ export enum MessageType {
   SetViewport = 'set-viewport',
 }
 
-export interface InitMessage {
+export type InitMessage = {
   type: MessageType.Init
-  strategy: GraphicsStrategy
-  world: World
-  canvas: OffscreenCanvas
-  viewport: TransferViewport
-  camera: TransferCamera
-  simulatorPort: MessagePort
-}
+} & Omit<
+  InitGraphicsArgs<OffscreenCanvas, SimpleVec2>,
+  'executor' | 'callbacks'
+>
 
 export interface SetCameraMessage {
   type: MessageType.SetCamera
-  camera: TransferCamera
+  camera: Camera<SimpleVec2>
   time: number
 }
 
 export interface SetViewportMessage {
   type: MessageType.SetViewport
-  viewport: TransferViewport
+  viewport: Viewport<SimpleVec2>
 }
 
 export type Message =

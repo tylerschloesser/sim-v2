@@ -3,32 +3,28 @@ import { World } from '@sim-v2/world'
 
 export * from './message.js'
 
-export interface Viewport<T = Vec2> {
-  size: T
+export interface Viewport<V = Vec2> {
+  size: V
   pixelRatio: number
 }
 
-export type TransferViewport = Viewport<SimpleVec2>
-
-export interface Camera<T = Vec2> {
-  position: T
+export interface Camera<V = Vec2> {
+  position: V
   zoom: number
 }
-
-export type TransferCamera = Camera<SimpleVec2>
 
 export enum Executor {
   Local = 'main',
   WebWorker = 'web-worker',
 }
 
-export interface InitSimulatorArgs {
+export interface InitSimulatorArgs<V = Vec2> {
   executor: Executor
-  viewport: Viewport
+  viewport: Viewport<V>
   world: World
-  camera: Camera
+  camera: Camera<V>
   graphicsPort: MessagePort
-  callbacks?: {}
+  // callbacks: {}
 }
 
 export type InitSimulatorFn<T = InitSimulatorArgs> = (
@@ -53,14 +49,15 @@ export type ReportInputLatencyFn = (
 ) => void
 
 export interface InitGraphicsArgs<
-  T = HTMLCanvasElement | OffscreenCanvas,
+  C = HTMLCanvasElement | OffscreenCanvas,
+  V = Vec2,
 > {
   executor: Executor
   strategy: GraphicsStrategy
   world: World
-  canvas: T
-  viewport: Viewport
-  camera: Camera
+  canvas: C
+  viewport: Viewport<V>
+  camera: Camera<V>
   simulatorPort: MessagePort
   callbacks: {
     reportFps: ReportFpsFn
