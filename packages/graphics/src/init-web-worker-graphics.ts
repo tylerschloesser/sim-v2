@@ -28,16 +28,6 @@ export function initWebWorkerGraphics({
   const controller = new AbortController()
   const { signal } = controller
 
-  const init: InitMessage = {
-    type: MessageType.Init,
-    ...args,
-  }
-
-  worker.postMessage(init, [
-    init.canvas,
-    init.simulatorPort,
-  ])
-
   worker.addEventListener(
     'message',
     (e) => {
@@ -64,6 +54,16 @@ export function initWebWorkerGraphics({
   signal.addEventListener('abort', () => {
     worker.terminate()
   })
+
+  const init: InitMessage = {
+    type: MessageType.Init,
+    ...args,
+  }
+
+  worker.postMessage(init, [
+    init.canvas,
+    init.simulatorPort,
+  ])
 
   return {
     stop() {

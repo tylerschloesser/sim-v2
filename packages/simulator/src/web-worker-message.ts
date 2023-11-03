@@ -4,6 +4,7 @@ import {
   InitSimulatorArgs,
   Viewport,
 } from '@sim-v2/types'
+import { World } from '@sim-v2/world'
 
 export enum MessageType {
   Init = 'init',
@@ -38,3 +39,14 @@ export type Message =
   | SetCameraMessage
   | SetViewportMessage
   | LogWorldMessage
+
+export enum CallbackMessageType {
+  SetWorld = 'set-world',
+}
+
+export interface SetWorldCallbackMessage {
+  type: CallbackMessageType.SetWorld
+  world: World
+}
+
+export type CallbackMessage = SetWorldCallbackMessage

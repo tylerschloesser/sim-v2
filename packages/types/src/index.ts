@@ -21,7 +21,6 @@ export enum Executor {
 export interface InitSimulatorArgs<V = Vec2> {
   executor: Executor
   viewport: Viewport<V>
-  world: World
   camera: Camera<V>
   graphicsPort: MessagePort
   callbacks: {
@@ -31,9 +30,10 @@ export interface InitSimulatorArgs<V = Vec2> {
 
 export type InitSimulatorFn<T = InitSimulatorArgs> = (
   args: T,
-) => Simulator
+) => Promise<Simulator>
 
 export interface Simulator {
+  world: World
   setViewport(viewport: Viewport): void
   setCamera(camera: Camera): void
   logWorld(): void

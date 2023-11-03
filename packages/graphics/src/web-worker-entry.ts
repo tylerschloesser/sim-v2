@@ -18,23 +18,8 @@ self.addEventListener('message', (e) => {
     case MessageType.Init: {
       invariant(graphics === null)
 
-      const callbacks: InitGraphicsArgs['callbacks'] = {
-        reportFps(fps) {
-          const message: ReportFpsCallbackMessage = {
-            type: CallbackMessageType.ReportFps,
-            fps,
-          }
-          self.postMessage(message)
-        },
-        reportInputLatency(inputLatency) {
-          const message: ReportInputLatencyCallbackMessage =
-            {
-              type: CallbackMessageType.ReportInputLatency,
-              inputLatency,
-            }
-          self.postMessage(message)
-        },
-      }
+      const callbacks: InitGraphicsArgs['callbacks'] =
+        initCallbacks()
 
       graphics = initLocalGraphics({
         ...message,
@@ -74,3 +59,22 @@ self.addEventListener('message', (e) => {
     }
   }
 })
+
+function initCallbacks(): InitGraphicsArgs['callbacks'] {
+  return {
+    reportFps(fps) {
+      const message: ReportFpsCallbackMessage = {
+        type: CallbackMessageType.ReportFps,
+        fps,
+      }
+      self.postMessage(message)
+    },
+    reportInputLatency(inputLatency) {
+      const message: ReportInputLatencyCallbackMessage = {
+        type: CallbackMessageType.ReportInputLatency,
+        inputLatency,
+      }
+      self.postMessage(message)
+    },
+  }
+}

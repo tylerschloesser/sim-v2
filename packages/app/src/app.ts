@@ -3,7 +3,6 @@ import { initGraphics } from '@sim-v2/graphics'
 import { Vec2 } from '@sim-v2/math'
 import { initSimulator } from '@sim-v2/simulator'
 import { Camera, Viewport } from '@sim-v2/types'
-import { World } from '@sim-v2/world'
 import invariant from 'tiny-invariant'
 import { initCanvasEventListeners } from './init-canvas-event-listeners.js'
 import { App, AppConfig, AppSettings } from './types.js'
@@ -36,15 +35,21 @@ export async function initApp({
 
   let tileSize = getTileSize(camera, viewport)
 
-  const world: World = {
-    seed: `${0}`,
-    tickDuration: 100,
-    chunkSize: 32,
-    tick: 0,
-    chunks: {},
-  }
-
   const ports = getPorts()
+
+  const simulator = await initSimulator({
+    executor: settings.executor.simulator,
+    viewport,
+    camera,
+    graphicsPort: ports.simulator.graphicsPort,
+    callbacks: {
+      setWorld(_world) {
+        invariant(false, 'TODO')
+      },
+    },
+  })
+
+  let { world } = simulator
 
   const graphics = initGraphics({
     executor: settings.executor.graphics,
@@ -60,19 +65,6 @@ export async function initApp({
         config.reportInputLatency?.(
           averageInputLatency(inputLatency),
         )
-      },
-    },
-  })
-
-  const simulator = initSimulator({
-    executor: settings.executor.simulator,
-    world,
-    viewport,
-    camera,
-    graphicsPort: ports.simulator.graphicsPort,
-    callbacks: {
-      setWorld(world) {
-        invariant(false, 'TODO')
       },
     },
   })

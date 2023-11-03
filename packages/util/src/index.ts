@@ -30,3 +30,9 @@ export function memo<T, U>(
     return value
   }
 }
+
+export function timeout(ms: number): Promise<void> {
+  return new Promise((_resolve, reject) => {
+    setTimeout(reject, ms)
+  })
+}

@@ -7,6 +7,7 @@ import {
   SyncChunksSimulatorMessage,
 } from '@sim-v2/types'
 import {
+  World,
   WorldUpdate,
   WorldUpdateType,
   applyWorldUpdates,
@@ -17,8 +18,16 @@ import { initGeneratorContext } from './init-generator-context.js'
 
 export const initLocalSimulator: InitSimulatorFn<
   Omit<InitSimulatorArgs, 'executor'>
-> = ({ graphicsPort, world, ...args }) => {
+> = async ({ graphicsPort, ...args }) => {
   let { camera, viewport } = args
+
+  const world: World = {
+    seed: `${0}`,
+    tickDuration: 100,
+    chunkSize: 32,
+    tick: 0,
+    chunks: {},
+  }
 
   const generator = initGeneratorContext(world.seed)
 
@@ -62,6 +71,7 @@ export const initLocalSimulator: InitSimulatorFn<
   graphicsPort.postMessage(message)
 
   return {
+    world,
     stop(): void {
       controller.abort()
     },
