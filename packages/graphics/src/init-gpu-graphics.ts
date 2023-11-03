@@ -1,3 +1,4 @@
+import { easeIn, easeOut } from '@sim-v2/math'
 import {
   Camera,
   InitGraphicsArgs,
@@ -68,7 +69,7 @@ export const initGpuGraphics: InitGraphicsFn<
   const animate: Record<
     ChunkId,
     {
-      elapsed: number
+      start: number
       duration: number
     }
   > = {}
@@ -86,14 +87,14 @@ export const initGpuGraphics: InitGraphicsFn<
     state.buffers.color[chunk.id] = buffer
     world.chunks[chunk.id] = chunk
     animate[chunk.id] = {
-      elapsed: 0,
-      duration: 1000,
+      start: performance.now(),
+      duration: 250,
     }
   }
 
   const render = measureFps(
     callbacks?.reportFps,
-    (_time: number) => {
+    (time: number) => {
       if (controller.signal.aborted) {
         return
       }
@@ -107,9 +108,20 @@ export const initGpuGraphics: InitGraphicsFn<
           continue
         }
 
+        let alpha: number = 1.0
+        const animation = animate[chunk.id]
+        if (animation) {
+          const elapsed = time - animation.start
+          if (elapsed >= animation.duration) {
+            delete animate[chunk.id]
+          } else {
+            alpha = easeOut(elapsed / animation.duration)
+          }
+        }
+
         gl.uniform1f(
           state.programs.main.uniforms.alpha,
-          1.0,
+          alpha,
         )
 
         gl.bindBuffer(gl.ARRAY_BUFFER, color)
