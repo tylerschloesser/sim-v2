@@ -44,6 +44,10 @@ export function initCanvasEventListeners({
     prev = null
   })
 
+  canvas.addEventListener('pointerout', () => {
+    prev = null
+  })
+
   canvas.addEventListener('touchstart', (e) => {
     e.preventDefault()
   })
