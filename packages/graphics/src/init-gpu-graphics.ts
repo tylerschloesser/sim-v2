@@ -1,4 +1,3 @@
-import { getTileSize } from '@sim-v2/camera'
 import {
   Camera,
   InitGraphicsArgs,
@@ -6,9 +5,9 @@ import {
   Viewport,
 } from '@sim-v2/types'
 import { getPosition } from '@sim-v2/world'
-import { mat4, vec3 } from 'gl-matrix'
 import invariant from 'tiny-invariant'
 import { checkInputLatency } from './check-input-latency.js'
+import { initMatrices } from './init-matricies.js'
 import {
   SyncChunkCallbackFn,
   initSimulatorMessageHandler,
@@ -28,8 +27,6 @@ export const initGpuGraphics: InitGraphicsFn<
 }) => {
   let { viewport, camera } = args
   const { chunkSize } = world
-
-  let tileSize = getTileSize(camera, viewport)
 
   const controller = new AbortController()
 
@@ -56,77 +53,25 @@ export const initGpuGraphics: InitGraphicsFn<
 
   gl.useProgram(state.programs.main.program)
 
-  const projection = mat4.create()
-  mat4.scale(
+  const {
+    model,
+    view,
     projection,
-    projection,
-    vec3.fromValues(1, -1, 1),
-  )
-  mat4.translate(
-    projection,
-    projection,
-    vec3.fromValues(-1, -1, 0),
-  )
-  mat4.scale(
-    projection,
-    projection,
-    vec3.fromValues(2, 2, 2),
-  )
-  mat4.scale(
-    projection,
-    projection,
-    vec3.fromValues(
-      1 / viewport.size.x,
-      1 / viewport.size.y,
-      1,
-    ),
-  )
+    updateModel,
+    updateView,
+  } = initMatrices({ camera, viewport })
+
   gl.uniformMatrix4fv(
     state.programs.main.uniforms.projection,
     false,
     projection,
   )
 
-  const view = mat4.create()
-  function updateView() {
-    mat4.identity(view)
-
-    mat4.translate(
-      view,
-      view,
-      vec3.fromValues(
-        viewport.size.x / 2,
-        viewport.size.y / 2,
-        0,
-      ),
-    )
-
-    mat4.scale(
-      view,
-      view,
-      vec3.fromValues(tileSize, tileSize, 1),
-    )
-
-    mat4.translate(
-      view,
-      view,
-      vec3.fromValues(
-        camera.position.x,
-        camera.position.y,
-        0,
-      ),
-    )
-
-    gl.uniformMatrix4fv(
-      state.programs.main.uniforms.view,
-      false,
-      view,
-    )
-  }
-  updateView()
-
-  const model = mat4.create()
-  const translate = vec3.create()
+  gl.uniformMatrix4fv(
+    state.programs.main.uniforms.view,
+    false,
+    view,
+  )
 
   gl.bindBuffer(gl.ARRAY_BUFFER, state.buffers.chunk.vertex)
   gl.bindBuffer(
@@ -136,13 +81,10 @@ export const initGpuGraphics: InitGraphicsFn<
   gl.enableVertexAttribArray(
     state.programs.main.attributes.vertex,
   )
+  // prettier-ignore
   gl.vertexAttribPointer(
     state.programs.main.attributes.vertex,
-    2,
-    gl.FLOAT,
-    false,
-    0,
-    0,
+    2, gl.FLOAT, false, 0, 0,
   )
 
   const render = measureFps(appPort, (_time: number) => {
@@ -163,21 +105,13 @@ export const initGpuGraphics: InitGraphicsFn<
       gl.enableVertexAttribArray(
         state.programs.main.attributes.color,
       )
+      // prettier-ignore
       gl.vertexAttribPointer(
         state.programs.main.attributes.color,
-        4,
-        gl.FLOAT,
-        false,
-        0,
-        0,
+        4, gl.FLOAT, false, 0, 0,
       )
 
-      const position = getPosition(chunk, world)
-      translate[0] = position.x
-      translate[1] = position.y
-
-      mat4.identity(model)
-      mat4.translate(model, model, translate)
+      updateModel(getPosition(chunk, world))
       gl.uniformMatrix4fv(
         state.programs.main.uniforms.model,
         false,
@@ -203,8 +137,7 @@ export const initGpuGraphics: InitGraphicsFn<
     setCamera(next: Camera, time: number): void {
       checkInputLatency(appPort, time)
       camera = next
-      tileSize = getTileSize(camera, viewport)
-      updateView()
+      updateView(camera, viewport)
     },
     setViewport(_next: Viewport): void {
       invariant(false, 'TODO')
