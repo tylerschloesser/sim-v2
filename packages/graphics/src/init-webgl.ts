@@ -30,6 +30,7 @@ export interface WebGLState {
         model: WebGLUniformLocation
         view: WebGLUniformLocation
         projection: WebGLUniformLocation
+        alpha: WebGLUniformLocation
       }
     }
   }
@@ -72,6 +73,7 @@ export function initWebGL({
             program,
             'uProjection',
           ),
+          alpha: getUniformLocation(gl, program, 'uAlpha'),
         },
       },
     },
