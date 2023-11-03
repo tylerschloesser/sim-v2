@@ -7,14 +7,11 @@ import {
   AppMessageType,
   Camera,
   Executor,
-  GraphicsMessage,
-  GraphicsMessageType,
   GraphicsStrategy,
   Viewport,
 } from '@sim-v2/types'
 import { clamp } from '@sim-v2/util'
 import { World } from '@sim-v2/world'
-import invariant from 'tiny-invariant'
 import { z } from 'zod'
 import { initGraphicsMessageHandler } from './init-graphics-message-handler.js'
 
