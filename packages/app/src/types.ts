@@ -22,8 +22,8 @@ export type AppSettings = z.infer<typeof AppSettings>
 
 export interface AppConfig {
   pixelRatio: number
-  reportFps?: ReportFpsFn
-  reportInputLatency?: ReportInputLatencyFn
+  reportFps: ReportFpsFn
+  reportInputLatency: ReportInputLatencyFn
 }
 
 export interface App {
