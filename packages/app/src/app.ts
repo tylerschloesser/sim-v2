@@ -101,6 +101,13 @@ export async function initApp({
     appPort: ports.simulator.appPort,
   })
 
+  function setCamera(camera: Camera<Vec2>, time: number) {
+    // TODO only do this if zoom/viewport changes?
+    tileSize = getTileSize(camera, viewport)
+
+    graphics.setCamera(camera, time)
+  }
+
   // report the input latency as the average of the last N values
   //
   const averageInputLatency = (() => {
@@ -151,7 +158,7 @@ export async function initApp({
         camera.position.y +=
           (e.clientY - prev.clientY) / tileSize
 
-        graphics.setCamera(
+        setCamera(
           camera,
           performance.timeOrigin + e.timeStamp,
         )
@@ -176,8 +183,7 @@ export async function initApp({
         0,
         1,
       )
-      tileSize = getTileSize(camera, viewport)
-      graphics.setCamera(
+      setCamera(
         camera,
         performance.timeOrigin + e.timeStamp,
       )
