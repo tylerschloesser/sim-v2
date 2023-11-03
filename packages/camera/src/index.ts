@@ -34,8 +34,8 @@ export function getVisibleChunkIds({
 
 // as a function of the smallest viewport dimension
 //
-const MIN_TILE_SIZE_FACTOR = 1 / 64
-const MAX_TILE_SIZE_FACTOR = 1 / 4
+const MIN_TILE_SIZE_FACTOR = 1 / 256
+const MAX_TILE_SIZE_FACTOR = 1 / 8
 
 export function getTileSize(
   camera: Camera,
