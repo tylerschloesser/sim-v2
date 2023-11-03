@@ -25,6 +25,10 @@ export const initLocalSimulator: InitSimulatorFn<
   const world = generateWorld({ id, seed, generator })
   const { chunkSize } = world
 
+  const syncChunksListeners: ((
+    chunks: Record<ChunkId, Chunk>,
+  ) => void)[] = []
+
   const controller = new AbortController()
   const { signal } = controller
 
@@ -78,6 +82,9 @@ export const initLocalSimulator: InitSimulatorFn<
       }
 
       if (Object.values(sync).length > 0) {
+        for (const syncChunks of syncChunksListeners) {
+          syncChunks(sync)
+        }
         callbacks.syncChunks(sync)
       }
     },
@@ -86,6 +93,9 @@ export const initLocalSimulator: InitSimulatorFn<
     },
     logWorld() {
       console.log(world)
+    },
+    addSyncChunksListener(listener) {
+      syncChunksListeners.push(listener)
     },
   }
 }

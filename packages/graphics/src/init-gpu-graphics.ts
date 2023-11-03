@@ -4,7 +4,7 @@ import {
   InitGraphicsFn,
   Viewport,
 } from '@sim-v2/types'
-import { getPosition } from '@sim-v2/world'
+import { Chunk, ChunkId, getPosition } from '@sim-v2/world'
 import invariant from 'tiny-invariant'
 import { initMatrices } from './init-matricies.js'
 import { initColorBuffer, initWebGL } from './init-webgl.js'
@@ -128,6 +128,9 @@ export const initGpuGraphics: InitGraphicsFn<
     },
     setViewport(_next: Viewport): void {
       invariant(false, 'TODO')
+    },
+    syncChunks(chunks: Record<ChunkId, Chunk>): void {
+      console.log('TODO')
     },
   }
 }

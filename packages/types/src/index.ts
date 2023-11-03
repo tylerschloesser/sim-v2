@@ -44,8 +44,10 @@ export interface Simulator {
   setCamera(camera: Camera): void
   logWorld(): void
   stop(): void
+  addSyncChunksListener(
+    listener: (chunks: Record<ChunkId, Chunk>) => void,
+  ): void
 }
-
 export enum GraphicsStrategy {
   Cpu = 'cpu',
   Gpu = 'gpu',
@@ -79,5 +81,6 @@ export type InitGraphicsFn<T = InitGraphicsArgs> = (
 export interface Graphics {
   setViewport(viewport: Viewport): void
   setCamera(camera: Camera, time: number): void
+  syncChunks(chunks: Record<ChunkId, Chunk>): void
   stop(): void
 }

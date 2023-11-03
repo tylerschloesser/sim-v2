@@ -38,9 +38,7 @@ export async function initApp({
     viewport,
     camera,
     callbacks: {
-      syncChunks(chunks) {
-        console.log('todo sync chunks', chunks)
-      },
+      syncChunks(chunks) {},
     },
   })
 
@@ -62,6 +60,8 @@ export async function initApp({
       },
     },
   })
+
+  simulator.addSyncChunksListener(graphics.syncChunks)
 
   initCanvasEventListeners({
     camera,

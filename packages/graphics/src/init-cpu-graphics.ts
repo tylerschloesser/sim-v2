@@ -6,6 +6,8 @@ import {
   Viewport,
 } from '@sim-v2/types'
 import {
+  Chunk,
+  ChunkId,
   TILE_TYPE_TO_COLOR,
   iterateTiles,
 } from '@sim-v2/world'
@@ -85,6 +87,15 @@ export const initCpuGraphics: InitGraphicsFn<
     },
     setViewport(_next: Viewport): void {
       invariant(false, 'TODO')
+    },
+    syncChunks(chunks: Record<ChunkId, Chunk>): void {
+      for (const [chunkId, chunk] of Object.entries(
+        chunks,
+      )) {
+        invariant(!world.chunks[chunkId])
+        console.log('synced', chunkId)
+        world.chunks[chunkId] = chunk
+      }
     },
   }
 }

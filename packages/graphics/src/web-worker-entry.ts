@@ -53,6 +53,11 @@ self.addEventListener('message', (e) => {
       })
       break
     }
+    case MessageType.SyncChunks: {
+      invariant(graphics)
+      graphics.syncChunks(message.chunks)
+      break
+    }
     default: {
       invariant(false)
     }
