@@ -75,8 +75,8 @@ function updateView(
     view,
     view,
     vec3.fromValues(
-      camera.position.x,
-      camera.position.y,
+      -camera.position.x,
+      -camera.position.y,
       0,
     ),
   )

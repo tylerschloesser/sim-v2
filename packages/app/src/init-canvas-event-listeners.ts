@@ -25,10 +25,11 @@ export function initCanvasEventListeners({
     if (e.buttons === 1) {
       if (prev) {
         const tileSize = getTileSize()
+
         camera.position.x +=
-          (e.clientX - prev.clientX) / tileSize
+          (prev.clientX - e.clientX) / tileSize
         camera.position.y +=
-          (e.clientY - prev.clientY) / tileSize
+          (prev.clientY - e.clientY) / tileSize
 
         setCamera(
           camera,

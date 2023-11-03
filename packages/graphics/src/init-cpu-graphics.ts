@@ -48,8 +48,8 @@ export const initCpuGraphics: InitGraphicsFn<
       )
 
       context.translate(
-        camera.position.x * tileSize,
-        camera.position.y * tileSize,
+        -camera.position.x * tileSize,
+        -camera.position.y * tileSize,
       )
 
       for (const chunk of Object.values(world.chunks)) {
