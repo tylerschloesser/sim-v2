@@ -23,6 +23,11 @@ function getOtherPointer(e: PointerEvent) {
   invariant(false)
 }
 
+type HandlePointerFn = (args: {
+  prev: PointerEvent
+  next: PointerEvent
+}) => void
+
 export function initCanvasEventListeners({
   canvas,
   camera,
@@ -38,16 +43,62 @@ export function initCanvasEventListeners({
   getTileSize: GetTileSizeFn
   signal: AbortSignal
 }): void {
-  function handlePointerOne(
-    prev: PointerEvent,
-    next: PointerEvent,
-  ): void {
+  const handlePointerOne: HandlePointerFn = ({
+    next,
+    prev,
+  }) => {
     const tileSize = getTileSize()
 
     camera.position.x +=
       (prev.clientX - next.clientX) / tileSize
     camera.position.y +=
       (prev.clientY - next.clientY) / tileSize
+
+    setCamera(
+      camera,
+      performance.timeOrigin + next.timeStamp,
+    )
+  }
+
+  const handlePointerTwo: HandlePointerFn = ({
+    next,
+    prev,
+  }) => {
+    const other = getOtherPointer(next)
+    if (!other.buttons) {
+      return
+    }
+
+    const tileSize = getTileSize()
+
+    const v = {
+      other: new Vec2(other.clientX, other.clientY),
+      prev: new Vec2(prev.clientX, prev.clientY),
+      next: new Vec2(next.clientX, next.clientY),
+    }
+
+    const center = {
+      prev: v.other.add(v.prev.sub(v.other).div(2)),
+      next: v.other.add(v.next.sub(v.other).div(2)),
+    }
+
+    const move = center.next
+      .sub(center.prev)
+      .mul(-1)
+      .div(tileSize)
+
+    camera.position.x += move.x
+    camera.position.y += move.y
+
+    const dist = {
+      prev: v.other.sub(v.prev).len(),
+      next: v.other.sub(v.next).len(),
+    }
+
+    camera.zoom = tileSizeToZoom(
+      tileSize * (dist.next / dist.prev),
+      getViewport(),
+    )
 
     setCamera(
       camera,
@@ -67,51 +118,11 @@ export function initCanvasEventListeners({
 
       switch (pointerCache.size) {
         case 1: {
-          handlePointerOne(prev, e)
+          handlePointerOne({ prev, next: e })
           break
         }
         case 2: {
-          const other = getOtherPointer(e)
-          if (!other.buttons) {
-            return
-          }
-
-          const tileSize = getTileSize()
-
-          const v = {
-            other: new Vec2(other.clientX, other.clientY),
-            prev: new Vec2(prev.clientX, prev.clientY),
-            next: new Vec2(e.clientX, e.clientY),
-          }
-
-          const center = {
-            prev: v.other.add(v.prev.sub(v.other).div(2)),
-            next: v.other.add(v.next.sub(v.other).div(2)),
-          }
-
-          const move = center.next
-            .sub(center.prev)
-            .mul(-1)
-            .div(tileSize)
-
-          camera.position.x += move.x
-          camera.position.y += move.y
-
-          const dist = {
-            prev: v.other.sub(v.prev).len(),
-            next: v.other.sub(v.next).len(),
-          }
-
-          camera.zoom = tileSizeToZoom(
-            tileSize * (dist.next / dist.prev),
-            getViewport(),
-          )
-
-          setCamera(
-            camera,
-            performance.timeOrigin + e.timeStamp,
-          )
-
+          handlePointerTwo({ prev, next: e })
           break
         }
       }
