@@ -28,7 +28,6 @@ export interface InitSimulatorArgs {
   world: World
   camera: Camera
   graphicsPort: MessagePort
-  appPort: MessagePort
 }
 
 export type InitSimulatorFn<T = InitSimulatorArgs> = (
@@ -62,7 +61,6 @@ export interface InitGraphicsArgs<
   viewport: Viewport
   camera: Camera
   simulatorPort: MessagePort
-  appPort: MessagePort
   callbacks?: {
     reportFps?: ReportFpsFn
     reportInputLatency?: ReportInputLatencyFn

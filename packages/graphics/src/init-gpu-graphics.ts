@@ -20,7 +20,6 @@ export const initGpuGraphics: InitGraphicsFn<
 > = ({
   canvas,
   simulatorPort,
-  appPort,
   world,
   callbacks,
   ...args

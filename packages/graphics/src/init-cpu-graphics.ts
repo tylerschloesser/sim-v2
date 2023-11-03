@@ -19,7 +19,6 @@ export const initCpuGraphics: InitGraphicsFn<
 > = ({
   canvas,
   simulatorPort,
-  appPort,
   world,
   callbacks,
   ...args

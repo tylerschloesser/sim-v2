@@ -17,7 +17,7 @@ import { initGeneratorContext } from './init-generator-context.js'
 
 export const initLocalSimulator: InitSimulatorFn<
   Omit<InitSimulatorArgs, 'executor'>
-> = ({ graphicsPort, appPort, world, ...args }) => {
+> = ({ graphicsPort, world, ...args }) => {
   let { camera, viewport } = args
 
   const generator = initGeneratorContext(world.seed)

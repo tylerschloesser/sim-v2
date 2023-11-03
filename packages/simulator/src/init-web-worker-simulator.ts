@@ -24,10 +24,7 @@ export const initWebWorkerSimulator: InitSimulatorFn<
     ...args,
   }
 
-  worker.postMessage(init, [
-    init.graphicsPort,
-    init.appPort,
-  ])
+  worker.postMessage(init, [init.graphicsPort])
 
   return {
     stop(): void {

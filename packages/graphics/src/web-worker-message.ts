@@ -19,7 +19,6 @@ export interface InitMessage {
   viewport: TransferViewport
   camera: TransferCamera
   simulatorPort: MessagePort
-  appPort: MessagePort
 }
 
 export interface SetCameraMessage {

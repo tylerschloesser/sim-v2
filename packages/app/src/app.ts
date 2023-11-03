@@ -53,7 +53,6 @@ export async function initApp({
     viewport,
     camera,
     simulatorPort: ports.graphics.simulatorPort,
-    appPort: ports.graphics.appPort,
     callbacks: {
       reportFps: config.reportFps,
       reportInputLatency(inputLatency) {
@@ -70,7 +69,6 @@ export async function initApp({
     viewport,
     camera,
     graphicsPort: ports.simulator.graphicsPort,
-    appPort: ports.simulator.appPort,
   })
 
   initCanvasEventListeners({
@@ -98,21 +96,13 @@ export async function initApp({
 
 function getPorts() {
   const channel1 = new MessageChannel()
-  const channel2 = new MessageChannel()
-  const channel3 = new MessageChannel()
 
   return {
     graphics: {
-      simulatorPort: channel2.port1,
-      appPort: channel1.port2,
+      simulatorPort: channel1.port1,
     },
     simulator: {
-      graphicsPort: channel2.port2,
-      appPort: channel3.port2,
-    },
-    app: {
-      graphicsPort: channel1.port1,
-      simulatorPort: channel3.port1,
+      graphicsPort: channel1.port2,
     },
   }
 }
