@@ -1,10 +1,25 @@
 import { Vec2 } from '@sim-v2/math'
-import { Camera } from '@sim-v2/types'
+import { Camera, SimpleCamera } from '@sim-v2/types'
+
+const KEY = 'camera'
 
 export function loadCamera(): Camera<Vec2> {
+  const json = self.localStorage.getItem(KEY)
+  if (!json) {
+    console.debug('creating new camera')
+    return {
+      position: new Vec2(0),
+      zoom: 0.25,
+    }
+  }
+
+  console.debug('loading existing camera')
+
+  const simple = SimpleCamera.parse(JSON.parse(json))
+
   return {
-    position: new Vec2(0),
-    zoom: 0.25,
+    position: new Vec2(simple.position),
+    zoom: simple.zoom,
   }
 }
 
