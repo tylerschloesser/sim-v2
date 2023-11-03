@@ -13,17 +13,19 @@ export function getVisibleChunkIds({
 }): Set<ChunkId> {
   const tileSize = getTileSize(camera, viewport)
 
-  const tl = camera.position.sub(
-    viewport.size.div(2).div(tileSize),
-  )
-  const br = camera.position.add(
-    viewport.size.div(2).div(tileSize),
-  )
-  console.log({ tl, br })
+  const d = viewport.size.div(2).div(tileSize)
+  const tl = camera.position.sub(d).div(chunkSize)
+  const br = camera.position.add(d).div(chunkSize)
+
+  tl.x = Math.floor(tl.x)
+  tl.y = Math.floor(tl.y)
+
+  br.x = Math.ceil(br.x)
+  br.y = Math.ceil(br.y)
 
   const chunkIds = new Set<ChunkId>()
-  for (let y = -1; y <= 0; y++) {
-    for (let x = -1; x <= 0; x++) {
+  for (let y = tl.y; y < br.y; y++) {
+    for (let x = tl.x; x < br.x; x++) {
       chunkIds.add(`${x}.${y}`)
     }
   }
