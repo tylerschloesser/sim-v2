@@ -2,7 +2,8 @@ import { getTileSize } from '@sim-v2/camera'
 import { initGraphics } from '@sim-v2/graphics'
 import { Vec2 } from '@sim-v2/math'
 import { initSimulator } from '@sim-v2/simulator'
-import { Camera, Viewport } from '@sim-v2/types'
+import { Viewport } from '@sim-v2/types'
+import { loadCamera } from '../camera.js'
 import { initCanvasEventListeners } from './init-canvas-event-listeners.js'
 import { App, AppConfig, AppSettings } from './types.js'
 import { averageInputLatency } from './util.js'
@@ -27,10 +28,7 @@ export async function initApp({
     pixelRatio: config.pixelRatio,
   }
 
-  const camera: Camera = {
-    position: new Vec2(0),
-    zoom: 0.25,
-  }
+  const camera = loadCamera()
 
   let tileSize = getTileSize(camera, viewport)
 
