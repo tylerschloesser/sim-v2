@@ -5,7 +5,7 @@ import { GeneratorContext } from './init-generator-context.js'
 
 const TICK_DURATION = 100
 const CHUNK_SIZE = 32
-const INITIAL_CHUNK_RADIUS = 2
+const INITIAL_CHUNK_RADIUS = 0
 
 export function generateWorld({
   id,

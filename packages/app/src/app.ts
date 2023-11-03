@@ -82,6 +82,8 @@ export async function initApp({
     },
   })
 
+  simulator.start()
+
   return {
     destroy() {
       graphics.stop()

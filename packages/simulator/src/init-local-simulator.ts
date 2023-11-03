@@ -18,7 +18,7 @@ import { initGeneratorContext } from './init-generator-context.js'
 
 export const initLocalSimulator: InitSimulatorFn<
   Omit<InitSimulatorArgs, 'executor'>
-> = async ({ viewport, callbacks }) => {
+> = async ({ viewport, callbacks, ...args }) => {
   const id = 'test'
   const seed = `${0}`
   const generator = initGeneratorContext(seed)
@@ -34,25 +34,6 @@ export const initLocalSimulator: InitSimulatorFn<
 
   let started: boolean = false
   let interval: number | undefined
-
-  const start: Simulator['start'] = () => {
-    invariant(started === false)
-    started = true
-    interval = self.setInterval(() => {
-      const updates: WorldUpdate[] = []
-
-      updates.push({
-        type: WorldUpdateType.Tick,
-        tick: world.tick + 1,
-      })
-
-      applyWorldUpdates(world, updates)
-    }, world.tickDuration)
-  }
-
-  signal.addEventListener('abort', () => {
-    self.clearInterval(interval)
-  })
 
   const setCamera: Simulator['setCamera'] = (camera) => {
     const visibleChunkIds = getVisibleChunkIds({
@@ -82,6 +63,29 @@ export const initLocalSimulator: InitSimulatorFn<
       callbacks.syncChunks(sync)
     }
   }
+
+  const start: Simulator['start'] = () => {
+    invariant(started === false)
+    started = true
+
+    // send the initial chunks
+    setCamera(args.camera)
+
+    interval = self.setInterval(() => {
+      const updates: WorldUpdate[] = []
+
+      updates.push({
+        type: WorldUpdateType.Tick,
+        tick: world.tick + 1,
+      })
+
+      applyWorldUpdates(world, updates)
+    }, world.tickDuration)
+  }
+
+  signal.addEventListener('abort', () => {
+    self.clearInterval(interval)
+  })
 
   return {
     world,
