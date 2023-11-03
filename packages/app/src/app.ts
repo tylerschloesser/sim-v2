@@ -4,6 +4,7 @@ import { Vec2 } from '@sim-v2/math'
 import { initSimulator } from '@sim-v2/simulator'
 import { Camera, Viewport } from '@sim-v2/types'
 import { World } from '@sim-v2/world'
+import invariant from 'tiny-invariant'
 import { initCanvasEventListeners } from './init-canvas-event-listeners.js'
 import { App, AppConfig, AppSettings } from './types.js'
 import { averageInputLatency } from './util.js'
@@ -69,7 +70,11 @@ export async function initApp({
     viewport,
     camera,
     graphicsPort: ports.simulator.graphicsPort,
-    callbacks: {},
+    callbacks: {
+      setWorld(world) {
+        invariant(false, 'TODO')
+      },
+    },
   })
 
   initCanvasEventListeners({

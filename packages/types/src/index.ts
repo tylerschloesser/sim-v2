@@ -24,7 +24,9 @@ export interface InitSimulatorArgs<V = Vec2> {
   world: World
   camera: Camera<V>
   graphicsPort: MessagePort
-  callbacks: {}
+  callbacks: {
+    setWorld(world: World): void
+  }
 }
 
 export type InitSimulatorFn<T = InitSimulatorArgs> = (

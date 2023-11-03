@@ -1,5 +1,5 @@
 import { Vec2 } from '@sim-v2/math'
-import { Simulator } from '@sim-v2/types'
+import { InitSimulatorArgs, Simulator } from '@sim-v2/types'
 import invariant from 'tiny-invariant'
 import { initLocalSimulator } from './init-local-simulator.js'
 import {
@@ -14,6 +14,13 @@ self.addEventListener('message', (e) => {
   switch (message.type) {
     case MessageType.Init: {
       invariant(simulator === null)
+
+      const callbacks: InitSimulatorArgs['callbacks'] = {
+        setWorld(world) {
+          invariant(false, 'TODO')
+        },
+      }
+
       simulator = initLocalSimulator({
         ...message,
         camera: {
@@ -24,7 +31,7 @@ self.addEventListener('message', (e) => {
           ...message.viewport,
           size: new Vec2(message.viewport.size),
         },
-        callbacks: {},
+        callbacks,
       })
       break
     }
