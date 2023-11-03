@@ -3,7 +3,7 @@ import { initGraphics } from '@sim-v2/graphics'
 import { Vec2 } from '@sim-v2/math'
 import { initSimulator } from '@sim-v2/simulator'
 import { Viewport } from '@sim-v2/types'
-import { loadCamera } from '../camera.js'
+import { loadCamera, saveCamera } from '../camera.js'
 import { initCanvasEventListeners } from './init-canvas-event-listeners.js'
 import { App, AppConfig, AppSettings } from './types.js'
 import { averageInputLatency } from './util.js'
@@ -66,8 +66,8 @@ export async function initApp({
     setCamera(camera, time) {
       // TODO only do this if zoom/viewport changes?
       tileSize = getTileSize(camera, viewport)
-
       graphics.setCamera(camera, time)
+      saveCamera(camera)
     },
   })
 
