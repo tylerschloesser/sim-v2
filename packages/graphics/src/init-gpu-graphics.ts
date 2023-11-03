@@ -75,20 +75,21 @@ export const initGpuGraphics: InitGraphicsFn<
   > = {}
 
   function addChunk(chunk: Chunk): void {
-    invariant(!world.chunks[chunk.id])
-    invariant(!state.buffers.color[chunk.id])
-    invariant(!animate[chunk.id])
-
-    const buffer = initColorBuffer({
-      gl,
-      chunkSize,
-      chunk,
-    })
-    state.buffers.color[chunk.id] = buffer
     world.chunks[chunk.id] = chunk
-    animate[chunk.id] = {
-      start: performance.now(),
-      duration: 250,
+
+    if (!state.buffers.color[chunk.id]) {
+      const buffer = initColorBuffer({
+        gl,
+        chunkSize,
+        chunk,
+      })
+      state.buffers.color[chunk.id] = buffer
+
+      invariant(!animate[chunk.id])
+      animate[chunk.id] = {
+        start: performance.now(),
+        duration: 250,
+      }
     }
   }
 
@@ -174,9 +175,7 @@ export const initGpuGraphics: InitGraphicsFn<
     },
     syncChunks(chunks: Record<ChunkId, Chunk>): void {
       for (const chunk of Object.values(chunks)) {
-        if (!world.chunks[chunk.id]) {
-          addChunk(chunk)
-        }
+        addChunk(chunk)
       }
     },
   }

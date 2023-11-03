@@ -6,6 +6,10 @@ import {
   SetCameraFn,
 } from './types.js'
 
+type PointerId = number
+
+const pointerCache = new Map<PointerId, PointerEvent>()
+
 export function initCanvasEventListeners({
   canvas,
   camera,
@@ -19,9 +23,10 @@ export function initCanvasEventListeners({
   getViewport: GetViewportFn
   getTileSize: GetTileSizeFn
 }): void {
-  let prev: PointerEvent | null = null
-
   canvas.addEventListener('pointermove', (e) => {
+    let prev = pointerCache.get(e.pointerId)
+    pointerCache.set(e.pointerId, e)
+
     if (e.buttons === 1) {
       if (prev) {
         const tileSize = getTileSize()
@@ -40,12 +45,14 @@ export function initCanvasEventListeners({
     }
   })
 
-  canvas.addEventListener('pointerup', () => {
-    prev = null
+  canvas.addEventListener('pointerup', (e) => {
+    pointerCache.delete(e.pointerId)
   })
-
-  canvas.addEventListener('pointerout', () => {
-    prev = null
+  canvas.addEventListener('pointerout', (e) => {
+    pointerCache.delete(e.pointerId)
+  })
+  canvas.addEventListener('pointerleave', (e) => {
+    pointerCache.delete(e.pointerId)
   })
 
   canvas.addEventListener('touchstart', (e) => {
