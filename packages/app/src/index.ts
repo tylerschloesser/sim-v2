@@ -1,13 +1,13 @@
 import { Executor, GraphicsStrategy } from '@sim-v2/types'
 import invariant from 'tiny-invariant'
+import { initApp } from './app.js'
+import './index.scss'
 import {
   AppConfig,
   AppSettings,
   FpsCallbackFn,
   InputLatencyCallback,
-  initApp,
-} from './app.js'
-import './index.scss'
+} from './types.js'
 import { getPixelRatio } from './util.js'
 
 const elements = {

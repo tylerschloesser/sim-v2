@@ -6,41 +6,12 @@ import {
   AppMessage,
   AppMessageType,
   Camera,
-  Executor,
-  GraphicsStrategy,
   Viewport,
 } from '@sim-v2/types'
 import { clamp } from '@sim-v2/util'
 import { World } from '@sim-v2/world'
-import { z } from 'zod'
 import { initGraphicsMessageHandler } from './init-graphics-message-handler.js'
-
-export const AppSettings = z.object({
-  executor: z.object({
-    simulator: z.nativeEnum(Executor),
-    graphics: z.nativeEnum(Executor),
-  }),
-  strategy: z.object({
-    graphics: z.nativeEnum(GraphicsStrategy),
-  }),
-})
-export type AppSettings = z.infer<typeof AppSettings>
-
-export type FpsCallbackFn = (fps: number) => void
-export type InputLatencyCallback = (
-  inputLatency: number,
-) => void
-
-export interface AppConfig {
-  pixelRatio: number
-  fpsCallback?: FpsCallbackFn
-  inputLatencyCallback?: InputLatencyCallback
-}
-
-export interface App {
-  destroy(): void
-  logWorld(): void
-}
+import { App, AppConfig, AppSettings } from './types.js'
 
 export async function initApp({
   settings,

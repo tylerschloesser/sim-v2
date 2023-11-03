@@ -3,7 +3,7 @@ import {
   GraphicsMessageType,
 } from '@sim-v2/types'
 import invariant from 'tiny-invariant'
-import { AppConfig } from './app.js'
+import { AppConfig } from './types.js'
 
 export function initGraphicsMessageHandler({
   config,
