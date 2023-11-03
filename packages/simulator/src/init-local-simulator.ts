@@ -54,40 +54,42 @@ export const initLocalSimulator: InitSimulatorFn<
     self.clearInterval(interval)
   })
 
+  const setCamera: Simulator['setCamera'] = (camera) => {
+    const visibleChunkIds = getVisibleChunkIds({
+      camera,
+      viewport,
+      chunkSize,
+    })
+
+    const sync: Record<ChunkId, Chunk> = {}
+
+    for (const chunkId of visibleChunkIds) {
+      if (!world.chunks[chunkId]) {
+        const chunk = generateChunk({
+          chunkId,
+          chunkSize,
+          generator,
+        })
+        world.chunks[chunkId] = chunk
+        sync[chunkId] = chunk
+      }
+    }
+
+    if (Object.values(sync).length > 0) {
+      for (const syncChunks of syncChunksListeners) {
+        syncChunks(sync)
+      }
+      callbacks.syncChunks(sync)
+    }
+  }
+
   return {
     world,
     start,
     stop(): void {
       controller.abort()
     },
-    setCamera(camera): void {
-      const visibleChunkIds = getVisibleChunkIds({
-        camera,
-        viewport,
-        chunkSize,
-      })
-
-      const sync: Record<ChunkId, Chunk> = {}
-
-      for (const chunkId of visibleChunkIds) {
-        if (!world.chunks[chunkId]) {
-          const chunk = generateChunk({
-            chunkId,
-            chunkSize,
-            generator,
-          })
-          world.chunks[chunkId] = chunk
-          sync[chunkId] = chunk
-        }
-      }
-
-      if (Object.values(sync).length > 0) {
-        for (const syncChunks of syncChunksListeners) {
-          syncChunks(sync)
-        }
-        callbacks.syncChunks(sync)
-      }
-    },
+    setCamera,
     setViewport() {
       invariant(false, 'TODO')
     },
