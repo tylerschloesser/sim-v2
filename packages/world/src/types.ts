@@ -28,7 +28,10 @@ export interface Chunk {
   tiles: Tile[]
 }
 
+export type WorldId = string
+
 export interface World {
+  id: WorldId
   seed: string
   tickDuration: number
   chunkSize: number

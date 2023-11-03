@@ -20,6 +20,7 @@ export const initLocalSimulator: InitSimulatorFn<
   let { camera, viewport } = args
 
   const world: World = {
+    id: 'test',
     seed: `${0}`,
     tickDuration: 100,
     chunkSize: 32,
