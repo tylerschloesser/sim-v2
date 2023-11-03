@@ -5,10 +5,22 @@ import invariant from 'tiny-invariant'
 export function getVisibleChunkIds({
   camera,
   viewport,
+  chunkSize,
 }: {
   camera: Camera
   viewport: Viewport
+  chunkSize: number
 }): Set<ChunkId> {
+  const tileSize = getTileSize(camera, viewport)
+
+  const tl = camera.position.sub(
+    viewport.size.div(2).div(tileSize),
+  )
+  const br = camera.position.add(
+    viewport.size.div(2).div(tileSize),
+  )
+  console.log({ tl, br })
+
   const chunkIds = new Set<ChunkId>()
   for (let y = -1; y <= 0; y++) {
     for (let x = -1; x <= 0; x++) {

@@ -1,3 +1,4 @@
+import { getVisibleChunkIds } from '@sim-v2/camera'
 import {
   InitSimulatorArgs,
   InitSimulatorFn,
@@ -13,7 +14,7 @@ import { generateWorld } from './generate-world.js'
 
 export const initLocalSimulator: InitSimulatorFn<
   Omit<InitSimulatorArgs, 'executor'>
-> = async () => {
+> = async ({ viewport }) => {
   const world = generateWorld({
     id: 'test',
     seed: `${0}`,
@@ -50,8 +51,13 @@ export const initLocalSimulator: InitSimulatorFn<
     stop(): void {
       controller.abort()
     },
-    setCamera(): void {
-      console.log('todo update visible chunk IDs')
+    setCamera(camera): void {
+      const visibleChunkIds = getVisibleChunkIds({
+        camera,
+        viewport,
+        chunkSize: world.chunkSize,
+      })
+      console.log(visibleChunkIds)
     },
     setViewport() {
       invariant(false, 'TODO')
