@@ -68,7 +68,7 @@ export const initGpuGraphics: InitGraphicsFn<
   const animate: Record<
     ChunkId,
     {
-      start: number
+      elapsed: number
       duration: number
     }
   > = {}
@@ -85,6 +85,10 @@ export const initGpuGraphics: InitGraphicsFn<
     })
     state.buffers.color[chunk.id] = buffer
     world.chunks[chunk.id] = chunk
+    animate[chunk.id] = {
+      elapsed: 0,
+      duration: 1000,
+    }
   }
 
   const render = measureFps(
