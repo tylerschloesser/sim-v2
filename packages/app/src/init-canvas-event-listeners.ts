@@ -44,8 +44,8 @@ export function initCanvasEventListeners({
   signal: AbortSignal
 }): void {
   const handlePointerOne: HandlePointerFn = ({
-    next,
     prev,
+    next,
   }) => {
     const tileSize = getTileSize()
 
@@ -61,8 +61,8 @@ export function initCanvasEventListeners({
   }
 
   const handlePointerTwo: HandlePointerFn = ({
-    next,
     prev,
+    next,
   }) => {
     const other = getOtherPointer(next)
     if (!other.buttons) {
