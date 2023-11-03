@@ -91,7 +91,7 @@ export const initGpuGraphics: InitGraphicsFn<
         4, gl.FLOAT, false, 0, 0,
       )
 
-        updateModel(getPosition(chunk, world))
+        updateModel(getPosition(chunk.id, chunkSize))
         gl.uniformMatrix4fv(
           state.programs.main.uniforms.model,
           false,

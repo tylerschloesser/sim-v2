@@ -1,4 +1,5 @@
 import Prando from 'prando'
+import { createNoise3D } from 'simplex-noise'
 import invariant from 'tiny-invariant'
 
 export function initGeneratorContext(seed: string) {
@@ -14,7 +15,12 @@ export function initGeneratorContext(seed: string) {
     return rng.next()
   }
 
-  return { random }
+  const noise3d = createNoise3D(rng.next.bind(rng))
+  function noise(x: number, y: number, z: number): number {
+    return (noise3d(x, y, z) + 1) / 2
+  }
+
+  return { random, noise }
 }
 
 export type GeneratorContext = ReturnType<

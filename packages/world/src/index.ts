@@ -2,6 +2,7 @@ import { Vec2 } from '@sim-v2/math'
 import invariant from 'tiny-invariant'
 import {
   Chunk,
+  ChunkId,
   World,
   WorldUpdate,
   WorldUpdateType,
@@ -30,21 +31,21 @@ export function applyWorldUpdates(
 const positionCache = new Map<string, Vec2>()
 
 export function getPosition(
-  chunk: Chunk,
-  world: World,
+  chunkId: ChunkId,
+  chunkSize: number,
 ): Vec2 {
-  const key = `${world.chunkSize}.${chunk.id}`
+  const key = `${chunkSize}.${chunkId}`
   const cached = positionCache.get(key)
   if (cached) {
     return cached
   }
-  const match = chunk.id.match(/(-?\d+)\.(-?\d+)/)
+  const match = chunkId.match(/(-?\d+)\.(-?\d+)/)
   invariant(match?.length === 3)
   const [x, y] = match.slice(1)
   invariant(x)
   invariant(y)
   const position = new Vec2(parseInt(x), parseInt(y)).mul(
-    world.chunkSize,
+    chunkSize,
   )
   positionCache.set(key, position)
   return position
@@ -52,7 +53,7 @@ export function getPosition(
 
 export function* iterateTiles(chunk: Chunk, world: World) {
   const { chunkSize } = world
-  const position = getPosition(chunk, world)
+  const position = getPosition(chunk.id, chunkSize)
 
   invariant(chunk.tiles[0])
 
