@@ -1,8 +1,6 @@
 import { SimpleVec2, Vec2 } from '@sim-v2/math'
 import { World } from '@sim-v2/world'
 
-export * from './message.js'
-
 export interface Viewport<V = Vec2> {
   size: V
   pixelRatio: number
@@ -22,7 +20,6 @@ export interface InitSimulatorArgs<V = Vec2> {
   executor: Executor
   viewport: Viewport<V>
   camera: Camera<V>
-  graphicsPort: MessagePort
   callbacks: {
     setWorld(world: World): void
   }
@@ -60,7 +57,6 @@ export interface InitGraphicsArgs<
   canvas: C
   viewport: Viewport<V>
   camera: Camera<V>
-  simulatorPort: MessagePort
   callbacks: {
     reportFps: ReportFpsFn
     reportInputLatency: ReportInputLatencyFn

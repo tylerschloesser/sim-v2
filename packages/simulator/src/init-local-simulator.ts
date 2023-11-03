@@ -3,8 +3,6 @@ import {
   Camera,
   InitSimulatorArgs,
   InitSimulatorFn,
-  SimulatorMessageType,
-  SyncChunksSimulatorMessage,
 } from '@sim-v2/types'
 import {
   World,
@@ -18,7 +16,7 @@ import { initGeneratorContext } from './init-generator-context.js'
 
 export const initLocalSimulator: InitSimulatorFn<
   Omit<InitSimulatorArgs, 'executor'>
-> = async ({ graphicsPort, ...args }) => {
+> = async ({ ...args }) => {
   let { camera, viewport } = args
 
   const world: World = {
@@ -63,12 +61,6 @@ export const initLocalSimulator: InitSimulatorFn<
       })
     }
   }
-
-  const message: SyncChunksSimulatorMessage = {
-    type: SimulatorMessageType.SyncChunks,
-    chunks: world.chunks,
-  }
-  graphicsPort.postMessage(message)
 
   return {
     world,

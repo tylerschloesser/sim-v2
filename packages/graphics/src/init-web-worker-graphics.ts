@@ -60,10 +60,7 @@ export function initWebWorkerGraphics({
     ...args,
   }
 
-  worker.postMessage(init, [
-    init.canvas,
-    init.simulatorPort,
-  ])
+  worker.postMessage(init, [init.canvas])
 
   return {
     stop() {

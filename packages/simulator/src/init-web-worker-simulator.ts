@@ -36,7 +36,9 @@ export const initWebWorkerSimulator: InitSimulatorFn<
       'message',
       (e) => {
         const message = e.data as CallbackMessage
-        invariant(message.type === CallbackMessageType.SetWorld)
+        invariant(
+          message.type === CallbackMessageType.SetWorld,
+        )
         resolve(message.world)
       },
       { once: true, signal },
@@ -70,7 +72,7 @@ export const initWebWorkerSimulator: InitSimulatorFn<
     worker.terminate()
   })
 
-  worker.postMessage(init, [init.graphicsPort])
+  worker.postMessage(init)
 
   let world = await promise
 

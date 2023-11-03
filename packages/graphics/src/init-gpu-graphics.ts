@@ -7,23 +7,13 @@ import {
 import { getPosition } from '@sim-v2/world'
 import invariant from 'tiny-invariant'
 import { initMatrices } from './init-matricies.js'
-import {
-  SyncChunkCallbackFn,
-  initSimulatorMessageHandler,
-} from './init-simulator-message-handler.js'
 import { initColorBuffer, initWebGL } from './init-webgl.js'
 import { measureFps } from './measure-fps.js'
 import { getGpuContext } from './util.js'
 
 export const initGpuGraphics: InitGraphicsFn<
   Omit<InitGraphicsArgs, 'executor' | 'strategy'>
-> = ({
-  canvas,
-  simulatorPort,
-  world,
-  callbacks,
-  ...args
-}) => {
+> = ({ canvas, world, callbacks, ...args }) => {
   let { viewport, camera } = args
   const { chunkSize } = world
 
@@ -34,21 +24,10 @@ export const initGpuGraphics: InitGraphicsFn<
 
   const state = initWebGL({ gl, chunkSize })
 
-  const syncChunkCallback: SyncChunkCallbackFn = (
-    chunk,
-  ) => {
-    // TODO move this to another task/thread
-
-    invariant(state.buffers.color[chunk.id] === undefined)
+  for (const chunk of Object.values(world.chunks)) {
     const buffer = initColorBuffer({ gl, chunkSize, chunk })
     state.buffers.color[chunk.id] = buffer
   }
-
-  initSimulatorMessageHandler({
-    world,
-    simulatorPort,
-    syncChunkCallback,
-  })
 
   gl.useProgram(state.programs.main.program)
 

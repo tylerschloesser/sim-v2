@@ -10,28 +10,16 @@ import {
   iterateTiles,
 } from '@sim-v2/world'
 import invariant from 'tiny-invariant'
-import { initSimulatorMessageHandler } from './init-simulator-message-handler.js'
 import { measureFps } from './measure-fps.js'
 import { getCpuContext } from './util.js'
 
 export const initCpuGraphics: InitGraphicsFn<
   Omit<InitGraphicsArgs, 'executor' | 'strategy'>
-> = ({
-  canvas,
-  simulatorPort,
-  world,
-  callbacks,
-  ...args
-}) => {
+> = ({ canvas, world, callbacks, ...args }) => {
   let { viewport, camera } = args
   let tileSize = getTileSize(camera, viewport)
 
   const controller = new AbortController()
-
-  initSimulatorMessageHandler({
-    world,
-    simulatorPort,
-  })
 
   const context = getCpuContext(canvas)
   context.scale(viewport.pixelRatio, viewport.pixelRatio)

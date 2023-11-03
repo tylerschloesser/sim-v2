@@ -35,13 +35,10 @@ export async function initApp({
 
   let tileSize = getTileSize(camera, viewport)
 
-  const ports = getPorts()
-
   const simulator = await initSimulator({
     executor: settings.executor.simulator,
     viewport,
     camera,
-    graphicsPort: ports.simulator.graphicsPort,
     callbacks: {
       setWorld(_world) {
         invariant(false, 'TODO')
@@ -58,7 +55,6 @@ export async function initApp({
     canvas,
     viewport,
     camera,
-    simulatorPort: ports.graphics.simulatorPort,
     callbacks: {
       reportFps: config.reportFps,
       reportInputLatency(inputLatency) {
@@ -89,18 +85,5 @@ export async function initApp({
       canvas.remove()
     },
     logWorld: simulator.logWorld,
-  }
-}
-
-function getPorts() {
-  const channel1 = new MessageChannel()
-
-  return {
-    graphics: {
-      simulatorPort: channel1.port1,
-    },
-    simulator: {
-      graphicsPort: channel1.port2,
-    },
   }
 }
