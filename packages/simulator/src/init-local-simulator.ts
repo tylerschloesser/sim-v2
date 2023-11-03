@@ -51,7 +51,7 @@ export const initLocalSimulator: InitSimulatorFn<
       controller.abort()
     },
     setCamera(): void {
-      invariant(false, 'TODO')
+      console.log('todo update visible chunk IDs')
     },
     setViewport() {
       invariant(false, 'TODO')

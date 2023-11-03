@@ -45,6 +45,21 @@ self.addEventListener('message', async (e) => {
       simulator.logWorld()
       break
     }
+    case MessageType.SetCamera: {
+      invariant(simulator)
+      simulator.setCamera({
+        position: new Vec2(message.camera.position),
+        zoom: message.camera.zoom,
+      })
+      break
+    }
+    case MessageType.SetViewport: {
+      invariant(simulator)
+      simulator.setViewport({
+        size: new Vec2(message.viewport.size),
+        pixelRatio: message.viewport.pixelRatio,
+      })
+    }
     default: {
       invariant(false)
     }

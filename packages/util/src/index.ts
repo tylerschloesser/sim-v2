@@ -37,6 +37,8 @@ export function timeout(ms: number): Promise<void> {
   })
 }
 
+const cache = new Map()
+
 export function throttle<A extends Array<unknown>>(
   fn: (...args: A) => void,
   ms: number,
@@ -44,7 +46,12 @@ export function throttle<A extends Array<unknown>>(
   let timeout: number | undefined
   let use: A
 
-  return (...args: A) => {
+  const cached = cache.get(fn)
+  if (cached) {
+    return cached
+  }
+
+  const throttled = (...args: A) => {
     use = args
     if (!timeout) {
       timeout = self.setTimeout(() => {
@@ -53,4 +60,7 @@ export function throttle<A extends Array<unknown>>(
       }, ms)
     }
   }
+
+  cache.set(fn, throttled)
+  return throttled
 }
