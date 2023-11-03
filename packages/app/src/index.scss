@@ -22,6 +22,11 @@ canvas {
   display: flex;
   justify-content: space-between;
   background: var(--background-panel);
+
+  fieldset {
+    display: flex;
+    flex-direction: column;
+  }
 }
 
 .info {
