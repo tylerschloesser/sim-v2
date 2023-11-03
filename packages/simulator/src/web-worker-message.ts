@@ -4,7 +4,7 @@ import {
   InitSimulatorArgs,
   Viewport,
 } from '@sim-v2/types'
-import { World } from '@sim-v2/world'
+import { Chunk, ChunkId, World } from '@sim-v2/world'
 
 export enum MessageType {
   InitRequest = 'init-request',
@@ -13,6 +13,7 @@ export enum MessageType {
   SetCamera = 'set-camera',
   SetViewport = 'set-viewport',
   LogWorld = 'log-world',
+  SyncChunksCallback = 'sync-chunks-callback',
 }
 
 export type InitRequestMessage = {
@@ -45,6 +46,11 @@ export interface LogWorldMessage {
   type: MessageType.LogWorld
 }
 
+export interface SyncChunksCallbackMessage {
+  type: MessageType.SyncChunksCallback
+  chunks: Record<ChunkId, Chunk>
+}
+
 export type Message =
   | InitRequestMessage
   | InitResponseMessage
@@ -52,3 +58,4 @@ export type Message =
   | SetCameraMessage
   | SetViewportMessage
   | LogWorldMessage
+  | SyncChunksCallbackMessage

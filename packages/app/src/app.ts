@@ -37,7 +37,11 @@ export async function initApp({
     executor: settings.executor.simulator,
     viewport,
     camera,
-    callbacks: {},
+    callbacks: {
+      syncChunks(chunks) {
+        console.log('todo sync chunks', chunks)
+      },
+    },
   })
 
   let { world } = simulator

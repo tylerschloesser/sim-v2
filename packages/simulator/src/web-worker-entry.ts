@@ -6,6 +6,7 @@ import {
   InitResponseMessage,
   Message,
   MessageType,
+  SyncChunksCallbackMessage,
 } from './web-worker-message.js'
 
 let simulator: Simulator | null = null
@@ -67,5 +68,13 @@ self.addEventListener('message', async (e) => {
 })
 
 function initCallbacks(): InitSimulatorArgs['callbacks'] {
-  return {}
+  return {
+    syncChunks(chunks) {
+      const message: SyncChunksCallbackMessage = {
+        type: MessageType.SyncChunksCallback,
+        chunks,
+      }
+      self.postMessage(message)
+    },
+  }
 }

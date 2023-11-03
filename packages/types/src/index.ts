@@ -1,5 +1,5 @@
 import { SimpleVec2, Vec2 } from '@sim-v2/math'
-import { World } from '@sim-v2/world'
+import { Chunk, ChunkId, World } from '@sim-v2/world'
 import * as z from 'zod'
 
 export interface Viewport<V = Vec2> {
@@ -28,7 +28,9 @@ export interface InitSimulatorArgs<V = Vec2> {
   executor: Executor
   viewport: Viewport<V>
   camera: Camera<V>
-  callbacks: {}
+  callbacks: {
+    syncChunks(chunks: Record<ChunkId, Chunk>): void
+  }
 }
 
 export type InitSimulatorFn<T = InitSimulatorArgs> = (

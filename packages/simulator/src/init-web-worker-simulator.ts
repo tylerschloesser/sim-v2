@@ -26,12 +26,16 @@ export const initWebWorkerSimulator: InitSimulatorFn<
   const controller = new AbortController()
   const { signal } = controller
 
+  signal.addEventListener('abort', () => {
+    worker.terminate()
+  })
+
   const init: InitRequestMessage = {
     type: MessageType.InitRequest,
     ...args,
   }
 
-  const world = new Promise<World>((resolve, reject) => {
+  const promise = new Promise<World>((resolve, reject) => {
     const timeout = setTimeout(() => {
       reject('timeout')
     }, 1000)
@@ -49,12 +53,23 @@ export const initWebWorkerSimulator: InitSimulatorFn<
 
   worker.postMessage(init)
 
-  signal.addEventListener('abort', () => {
-    worker.terminate()
+  const world = await promise
+
+  worker.addEventListener('message', (e) => {
+    const message = e.data as Message
+    switch (message.type) {
+      case MessageType.SyncChunksCallback: {
+        callbacks.syncChunks(message.chunks)
+        break
+      }
+      default: {
+        invariant(false)
+      }
+    }
   })
 
   return {
-    world: await world,
+    world,
     start(): void {
       const message: StartMessage = {
         type: MessageType.Start,
