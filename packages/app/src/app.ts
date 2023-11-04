@@ -7,7 +7,6 @@ import { throttle } from '@sim-v2/util'
 import { loadCamera, saveCamera } from './camera.js'
 import { initCanvasEventListeners } from './init-canvas-event-listeners.js'
 import { App, AppConfig, AppSettings } from './types.js'
-import { averageInputLatency } from './util.js'
 
 export async function initApp({
   settings,
@@ -57,11 +56,6 @@ export async function initApp({
     camera,
     callbacks: {
       reportStat: config.reportStat,
-      reportInputLatency(inputLatency) {
-        config.reportInputLatency?.(
-          averageInputLatency(inputLatency),
-        )
-      },
     },
   })
 

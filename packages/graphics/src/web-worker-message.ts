@@ -12,7 +12,6 @@ export enum MessageType {
   SetViewport = 'set-viewport',
   SyncChunks = 'sync-chunks',
   ReportStatCallback = 'report-stat-callback',
-  ReportInputLatencyCallback = 'report-input-latency-callback',
 }
 
 export type InitMessage = {
@@ -49,12 +48,11 @@ export type ReportStatCallbackMessage = {
       key: 'fps'
       value: number
     }
+  | {
+      key: 'input-latency'
+      value: number
+    }
 )
-
-export interface ReportInputLatencyCallbackMessage {
-  type: MessageType.ReportInputLatencyCallback
-  inputLatency: number
-}
 
 export type Message =
   | InitMessage
@@ -62,4 +60,3 @@ export type Message =
   | SetViewportMessage
   | SyncChunksMessage
   | ReportStatCallbackMessage
-  | ReportInputLatencyCallbackMessage

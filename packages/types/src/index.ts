@@ -70,7 +70,7 @@ export interface InitGraphicsArgs<
   callbacks: {
     reportStat(key: 'rendered-chunks', value: number): void
     reportStat(key: 'fps', value: number): void
-    reportInputLatency: ReportInputLatencyFn
+    reportStat(key: 'input-latency', value: number): void
   }
 }
 

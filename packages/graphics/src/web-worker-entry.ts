@@ -5,7 +5,6 @@ import { initLocalGraphics } from './init-local-graphics.js'
 import {
   Message,
   MessageType,
-  ReportInputLatencyCallbackMessage,
   ReportStatCallbackMessage,
 } from './web-worker-message.js'
 
@@ -75,15 +74,10 @@ function initCallbacks(): InitGraphicsArgs['callbacks'] {
               return { key, value }
             case 'fps':
               return { key, value }
+            case 'input-latency':
+              return { key, value }
           }
         })(),
-      }
-      self.postMessage(message)
-    },
-    reportInputLatency(inputLatency) {
-      const message: ReportInputLatencyCallbackMessage = {
-        type: MessageType.ReportInputLatencyCallback,
-        inputLatency,
       }
       self.postMessage(message)
     },

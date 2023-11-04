@@ -81,7 +81,7 @@ export const initCpuGraphics: InitGraphicsFn<
     },
     setCamera(next: Camera, time: number): void {
       const now = performance.timeOrigin + performance.now()
-      callbacks?.reportInputLatency?.(now - time)
+      callbacks.reportStat('input-latency', now - time)
       camera = next
       tileSize = zoomToTileSize(camera.zoom, viewport)
     },

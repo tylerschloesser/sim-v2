@@ -50,14 +50,16 @@ export function initWebWorkerGraphics({
               )
               break
             }
+            case 'input-latency': {
+              callbacks.reportStat(
+                message.key,
+                message.value,
+              )
+            }
             default: {
               invariant(false)
             }
           }
-          break
-        }
-        case MessageType.ReportInputLatencyCallback: {
-          callbacks.reportInputLatency(message.inputLatency)
           break
         }
         default: {

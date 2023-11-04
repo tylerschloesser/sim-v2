@@ -3,7 +3,6 @@ import {
   Camera,
   Executor,
   GraphicsStrategy,
-  ReportInputLatencyFn,
   ReportStatFn,
   Viewport,
 } from '@sim-v2/types'
@@ -25,7 +24,6 @@ export type AppSettings = z.infer<typeof AppSettings>
 export interface AppConfig {
   pixelRatio: number
   reportStat: ReportStatFn
-  reportInputLatency: ReportInputLatencyFn
   reportCamera: ReportCameraFn
 }
 

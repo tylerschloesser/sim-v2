@@ -1,8 +1,4 @@
-import {
-  Executor,
-  GraphicsStrategy,
-  ReportInputLatencyFn,
-} from '@sim-v2/types'
+import { Executor, GraphicsStrategy } from '@sim-v2/types'
 import invariant from 'tiny-invariant'
 import { initApp } from './app.js'
 import './index.scss'
@@ -11,7 +7,10 @@ import {
   AppSettings,
   ReportCameraFn,
 } from './types.js'
-import { getPixelRatio } from './util.js'
+import {
+  averageInputLatency,
+  getPixelRatio,
+} from './util.js'
 
 const elements = {
   fps: getSpan('.fps .value'),
@@ -29,24 +28,11 @@ const elements = {
 const pixelRatio = getPixelRatio()
 elements.dpr.innerText = `${pixelRatio}`
 
-const reportInputLatency: ReportInputLatencyFn = (
-  inputLatency,
-) => {
-  elements.inputLatency.innerText = `${inputLatency.toFixed(
-    2,
-  )}ms`
-}
-
+// prettier-ignore
 const reportCamera: ReportCameraFn = (camera) => {
-  elements.camera.x.innerText = `${camera.position.x.toFixed(
-    2,
-  )}`
-  elements.camera.y.innerText = `${camera.position.y.toFixed(
-    2,
-  )}`
-  elements.camera.zoom.innerText = `${camera.zoom.toFixed(
-    2,
-  )}`
+  elements.camera.x.innerText = `${camera.position.x.toFixed(2)}`
+  elements.camera.y.innerText = `${camera.position.y.toFixed(2)}`
+  elements.camera.zoom.innerText = `${camera.zoom.toFixed(2)}`
 }
 
 const config: AppConfig = {
@@ -61,9 +47,13 @@ const config: AppConfig = {
         elements.fps.innerText = `${value}`
         break
       }
+      case 'input-latency': {
+        const average = averageInputLatency(value)
+        // prettier-ignore
+        elements.inputLatency.innerText = `${average.toFixed(2)}ms`
+      }
     }
   },
-  reportInputLatency,
   reportCamera,
 }
 

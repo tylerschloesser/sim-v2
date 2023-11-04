@@ -175,7 +175,7 @@ export const initGpuGraphics: InitGraphicsFn<
     },
     setCamera(next: Camera, time: number): void {
       const now = performance.timeOrigin + performance.now()
-      callbacks?.reportInputLatency?.(now - time)
+      callbacks.reportStat('input-latency', now - time)
       camera = next
       updateView(camera, viewport)
       gl.uniformMatrix4fv(
