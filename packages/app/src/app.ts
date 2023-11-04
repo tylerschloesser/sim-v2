@@ -44,9 +44,7 @@ export async function initApp({
     viewport,
     camera,
     callbacks: {
-      syncChunks({ show, hide }) {
-        console.log(show, hide)
-      },
+      syncChunks({ show, hide }) {},
     },
   })
 

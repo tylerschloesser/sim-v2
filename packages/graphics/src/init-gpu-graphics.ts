@@ -142,6 +142,9 @@ export const initGpuGraphics: InitGraphicsFn<
 
       let renderedChunkCount = 0
       for (const chunk of Object.values(world.chunks)) {
+        if (!chunkIdToStatus[chunk.id]?.shown) {
+          continue
+        }
         const color = state.buffers.color[chunk.id]
         if (!color) {
           continue
