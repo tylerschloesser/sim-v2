@@ -191,7 +191,8 @@ export function initCanvasEventListeners({
       e.preventDefault()
 
       const viewport = getViewport()
-      const scale = viewport.size.y
+      const scale =
+        viewport.size.y * (1 + (1 - camera.zoom)) * 1
 
       const zoom = {
         prev: camera.zoom,
