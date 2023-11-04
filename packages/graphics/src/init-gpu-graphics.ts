@@ -30,6 +30,19 @@ export const initGpuGraphics: InitGraphicsFn<
     state.buffers.color[chunk.id] = buffer
   }
 
+  const reportRenderedChunks = (() => {
+    let value: number | undefined
+    return (count: number) => {
+      if (value !== count) {
+        value = count
+        callbacks.reportStat({
+          key: 'rendered-chunks',
+          value,
+        })
+      }
+    }
+  })()
+
   gl.useProgram(state.programs.main.program)
 
   const {
@@ -103,11 +116,13 @@ export const initGpuGraphics: InitGraphicsFn<
       gl.clearColor(1, 1, 1, 1)
       gl.clear(gl.COLOR_BUFFER_BIT)
 
+      let renderedChunkCount = 0
       for (const chunk of Object.values(world.chunks)) {
         const color = state.buffers.color[chunk.id]
         if (!color) {
           continue
         }
+        renderedChunkCount += 1
 
         let alpha: number = 1.0
         const animation = animate[chunk.id]
@@ -149,6 +164,8 @@ export const initGpuGraphics: InitGraphicsFn<
           0,
         )
       }
+
+      reportRenderedChunks(renderedChunkCount)
 
       requestAnimationFrame(render)
     },
