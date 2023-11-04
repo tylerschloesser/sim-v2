@@ -24,12 +24,16 @@ export enum Executor {
   WebWorker = 'web-worker',
 }
 
+export type SyncChunksFn = (
+  chunks: Record<ChunkId, Chunk>,
+) => void
+
 export interface InitSimulatorArgs<V = Vec2> {
   executor: Executor
   viewport: Viewport<V>
   camera: Camera<V>
   callbacks: {
-    syncChunks(chunks: Record<ChunkId, Chunk>): void
+    syncChunks: SyncChunksFn
   }
 }
 
@@ -44,9 +48,7 @@ export interface Simulator {
   setCamera(camera: Camera): void
   logWorld(): void
   stop(): void
-  addSyncChunksListener(
-    listener: (chunks: Record<ChunkId, Chunk>) => void,
-  ): void
+  addSyncChunksListener(listener: SyncChunksFn): void
 }
 export enum GraphicsStrategy {
   Cpu = 'cpu',
@@ -95,7 +97,7 @@ export type InitGraphicsFn<T = InitGraphicsArgs> = (
 export interface Graphics {
   setViewport(viewport: Viewport): void
   setCamera(camera: Camera, time: number): void
-  syncChunks(chunks: Record<ChunkId, Chunk>): void
+  syncChunks: SyncChunksFn
   stop(): void
 }
 
