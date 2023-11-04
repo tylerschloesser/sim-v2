@@ -190,17 +190,29 @@ export function initCanvasEventListeners({
     (e) => {
       e.preventDefault()
 
+      const viewport = getViewport()
+      const scale = viewport.size.y
+
       const zoom = {
         prev: camera.zoom,
-        next: clampZoom(
-          camera.zoom + -e.deltaY / getViewport().size.y,
-        ),
+        next: clampZoom(camera.zoom + -e.deltaY / scale),
       }
 
       if (zoom.prev === zoom.next) {
         return
       }
 
+      const anchor = new Vec2(e.clientX, e.clientY).sub(
+        viewport.size.div(2),
+      )
+      const adjust = anchor
+        .div(zoomToTileSize(zoom.prev, viewport))
+        .sub(
+          anchor.div(zoomToTileSize(zoom.next, viewport)),
+        )
+
+      camera.position.x += adjust.x
+      camera.position.y += adjust.y
       camera.zoom = zoom.next
 
       setCamera(
