@@ -2,7 +2,7 @@ import { zoomToTileSize } from '@sim-v2/camera'
 import { initGraphics } from '@sim-v2/graphics'
 import { Vec2 } from '@sim-v2/math'
 import { initSimulator } from '@sim-v2/simulator'
-import { Viewport } from '@sim-v2/types'
+import { StatType, Viewport } from '@sim-v2/types'
 import { throttle } from '@sim-v2/util'
 import { loadCamera, saveCamera } from './camera.js'
 import { initCanvasEventListeners } from './init-canvas-event-listeners.js'
@@ -32,7 +32,10 @@ export async function initApp({
   }
 
   const camera = loadCamera()
-  config.reportCamera(camera)
+  config.reportStat({
+    type: StatType.Camera,
+    value: camera,
+  })
 
   let tileSize = zoomToTileSize(camera.zoom, viewport)
 
@@ -75,7 +78,10 @@ export async function initApp({
 
       throttle(saveCamera, 1000)(camera)
 
-      config.reportCamera(camera)
+      config.reportStat({
+        type: StatType.Camera,
+        value: camera,
+      })
     },
     signal,
   })

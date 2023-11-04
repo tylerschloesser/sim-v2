@@ -2,11 +2,7 @@ import { Executor, GraphicsStrategy } from '@sim-v2/types'
 import invariant from 'tiny-invariant'
 import { initApp } from './app.js'
 import './index.scss'
-import {
-  AppConfig,
-  AppSettings,
-  ReportCameraFn,
-} from './types.js'
+import { AppConfig, AppSettings } from './types.js'
 import {
   averageInputLatency,
   getPixelRatio,
@@ -28,13 +24,6 @@ const elements = {
 const pixelRatio = getPixelRatio()
 elements.dpr.innerText = `${pixelRatio}`
 
-// prettier-ignore
-const reportCamera: ReportCameraFn = (camera) => {
-  elements.camera.x.innerText = `${camera.position.x.toFixed(2)}`
-  elements.camera.y.innerText = `${camera.position.y.toFixed(2)}`
-  elements.camera.zoom.innerText = `${camera.zoom.toFixed(2)}`
-}
-
 const config: AppConfig = {
   pixelRatio,
   reportStat({ type, value }) {
@@ -53,9 +42,15 @@ const config: AppConfig = {
         elements.inputLatency.innerText = `${average.toFixed(2)}ms`
         break
       }
+      // prettier-ignore
+      case 'camera': {
+        elements.camera.x.innerText = `${value.position.x.toFixed(2)}`
+        elements.camera.y.innerText = `${value.position.y.toFixed(2)}`
+        elements.camera.zoom.innerText = `${value.zoom.toFixed(2)}`
+        break
+      }
     }
   },
-  reportCamera,
 }
 
 const DEFAULT_SETTINGS: AppSettings = {

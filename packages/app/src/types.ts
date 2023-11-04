@@ -8,8 +8,6 @@ import {
 } from '@sim-v2/types'
 import { z } from 'zod'
 
-export type ReportCameraFn = (camera: Camera) => void
-
 export const AppSettings = z.object({
   executor: z.object({
     simulator: z.nativeEnum(Executor),
@@ -24,7 +22,6 @@ export type AppSettings = z.infer<typeof AppSettings>
 export interface AppConfig {
   pixelRatio: number
   reportStat: ReportStatFn
-  reportCamera: ReportCameraFn
 }
 
 export interface App {
