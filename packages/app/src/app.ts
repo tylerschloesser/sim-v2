@@ -53,7 +53,8 @@ export async function initApp({
   const graphics = initGraphics({
     executor: settings.executor.graphics,
     strategy: settings.strategy.graphics,
-    world,
+    // shallow copy so that graphics can maintain its own chunks
+    world: { ...world },
     canvas,
     viewport,
     camera,
