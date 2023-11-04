@@ -34,6 +34,8 @@ export const initLocalSimulator: InitSimulatorFn<
   let started: boolean = false
   let interval: number | undefined
 
+  const currentChunkIds = new Set<ChunkId>()
+
   const setCamera: Simulator['setCamera'] = (camera) => {
     const visibleChunkIds = getVisibleChunkIds({
       camera,
@@ -42,17 +44,35 @@ export const initLocalSimulator: InitSimulatorFn<
     })
 
     const show = new Set<Chunk>()
-    // TODO
     const hide = new Set<ChunkId>()
 
+    let identical =
+      visibleChunkIds.size === currentChunkIds.size
+    for (const chunkId of currentChunkIds) {
+      if (!visibleChunkIds.has(chunkId)) {
+        identical = false
+        currentChunkIds.delete(chunkId)
+        hide.add(chunkId)
+      }
+    }
+
+    if (identical) {
+      // optimization, if visible chunks have not changed
+      return
+    }
+
     for (const chunkId of visibleChunkIds) {
-      if (!world.chunks[chunkId]) {
-        const chunk = generateChunk({
+      let chunk = world.chunks[chunkId]
+      if (!chunk) {
+        chunk = world.chunks[chunkId] = generateChunk({
           chunkId,
           chunkSize,
           generator,
         })
-        world.chunks[chunkId] = chunk
+      }
+
+      if (!currentChunkIds.has(chunk.id)) {
+        currentChunkIds.add(chunk.id)
         show.add(chunk)
       }
     }
