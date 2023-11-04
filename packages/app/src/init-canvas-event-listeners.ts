@@ -188,11 +188,17 @@ export function initCanvasEventListeners({
   canvas.addEventListener(
     'wheel',
     (e) => {
+      e.preventDefault()
+
       const zoom = {
         prev: camera.zoom,
         next: clampZoom(
           camera.zoom + -e.deltaY / getViewport().size.y,
         ),
+      }
+
+      if (zoom.prev === zoom.next) {
+        return
       }
 
       camera.zoom = zoom.next
@@ -201,8 +207,6 @@ export function initCanvasEventListeners({
         camera,
         performance.timeOrigin + e.timeStamp,
       )
-
-      e.preventDefault()
     },
     { passive: false, signal },
   )
