@@ -7,11 +7,15 @@ export function getVisibleChunkIds({
   camera,
   viewport,
   chunkSize,
+  chunkIds = new Set(),
 }: {
   camera: Camera
   viewport: Viewport
   chunkSize: number
+  chunkIds?: Set<ChunkId>
 }): Set<ChunkId> {
+  chunkIds.clear()
+
   const tileSize = zoomToTileSize(camera.zoom, viewport)
 
   const d = viewport.size.div(2).div(tileSize)
@@ -24,7 +28,6 @@ export function getVisibleChunkIds({
   br.x = Math.ceil(br.x)
   br.y = Math.ceil(br.y)
 
-  const chunkIds = new Set<ChunkId>()
   for (let y = tl.y; y < br.y; y++) {
     for (let x = tl.x; x < br.x; x++) {
       chunkIds.add(`${x}.${y}`)

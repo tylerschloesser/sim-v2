@@ -36,27 +36,20 @@ export const initLocalSimulator: InitSimulatorFn<
 
   const chunkIdToStatus: Record<
     ChunkId,
-    { synced: boolean; shown: boolean }
+    { synced: boolean }
   > = {}
 
+  const visibleChunkIds = new Set<ChunkId>()
+  const sync = new Set<Chunk>()
+
   const setCamera: Simulator['setCamera'] = (camera) => {
-    const visibleChunkIds = getVisibleChunkIds({
+    getVisibleChunkIds({
       camera,
       viewport,
       chunkSize,
+      chunkIds: visibleChunkIds,
     })
-
-    const sync = new Set<Chunk>()
-    const show = new Set<ChunkId>()
-
-    const hide = new Set<ChunkId>()
-    for (const [chunkId, { shown }] of Object.entries(
-      chunkIdToStatus,
-    )) {
-      if (shown) {
-        hide.add(chunkId)
-      }
-    }
+    sync.clear()
 
     for (const chunkId of visibleChunkIds) {
       let chunk = world.chunks[chunkId]
@@ -72,7 +65,6 @@ export const initLocalSimulator: InitSimulatorFn<
       if (!status) {
         status = chunkIdToStatus[chunk.id] = {
           synced: false,
-          shown: false,
         }
       }
 
@@ -80,24 +72,10 @@ export const initLocalSimulator: InitSimulatorFn<
         sync.add(chunk)
         status.synced = true
       }
-      if (!status.shown) {
-        show.add(chunk.id)
-        status.shown = true
-      }
-
-      hide.delete(chunk.id)
     }
 
-    for (const chunkId of hide) {
-      const status = chunkIdToStatus[chunkId]
-      invariant(status)
-      status.shown = false
-    }
-
-    invariant(!sync.size || show.size > 0)
-
-    if (sync.size || show.size || hide.size) {
-      const args = { chunks: sync, show, hide }
+    if (sync.size) {
+      const args = { chunks: sync }
       for (const syncChunks of syncChunksListeners) {
         syncChunks(args)
       }

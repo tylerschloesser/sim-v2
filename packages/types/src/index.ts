@@ -26,8 +26,6 @@ export enum Executor {
 
 export type SyncChunksFn = (args: {
   chunks: Set<Chunk>
-  show: Set<ChunkId>
-  hide: Set<ChunkId>
 }) => void
 
 export interface InitSimulatorArgs<V = Vec2> {

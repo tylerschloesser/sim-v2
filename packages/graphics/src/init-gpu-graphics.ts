@@ -1,3 +1,4 @@
+import { getVisibleChunkIds } from '@sim-v2/camera'
 import { easeOut } from '@sim-v2/math'
 import {
   Camera,
@@ -88,46 +89,30 @@ export const initGpuGraphics: InitGraphicsFn<
     }
   > = {}
 
-  // TODO consolidate with animate
-  const chunkIdToStatus: Record<
-    ChunkId,
-    { shown: boolean }
-  > = {}
+  const visibleChunkIds = getVisibleChunkIds({
+    camera,
+    chunkSize,
+    viewport,
+  })
 
   function addChunk(chunk: Chunk): void {
+    invariant(!world.chunks[chunk.id])
+    invariant(!state.buffers.color[chunk.id])
+    invariant(!animate[chunk.id])
+
     world.chunks[chunk.id] = chunk
 
-    if (!state.buffers.color[chunk.id]) {
-      const buffer = initColorBuffer({
-        gl,
-        chunkSize,
-        chunk,
-      })
-      state.buffers.color[chunk.id] = buffer
+    state.buffers.color[chunk.id] = initColorBuffer({
+      gl,
+      chunkSize,
+      chunk,
+    })
+
+    // assume that if we're adding a chunk, we're showing it immediately
+    animate[chunk.id] = {
+      start: performance.now(),
+      duration: 250,
     }
-  }
-
-  function showChunk(chunkId: ChunkId): void {
-    let status = chunkIdToStatus[chunkId]
-    if (!status) {
-      status = chunkIdToStatus[chunkId] = {
-        shown: false,
-      }
-
-      // this is a new chunk, animate it
-      invariant(!animate[chunkId])
-      animate[chunkId] = {
-        start: performance.now(),
-        duration: 250,
-      }
-    }
-    status.shown = true
-  }
-
-  function hideChunk(chunkId: ChunkId): void {
-    const status = chunkIdToStatus[chunkId]
-    invariant(status)
-    status.shown = false
   }
 
   const render = measureFps(
@@ -141,14 +126,14 @@ export const initGpuGraphics: InitGraphicsFn<
       gl.clear(gl.COLOR_BUFFER_BIT)
 
       let renderedChunkCount = 0
-      for (const chunk of Object.values(world.chunks)) {
-        if (!chunkIdToStatus[chunk.id]?.shown) {
+
+      for (const chunkId of visibleChunkIds) {
+        const chunk = world.chunks[chunkId]
+        if (!chunk) {
           continue
         }
         const color = state.buffers.color[chunk.id]
-        if (!color) {
-          continue
-        }
+        invariant(color)
         renderedChunkCount += 1
 
         let alpha: number = 1.0
@@ -216,19 +201,19 @@ export const initGpuGraphics: InitGraphicsFn<
         false,
         view,
       )
+      getVisibleChunkIds({
+        camera,
+        chunkSize,
+        viewport,
+        chunkIds: visibleChunkIds,
+      })
     },
     setViewport(_next: Viewport): void {
       invariant(false, 'TODO')
     },
-    syncChunks({ chunks, show, hide }): void {
+    syncChunks({ chunks }): void {
       for (const chunk of chunks) {
         addChunk(chunk)
-      }
-      for (const chunkId of show) {
-        showChunk(chunkId)
-      }
-      for (const chunkId of hide) {
-        hideChunk(chunkId)
       }
     },
   }

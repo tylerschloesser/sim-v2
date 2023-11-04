@@ -49,8 +49,6 @@ export interface LogWorldMessage {
 export interface SyncChunksCallbackMessage {
   type: MessageType.SyncChunksCallback
   chunks: Set<Chunk>
-  show: Set<ChunkId>
-  hide: Set<ChunkId>
 }
 
 export type Message =

@@ -4,6 +4,7 @@ import { Vec2 } from '@sim-v2/math'
 import { initSimulator } from '@sim-v2/simulator'
 import { StatType, Viewport } from '@sim-v2/types'
 import { throttle } from '@sim-v2/util'
+import invariant from 'tiny-invariant'
 import { loadCamera, saveCamera } from './camera.js'
 import { initCanvasEventListeners } from './init-canvas-event-listeners.js'
 import { App, AppConfig, AppSettings } from './types.js'
@@ -44,17 +45,18 @@ export async function initApp({
     viewport,
     camera,
     callbacks: {
-      syncChunks({ show, hide }) {},
+      syncChunks() {},
     },
   })
 
   let { world } = simulator
+  invariant(Object.keys(world.chunks).length === 0)
 
   const graphics = initGraphics({
     executor: settings.executor.graphics,
     strategy: settings.strategy.graphics,
     // shallow copy so that graphics can maintain its own chunks
-    world: { ...world },
+    world: { ...world, chunks: {} },
     canvas,
     viewport,
     camera,

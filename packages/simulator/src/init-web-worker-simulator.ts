@@ -62,8 +62,8 @@ export const initWebWorkerSimulator: InitSimulatorFn<
     const message = e.data as Message
     switch (message.type) {
       case MessageType.SyncChunksCallback: {
-        const { show, hide, chunks } = message
-        const args = { show, hide, chunks }
+        const { chunks } = message
+        const args = { chunks }
         for (const syncChunks of syncChunksListeners) {
           syncChunks(args)
         }

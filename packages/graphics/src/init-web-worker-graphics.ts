@@ -4,7 +4,6 @@ import {
   InitGraphicsArgs,
   Viewport,
 } from '@sim-v2/types'
-import { Chunk, ChunkId } from '@sim-v2/world'
 import invariant from 'tiny-invariant'
 import {
   InitMessage,
@@ -76,12 +75,10 @@ export function initWebWorkerGraphics({
       }
       worker.postMessage(message)
     },
-    syncChunks({ chunks, show, hide }): void {
+    syncChunks({ chunks }): void {
       const message: SyncChunksMessage = {
         type: MessageType.SyncChunks,
         chunks,
-        show,
-        hide,
       }
       worker.postMessage(message)
     },

@@ -5,7 +5,7 @@ import {
   Stat,
   Viewport,
 } from '@sim-v2/types'
-import { Chunk, ChunkId } from '@sim-v2/world'
+import { Chunk } from '@sim-v2/world'
 
 export enum MessageType {
   Init = 'init',
@@ -36,8 +36,6 @@ export interface SetViewportMessage {
 export interface SyncChunksMessage {
   type: MessageType.SyncChunks
   chunks: Set<Chunk>
-  show: Set<ChunkId>
-  hide: Set<ChunkId>
 }
 
 export interface ReportStatCallbackMessage {
