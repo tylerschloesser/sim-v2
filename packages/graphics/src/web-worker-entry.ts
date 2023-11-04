@@ -5,7 +5,6 @@ import { initLocalGraphics } from './init-local-graphics.js'
 import {
   Message,
   MessageType,
-  ReportFpsCallbackMessage,
   ReportInputLatencyCallbackMessage,
   ReportStatCallbackMessage,
 } from './web-worker-message.js'
@@ -67,17 +66,17 @@ self.addEventListener('message', (e) => {
 
 function initCallbacks(): InitGraphicsArgs['callbacks'] {
   return {
-    reportStat(stat) {
+    reportStat(key, value) {
       const message: ReportStatCallbackMessage = {
         type: MessageType.ReportStatCallback,
-        stat,
-      }
-      self.postMessage(message)
-    },
-    reportFps(fps) {
-      const message: ReportFpsCallbackMessage = {
-        type: MessageType.ReportFpsCallback,
-        fps,
+        ...(() => {
+          switch (key) {
+            case 'rendered-chunks':
+              return { key, value }
+            case 'fps':
+              return { key, value }
+          }
+        })(),
       }
       self.postMessage(message)
     },

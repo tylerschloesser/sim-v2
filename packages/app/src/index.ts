@@ -1,7 +1,6 @@
 import {
   Executor,
   GraphicsStrategy,
-  ReportFpsFn,
   ReportInputLatencyFn,
 } from '@sim-v2/types'
 import invariant from 'tiny-invariant'
@@ -30,10 +29,6 @@ const elements = {
 const pixelRatio = getPixelRatio()
 elements.dpr.innerText = `${pixelRatio}`
 
-const reportFps: ReportFpsFn = (fps) => {
-  elements.fps.innerText = `${fps}`
-}
-
 const reportInputLatency: ReportInputLatencyFn = (
   inputLatency,
 ) => {
@@ -56,15 +51,18 @@ const reportCamera: ReportCameraFn = (camera) => {
 
 const config: AppConfig = {
   pixelRatio,
-  reportStat(stat) {
-    switch (stat.key) {
+  reportStat(key, value) {
+    switch (key) {
       case 'rendered-chunks': {
-        elements.renderedChunks.innerText = `${stat.value}`
+        elements.renderedChunks.innerText = `${value}`
+        break
+      }
+      case 'fps': {
+        elements.fps.innerText = `${value}`
         break
       }
     }
   },
-  reportFps,
   reportInputLatency,
   reportCamera,
 }

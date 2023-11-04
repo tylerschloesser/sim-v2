@@ -3,7 +3,6 @@ import {
   Camera,
   Executor,
   GraphicsStrategy,
-  ReportFpsFn,
   ReportInputLatencyFn,
   ReportStatFn,
   Viewport,
@@ -26,7 +25,6 @@ export type AppSettings = z.infer<typeof AppSettings>
 export interface AppConfig {
   pixelRatio: number
   reportStat: ReportStatFn
-  reportFps: ReportFpsFn
   reportInputLatency: ReportInputLatencyFn
   reportCamera: ReportCameraFn
 }

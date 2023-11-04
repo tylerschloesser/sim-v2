@@ -57,7 +57,6 @@ export async function initApp({
     camera,
     callbacks: {
       reportStat: config.reportStat,
-      reportFps: config.reportFps,
       reportInputLatency(inputLatency) {
         config.reportInputLatency?.(
           averageInputLatency(inputLatency),

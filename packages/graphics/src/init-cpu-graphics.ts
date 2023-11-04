@@ -27,7 +27,7 @@ export const initCpuGraphics: InitGraphicsFn<
   context.scale(viewport.pixelRatio, viewport.pixelRatio)
 
   const render = measureFps(
-    callbacks?.reportFps,
+    callbacks.reportStat,
     (_time: number) => {
       if (controller.signal.aborted) {
         return

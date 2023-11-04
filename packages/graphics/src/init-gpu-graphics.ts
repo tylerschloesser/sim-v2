@@ -35,10 +35,7 @@ export const initGpuGraphics: InitGraphicsFn<
     return (count: number) => {
       if (value !== count) {
         value = count
-        callbacks.reportStat({
-          key: 'rendered-chunks',
-          value,
-        })
+        callbacks.reportStat('rendered-chunks', value)
       }
     }
   })()
@@ -107,7 +104,7 @@ export const initGpuGraphics: InitGraphicsFn<
   }
 
   const render = measureFps(
-    callbacks.reportFps,
+    callbacks.reportStat,
     (time: number) => {
       if (controller.signal.aborted) {
         return

@@ -53,19 +53,6 @@ export enum GraphicsStrategy {
   Gpu = 'gpu',
 }
 
-export type Stat =
-  | {
-      key: 'fps'
-      value: number
-    }
-  | {
-      key: 'rendered-chunks'
-      value: number
-    }
-
-export type ReportStatFn = (stat: Stat) => void
-
-export type ReportFpsFn = (fps: number) => void
 export type ReportInputLatencyFn = (
   inputLatency: number,
 ) => void
@@ -81,11 +68,14 @@ export interface InitGraphicsArgs<
   viewport: Viewport<V>
   camera: Camera<V>
   callbacks: {
-    reportStat: ReportStatFn
-    reportFps: ReportFpsFn
+    reportStat(key: 'rendered-chunks', value: number): void
+    reportStat(key: 'fps', value: number): void
     reportInputLatency: ReportInputLatencyFn
   }
 }
+
+export type ReportStatFn =
+  InitGraphicsArgs['callbacks']['reportStat']
 
 export type InitGraphicsFn<T = InitGraphicsArgs> = (
   args: T,
@@ -97,3 +87,5 @@ export interface Graphics {
   syncChunks(chunks: Record<ChunkId, Chunk>): void
   stop(): void
 }
+
+export type RenderFn = (time: number) => void

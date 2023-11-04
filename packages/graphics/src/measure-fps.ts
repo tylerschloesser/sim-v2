@@ -1,8 +1,8 @@
-import { ReportFpsFn } from '@sim-v2/types'
+import { RenderFn, ReportStatFn } from '@sim-v2/types'
 
 export function measureFps(
-  reportFps: ReportFpsFn | undefined,
-  renderFn: (time: number) => void,
+  reportStat: ReportStatFn,
+  render: RenderFn,
 ) {
   let frames = 0
   let prev = performance.now()
@@ -13,12 +13,12 @@ export function measureFps(
     prev = time
     elapsed += delta
     if (elapsed >= 1000) {
-      reportFps?.(frames)
+      reportStat('fps', frames)
       elapsed = elapsed - 1000
       frames = 0
     }
     frames += 1
 
-    renderFn(time)
+    render(time)
   }
 }
