@@ -94,7 +94,7 @@ export const initGpuGraphics: InitGraphicsFn<
   }
 
   const render = measureFps(
-    callbacks?.reportFps,
+    callbacks.reportFps,
     (time: number) => {
       if (controller.signal.aborted) {
         return

@@ -7,6 +7,7 @@ import {
   MessageType,
   ReportFpsCallbackMessage,
   ReportInputLatencyCallbackMessage,
+  ReportStatCallbackMessage,
 } from './web-worker-message.js'
 
 let graphics: Graphics | null = null
@@ -66,6 +67,13 @@ self.addEventListener('message', (e) => {
 
 function initCallbacks(): InitGraphicsArgs['callbacks'] {
   return {
+    reportStat(stat) {
+      const message: ReportStatCallbackMessage = {
+        type: MessageType.ReportStatCallback,
+        stat,
+      }
+      self.postMessage(message)
+    },
     reportFps(fps) {
       const message: ReportFpsCallbackMessage = {
         type: MessageType.ReportFpsCallback,

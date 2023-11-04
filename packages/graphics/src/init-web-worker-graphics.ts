@@ -34,14 +34,16 @@ export function initWebWorkerGraphics({
     (e) => {
       const message = e.data as Message
       switch (message.type) {
+        case MessageType.ReportStatCallback: {
+          callbacks.reportStat(message.stat)
+          break
+        }
         case MessageType.ReportFpsCallback: {
-          callbacks?.reportFps?.(message.fps)
+          callbacks.reportFps(message.fps)
           break
         }
         case MessageType.ReportInputLatencyCallback: {
-          callbacks?.reportInputLatency?.(
-            message.inputLatency,
-          )
+          callbacks.reportInputLatency(message.inputLatency)
           break
         }
         default: {

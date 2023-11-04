@@ -53,6 +53,18 @@ export enum GraphicsStrategy {
   Gpu = 'gpu',
 }
 
+export type Stat =
+  | {
+      key: 'fps'
+      value: number
+    }
+  | {
+      key: 'rendered-chunks'
+      value: number
+    }
+
+export type ReportStatFn = (stat: Stat) => void
+
 export type ReportFpsFn = (fps: number) => void
 export type ReportInputLatencyFn = (
   inputLatency: number,
@@ -69,6 +81,7 @@ export interface InitGraphicsArgs<
   viewport: Viewport<V>
   camera: Camera<V>
   callbacks: {
+    reportStat: ReportStatFn
     reportFps: ReportFpsFn
     reportInputLatency: ReportInputLatencyFn
   }
