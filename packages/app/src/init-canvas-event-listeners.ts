@@ -1,4 +1,8 @@
-import { tileSizeToZoom } from '@sim-v2/camera'
+import {
+  clampTileSize,
+  tileSizeToZoom,
+  zoomToTileSize,
+} from '@sim-v2/camera'
 import { Vec2 } from '@sim-v2/math'
 import { Camera } from '@sim-v2/types'
 import { clamp } from '@sim-v2/util'
@@ -69,8 +73,6 @@ export function initCanvasEventListeners({
       return
     }
 
-    const tileSize = getTileSize()
-
     const v = {
       other: new Vec2(other.clientX, other.clientY),
       prev: new Vec2(prev.clientX, prev.clientY),
@@ -82,23 +84,35 @@ export function initCanvasEventListeners({
       next: v.other.add(v.next.sub(v.other).div(2)),
     }
 
-    const move = center.next
-      .sub(center.prev)
-      .mul(-1)
-      .div(tileSize)
-
-    camera.position.x += move.x
-    camera.position.y += move.y
-
     const dist = {
       prev: v.other.sub(v.prev).len(),
       next: v.other.sub(v.next).len(),
     }
 
-    camera.zoom = tileSizeToZoom(
-      tileSize * (dist.next / dist.prev),
-      getViewport(),
-    )
+    const viewport = getViewport()
+    const tileSize = {
+      prev: zoomToTileSize(camera.zoom, viewport),
+      next: clampTileSize(
+        zoomToTileSize(camera.zoom, viewport) *
+          (dist.next / dist.prev),
+        viewport,
+      ),
+    }
+
+    const move = center.next
+      .sub(center.prev)
+      .mul(-1)
+      .div(tileSize.next)
+
+    const anchor = center.next.sub(viewport.size.div(2))
+    const adjust = anchor
+      .div(tileSize.prev)
+      .sub(anchor.div(tileSize.next))
+      .add(move)
+
+    camera.position.x += adjust.x
+    camera.position.y += adjust.y
+    camera.zoom = tileSizeToZoom(tileSize.next, viewport)
 
     setCamera(
       camera,

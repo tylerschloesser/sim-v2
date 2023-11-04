@@ -1,4 +1,4 @@
-import { getTileSize } from '@sim-v2/camera'
+import { zoomToTileSize } from '@sim-v2/camera'
 import {
   Camera,
   InitGraphicsArgs,
@@ -19,7 +19,7 @@ export const initCpuGraphics: InitGraphicsFn<
   Omit<InitGraphicsArgs, 'executor' | 'strategy'>
 > = ({ canvas, world, callbacks, ...args }) => {
   let { viewport, camera } = args
-  let tileSize = getTileSize(camera, viewport)
+  let tileSize = zoomToTileSize(camera.zoom, viewport)
 
   const controller = new AbortController()
 
@@ -83,7 +83,7 @@ export const initCpuGraphics: InitGraphicsFn<
       const now = performance.timeOrigin + performance.now()
       callbacks?.reportInputLatency?.(now - time)
       camera = next
-      tileSize = getTileSize(camera, viewport)
+      tileSize = zoomToTileSize(camera.zoom, viewport)
     },
     setViewport(_next: Viewport): void {
       invariant(false, 'TODO')

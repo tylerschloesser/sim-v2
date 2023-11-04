@@ -12,7 +12,7 @@ export function getVisibleChunkIds({
   viewport: Viewport
   chunkSize: number
 }): Set<ChunkId> {
-  const tileSize = getTileSize(camera, viewport)
+  const tileSize = zoomToTileSize(camera.zoom, viewport)
 
   const d = viewport.size.div(2).div(tileSize)
   const tl = camera.position.sub(d).div(chunkSize)
@@ -38,39 +38,49 @@ export function getVisibleChunkIds({
 const MIN_TILE_SIZE_FACTOR = 1 / 256
 const MAX_TILE_SIZE_FACTOR = 1 / 8
 
-export function getTileSize(
-  camera: Camera,
+const MIN_ZOOM = 0
+const MAX_ZOOM = 1
+
+export function zoomToTileSize(
+  zoom: number,
   viewport: Viewport,
 ): number {
-  const minTileSize =
-    Math.min(viewport.size.x, viewport.size.y) *
-    MIN_TILE_SIZE_FACTOR
-  const maxTileSize =
-    Math.min(viewport.size.x, viewport.size.y) *
-    MAX_TILE_SIZE_FACTOR
+  const { minTileSize, maxTileSize } =
+    getMinMaxTileSize(viewport)
 
-  invariant(camera.zoom >= 0)
-  invariant(camera.zoom <= 1)
+  invariant(zoom >= MIN_ZOOM)
+  invariant(zoom <= MAX_ZOOM)
 
-  return (
-    minTileSize + (maxTileSize - minTileSize) * camera.zoom
-  )
+  return minTileSize + (maxTileSize - minTileSize) * zoom
 }
 
 export function tileSizeToZoom(
   tileSize: number,
   viewport: Viewport,
 ): number {
-  const minTileSize =
-    Math.min(viewport.size.x, viewport.size.y) *
-    MIN_TILE_SIZE_FACTOR
-  const maxTileSize =
-    Math.min(viewport.size.x, viewport.size.y) *
-    MAX_TILE_SIZE_FACTOR
+  const { minTileSize, maxTileSize } =
+    getMinMaxTileSize(viewport)
+  const zoom =
+    (tileSize - minTileSize) / (maxTileSize - minTileSize)
+  return clamp(zoom, MIN_ZOOM, MAX_ZOOM)
+}
 
-  return clamp(
-    (tileSize - minTileSize) / (maxTileSize - minTileSize),
-    0,
-    1,
-  )
+function getMinMaxTileSize(viewport: Viewport) {
+  return {
+    minTileSize:
+      Math.min(viewport.size.x, viewport.size.y) *
+      MIN_TILE_SIZE_FACTOR,
+    maxTileSize:
+      Math.min(viewport.size.x, viewport.size.y) *
+      MAX_TILE_SIZE_FACTOR,
+  }
+}
+
+export function clampTileSize(
+  tileSize: number,
+  viewport: Viewport,
+) {
+  const { minTileSize, maxTileSize } =
+    getMinMaxTileSize(viewport)
+  return clamp(tileSize, minTileSize, maxTileSize)
 }

@@ -1,4 +1,4 @@
-import { getTileSize } from '@sim-v2/camera'
+import { zoomToTileSize } from '@sim-v2/camera'
 import { Vec2 } from '@sim-v2/math'
 import { Camera, Viewport } from '@sim-v2/types'
 import { mat4, vec3 } from 'gl-matrix'
@@ -51,7 +51,7 @@ function updateView(
   camera: Camera,
   viewport: Viewport,
 ): void {
-  const tileSize = getTileSize(camera, viewport)
+  const tileSize = zoomToTileSize(camera.zoom, viewport)
 
   mat4.identity(view)
 

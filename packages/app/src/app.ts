@@ -1,4 +1,4 @@
-import { getTileSize } from '@sim-v2/camera'
+import { zoomToTileSize } from '@sim-v2/camera'
 import { initGraphics } from '@sim-v2/graphics'
 import { Vec2 } from '@sim-v2/math'
 import { initSimulator } from '@sim-v2/simulator'
@@ -35,7 +35,7 @@ export async function initApp({
   const camera = loadCamera()
   config.reportCamera(camera)
 
-  let tileSize = getTileSize(camera, viewport)
+  let tileSize = zoomToTileSize(camera.zoom, viewport)
 
   const simulator = await initSimulator({
     executor: settings.executor.simulator,
@@ -74,7 +74,7 @@ export async function initApp({
     getViewport: () => viewport,
     setCamera(camera, time) {
       // TODO only do this if zoom/viewport changes?
-      tileSize = getTileSize(camera, viewport)
+      tileSize = zoomToTileSize(camera.zoom, viewport)
 
       graphics.setCamera(camera, time)
       throttle(simulator.setCamera, 200)(camera)
