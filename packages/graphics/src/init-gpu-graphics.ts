@@ -88,6 +88,12 @@ export const initGpuGraphics: InitGraphicsFn<
     }
   > = {}
 
+  // TODO consolidate with animate
+  const chunkIdToStatus: Record<
+    ChunkId,
+    { shown: boolean }
+  > = {}
+
   function addChunk(chunk: Chunk): void {
     world.chunks[chunk.id] = chunk
 
@@ -98,18 +104,30 @@ export const initGpuGraphics: InitGraphicsFn<
         chunk,
       })
       state.buffers.color[chunk.id] = buffer
+    }
+  }
 
-      invariant(!animate[chunk.id])
-      animate[chunk.id] = {
+  function showChunk(chunkId: ChunkId): void {
+    let status = chunkIdToStatus[chunkId]
+    if (!status) {
+      status = chunkIdToStatus[chunkId] = {
+        shown: false,
+      }
+
+      // this is a new chunk, animate it
+      invariant(!animate[chunkId])
+      animate[chunkId] = {
         start: performance.now(),
         duration: 250,
       }
     }
+    status.shown = true
   }
 
-  function removeChunk(chunkId: ChunkId): void {
-    invariant(world.chunks[chunkId])
-    delete world.chunks[chunkId]
+  function hideChunk(chunkId: ChunkId): void {
+    const status = chunkIdToStatus[chunkId]
+    invariant(status)
+    status.shown = false
   }
 
   const render = measureFps(
@@ -199,12 +217,15 @@ export const initGpuGraphics: InitGraphicsFn<
     setViewport(_next: Viewport): void {
       invariant(false, 'TODO')
     },
-    syncChunks({ show, hide }): void {
-      for (const chunk of show) {
+    syncChunks({ chunks, show, hide }): void {
+      for (const chunk of chunks) {
         addChunk(chunk)
       }
+      for (const chunkId of show) {
+        showChunk(chunkId)
+      }
       for (const chunkId of hide) {
-        removeChunk(chunkId)
+        hideChunk(chunkId)
       }
     },
   }

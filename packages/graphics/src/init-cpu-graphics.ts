@@ -7,8 +7,6 @@ import {
   Viewport,
 } from '@sim-v2/types'
 import {
-  Chunk,
-  ChunkId,
   TILE_TYPE_TO_COLOR,
   iterateTiles,
 } from '@sim-v2/world'
@@ -92,8 +90,8 @@ export const initCpuGraphics: InitGraphicsFn<
     setViewport(_next: Viewport): void {
       invariant(false, 'TODO')
     },
-    syncChunks({ show }): void {
-      for (const chunk of show) {
+    syncChunks({ chunks }): void {
+      for (const chunk of chunks) {
         if (!world.chunks[chunk.id]) {
           world.chunks[chunk.id] = chunk
         }

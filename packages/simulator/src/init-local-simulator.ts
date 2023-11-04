@@ -34,7 +34,10 @@ export const initLocalSimulator: InitSimulatorFn<
   let started: boolean = false
   let interval: number | undefined
 
-  const currentChunkIds = new Set<ChunkId>()
+  const chunkIdToStatus: Record<
+    ChunkId,
+    { synced: boolean; shown: boolean }
+  > = {}
 
   const setCamera: Simulator['setCamera'] = (camera) => {
     const visibleChunkIds = getVisibleChunkIds({
@@ -43,22 +46,16 @@ export const initLocalSimulator: InitSimulatorFn<
       chunkSize,
     })
 
-    const show = new Set<Chunk>()
-    const hide = new Set<ChunkId>()
+    const sync = new Set<Chunk>()
+    const show = new Set<ChunkId>()
 
-    let identical =
-      visibleChunkIds.size === currentChunkIds.size
-    for (const chunkId of currentChunkIds) {
-      if (!visibleChunkIds.has(chunkId)) {
-        identical = false
-        currentChunkIds.delete(chunkId)
+    const hide = new Set<ChunkId>()
+    for (const [chunkId, { shown }] of Object.entries(
+      chunkIdToStatus,
+    )) {
+      if (shown) {
         hide.add(chunkId)
       }
-    }
-
-    if (identical) {
-      // optimization, if visible chunks have not changed
-      return
     }
 
     for (const chunkId of visibleChunkIds) {
@@ -71,14 +68,36 @@ export const initLocalSimulator: InitSimulatorFn<
         })
       }
 
-      if (!currentChunkIds.has(chunk.id)) {
-        currentChunkIds.add(chunk.id)
-        show.add(chunk)
+      let status = chunkIdToStatus[chunk.id]
+      if (!status) {
+        status = chunkIdToStatus[chunk.id] = {
+          synced: false,
+          shown: false,
+        }
       }
+
+      if (!status.synced) {
+        sync.add(chunk)
+        status.synced = true
+      }
+      if (!status.shown) {
+        show.add(chunk.id)
+        status.shown = true
+      }
+
+      hide.delete(chunk.id)
     }
 
-    if (show.size > 0 || hide.size > 0) {
-      const args = { show, hide }
+    for (const chunkId of hide) {
+      const status = chunkIdToStatus[chunkId]
+      invariant(status)
+      status.shown = false
+    }
+
+    invariant(!sync.size || show.size > 0)
+
+    if (sync.size || show.size || hide.size) {
+      const args = { chunks: sync, show, hide }
       for (const syncChunks of syncChunksListeners) {
         syncChunks(args)
       }

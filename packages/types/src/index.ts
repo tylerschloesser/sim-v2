@@ -25,7 +25,8 @@ export enum Executor {
 }
 
 export type SyncChunksFn = (args: {
-  show: Set<Chunk>
+  chunks: Set<Chunk>
+  show: Set<ChunkId>
   hide: Set<ChunkId>
 }) => void
 
