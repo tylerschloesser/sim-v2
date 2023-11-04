@@ -1,5 +1,6 @@
 import { SimpleVec2, Vec2 } from '@sim-v2/math'
 import { Chunk, ChunkId, World } from '@sim-v2/world'
+import { Statement } from 'typescript'
 import * as z from 'zod'
 
 export interface Viewport<V = Vec2> {
@@ -53,9 +54,25 @@ export enum GraphicsStrategy {
   Gpu = 'gpu',
 }
 
-export type ReportInputLatencyFn = (
-  inputLatency: number,
-) => void
+export enum StatType {
+  RenderedChunks = 'rendered-chunks',
+  Fps = 'fps',
+  InputLatency = 'input-latency',
+  Camera = 'camera',
+}
+
+type StatUtil<T extends StatType, V> = {
+  type: T
+  value: V
+}
+
+export type Stat =
+  | StatUtil<StatType.RenderedChunks, number>
+  | StatUtil<StatType.Fps, number>
+  | StatUtil<StatType.InputLatency, number>
+  | StatUtil<StatType.Camera, SimpleCamera>
+
+export type ReportStatFn = (stat: Stat) => void
 
 export interface InitGraphicsArgs<
   C = HTMLCanvasElement | OffscreenCanvas,
@@ -68,14 +85,9 @@ export interface InitGraphicsArgs<
   viewport: Viewport<V>
   camera: Camera<V>
   callbacks: {
-    reportStat(key: 'rendered-chunks', value: number): void
-    reportStat(key: 'fps', value: number): void
-    reportStat(key: 'input-latency', value: number): void
+    reportStat: ReportStatFn
   }
 }
-
-export type ReportStatFn =
-  InitGraphicsArgs['callbacks']['reportStat']
 
 export type InitGraphicsFn<T = InitGraphicsArgs> = (
   args: T,

@@ -1,4 +1,8 @@
-import { RenderFn, ReportStatFn } from '@sim-v2/types'
+import {
+  RenderFn,
+  ReportStatFn,
+  StatType,
+} from '@sim-v2/types'
 
 export function measureFps(
   reportStat: ReportStatFn,
@@ -13,7 +17,10 @@ export function measureFps(
     prev = time
     elapsed += delta
     if (elapsed >= 1000) {
-      reportStat('fps', frames)
+      reportStat({
+        type: StatType.Fps,
+        value: frames,
+      })
       elapsed = elapsed - 1000
       frames = 0
     }

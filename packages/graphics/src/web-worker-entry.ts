@@ -65,19 +65,10 @@ self.addEventListener('message', (e) => {
 
 function initCallbacks(): InitGraphicsArgs['callbacks'] {
   return {
-    reportStat(key, value) {
+    reportStat(stat) {
       const message: ReportStatCallbackMessage = {
         type: MessageType.ReportStatCallback,
-        ...(() => {
-          switch (key) {
-            case 'rendered-chunks':
-              return { key, value }
-            case 'fps':
-              return { key, value }
-            case 'input-latency':
-              return { key, value }
-          }
-        })(),
+        stat,
       }
       self.postMessage(message)
     },

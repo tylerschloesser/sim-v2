@@ -37,8 +37,8 @@ const reportCamera: ReportCameraFn = (camera) => {
 
 const config: AppConfig = {
   pixelRatio,
-  reportStat(key, value) {
-    switch (key) {
+  reportStat({ type, value }) {
+    switch (type) {
       case 'rendered-chunks': {
         elements.renderedChunks.innerText = `${value}`
         break
@@ -51,6 +51,7 @@ const config: AppConfig = {
         const average = averageInputLatency(value)
         // prettier-ignore
         elements.inputLatency.innerText = `${average.toFixed(2)}ms`
+        break
       }
     }
   },

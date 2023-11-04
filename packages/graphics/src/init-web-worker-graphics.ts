@@ -35,31 +35,7 @@ export function initWebWorkerGraphics({
       const message = e.data as Message
       switch (message.type) {
         case MessageType.ReportStatCallback: {
-          switch (message.key) {
-            case 'rendered-chunks': {
-              callbacks.reportStat(
-                message.key,
-                message.value,
-              )
-              break
-            }
-            case 'fps': {
-              callbacks.reportStat(
-                message.key,
-                message.value,
-              )
-              break
-            }
-            case 'input-latency': {
-              callbacks.reportStat(
-                message.key,
-                message.value,
-              )
-            }
-            default: {
-              invariant(false)
-            }
-          }
+          callbacks.reportStat(message.stat)
           break
         }
         default: {

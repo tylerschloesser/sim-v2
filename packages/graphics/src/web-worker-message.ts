@@ -2,6 +2,7 @@ import { SimpleVec2 } from '@sim-v2/math'
 import {
   Camera,
   InitGraphicsArgs,
+  Stat,
   Viewport,
 } from '@sim-v2/types'
 import { Chunk, ChunkId } from '@sim-v2/world'
@@ -37,22 +38,10 @@ export interface SyncChunksMessage {
   chunks: Record<ChunkId, Chunk>
 }
 
-export type ReportStatCallbackMessage = {
+export interface ReportStatCallbackMessage {
   type: MessageType.ReportStatCallback
-} & (
-  | {
-      key: 'rendered-chunks'
-      value: number
-    }
-  | {
-      key: 'fps'
-      value: number
-    }
-  | {
-      key: 'input-latency'
-      value: number
-    }
-)
+  stat: Stat
+}
 
 export type Message =
   | InitMessage

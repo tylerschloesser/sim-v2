@@ -3,6 +3,7 @@ import {
   Camera,
   InitGraphicsArgs,
   InitGraphicsFn,
+  StatType,
   Viewport,
 } from '@sim-v2/types'
 import { Chunk, ChunkId, getPosition } from '@sim-v2/world'
@@ -35,7 +36,10 @@ export const initGpuGraphics: InitGraphicsFn<
     return (count: number) => {
       if (value !== count) {
         value = count
-        callbacks.reportStat('rendered-chunks', value)
+        callbacks.reportStat({
+          type: StatType.RenderedChunks,
+          value,
+        })
       }
     }
   })()
@@ -175,7 +179,10 @@ export const initGpuGraphics: InitGraphicsFn<
     },
     setCamera(next: Camera, time: number): void {
       const now = performance.timeOrigin + performance.now()
-      callbacks.reportStat('input-latency', now - time)
+      callbacks.reportStat({
+        type: StatType.InputLatency,
+        value: now - time,
+      })
       camera = next
       updateView(camera, viewport)
       gl.uniformMatrix4fv(

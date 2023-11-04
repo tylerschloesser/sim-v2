@@ -3,6 +3,7 @@ import {
   Camera,
   InitGraphicsArgs,
   InitGraphicsFn,
+  StatType,
   Viewport,
 } from '@sim-v2/types'
 import {
@@ -81,7 +82,10 @@ export const initCpuGraphics: InitGraphicsFn<
     },
     setCamera(next: Camera, time: number): void {
       const now = performance.timeOrigin + performance.now()
-      callbacks.reportStat('input-latency', now - time)
+      callbacks.reportStat({
+        type: StatType.InputLatency,
+        value: now - time,
+      })
       camera = next
       tileSize = zoomToTileSize(camera.zoom, viewport)
     },
