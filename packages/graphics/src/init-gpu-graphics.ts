@@ -5,9 +5,10 @@ import {
   InitGraphicsArgs,
   InitGraphicsFn,
   StatType,
+  SyncChunkFn,
   Viewport,
 } from '@sim-v2/types'
-import { Chunk, ChunkId, getPosition } from '@sim-v2/world'
+import { ChunkId, getPosition } from '@sim-v2/world'
 import invariant from 'tiny-invariant'
 import { initMatrices } from './init-matricies.js'
 import { initColorBuffer, initWebGL } from './init-webgl.js'
@@ -95,7 +96,7 @@ export const initGpuGraphics: InitGraphicsFn<
     viewport,
   })
 
-  function addChunk(chunk: Chunk): void {
+  const syncChunk: SyncChunkFn = (chunk) => {
     invariant(!world.chunks[chunk.id])
     invariant(!state.buffers.color[chunk.id])
     invariant(!animate[chunk.id])
@@ -211,10 +212,6 @@ export const initGpuGraphics: InitGraphicsFn<
     setViewport(_next: Viewport): void {
       invariant(false, 'TODO')
     },
-    syncChunks({ chunks }): void {
-      for (const chunk of chunks) {
-        addChunk(chunk)
-      }
-    },
+    syncChunk,
   }
 }

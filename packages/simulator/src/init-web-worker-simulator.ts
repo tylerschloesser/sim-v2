@@ -2,7 +2,7 @@ import {
   Camera,
   InitSimulatorArgs,
   InitSimulatorFn,
-  SyncChunksFn,
+  SyncChunkFn,
   Viewport,
 } from '@sim-v2/types'
 import { World } from '@sim-v2/world'
@@ -24,7 +24,7 @@ export const initWebWorkerSimulator: InitSimulatorFn<
     new URL('./web-worker-entry.js', import.meta.url),
   )
 
-  const syncChunksListeners: SyncChunksFn[] = []
+  const syncChunkListeners: SyncChunkFn[] = []
 
   const controller = new AbortController()
   const { signal } = controller
@@ -61,13 +61,12 @@ export const initWebWorkerSimulator: InitSimulatorFn<
   worker.addEventListener('message', (e) => {
     const message = e.data as Message
     switch (message.type) {
-      case MessageType.SyncChunksCallback: {
-        const { chunks } = message
-        const args = { chunks }
-        for (const syncChunks of syncChunksListeners) {
-          syncChunks(args)
+      case MessageType.SyncChunkCallback: {
+        const { chunk } = message
+        for (const syncChunks of syncChunkListeners) {
+          syncChunks(chunk)
         }
-        callbacks.syncChunks(args)
+        callbacks.syncChunk(chunk)
         break
       }
       default: {
@@ -107,8 +106,8 @@ export const initWebWorkerSimulator: InitSimulatorFn<
       }
       worker.postMessage(message)
     },
-    addSyncChunksListener(listener) {
-      syncChunksListeners.push(listener)
+    addSyncChunkListener(listener) {
+      syncChunkListeners.push(listener)
     },
   }
 }

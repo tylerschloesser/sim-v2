@@ -1,5 +1,5 @@
 import { SimpleVec2, Vec2 } from '@sim-v2/math'
-import { Chunk, ChunkId, World } from '@sim-v2/world'
+import { Chunk, World } from '@sim-v2/world'
 import * as z from 'zod'
 
 export interface Viewport<V = Vec2> {
@@ -24,16 +24,14 @@ export enum Executor {
   WebWorker = 'web-worker',
 }
 
-export type SyncChunksFn = (args: {
-  chunks: Set<Chunk>
-}) => void
+export type SyncChunkFn = (chunk: Chunk) => void
 
 export interface InitSimulatorArgs<V = Vec2> {
   executor: Executor
   viewport: Viewport<V>
   camera: Camera<V>
   callbacks: {
-    syncChunks: SyncChunksFn
+    syncChunk: SyncChunkFn
   }
 }
 
@@ -48,7 +46,7 @@ export interface Simulator {
   setCamera(camera: Camera): void
   logWorld(): void
   stop(): void
-  addSyncChunksListener(listener: SyncChunksFn): void
+  addSyncChunkListener(listener: SyncChunkFn): void
 }
 export enum GraphicsStrategy {
   Cpu = 'cpu',
@@ -97,7 +95,7 @@ export type InitGraphicsFn<T = InitGraphicsArgs> = (
 export interface Graphics {
   setViewport(viewport: Viewport): void
   setCamera(camera: Camera, time: number): void
-  syncChunks: SyncChunksFn
+  syncChunk: SyncChunkFn
   stop(): void
 }
 

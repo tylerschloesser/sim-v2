@@ -52,10 +52,10 @@ self.addEventListener('message', (e) => {
       })
       break
     }
-    case MessageType.SyncChunks: {
+    case MessageType.SyncChunk: {
       invariant(graphics)
-      const { chunks } = message
-      graphics.syncChunks({ chunks })
+      const { chunk } = message
+      graphics.syncChunk(chunk)
       break
     }
     default: {

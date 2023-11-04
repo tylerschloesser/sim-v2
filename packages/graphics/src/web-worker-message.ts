@@ -11,7 +11,7 @@ export enum MessageType {
   Init = 'init',
   SetCamera = 'set-camera',
   SetViewport = 'set-viewport',
-  SyncChunks = 'sync-chunks',
+  SyncChunk = 'sync-chunk',
   ReportStatCallback = 'report-stat-callback',
 }
 
@@ -33,9 +33,9 @@ export interface SetViewportMessage {
   viewport: Viewport<SimpleVec2>
 }
 
-export interface SyncChunksMessage {
-  type: MessageType.SyncChunks
-  chunks: Set<Chunk>
+export interface SyncChunkMessage {
+  type: MessageType.SyncChunk
+  chunk: Chunk
 }
 
 export interface ReportStatCallbackMessage {
@@ -47,5 +47,5 @@ export type Message =
   | InitMessage
   | SetCameraMessage
   | SetViewportMessage
-  | SyncChunksMessage
+  | SyncChunkMessage
   | ReportStatCallbackMessage

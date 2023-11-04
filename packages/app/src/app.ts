@@ -45,7 +45,7 @@ export async function initApp({
     viewport,
     camera,
     callbacks: {
-      syncChunks() {},
+      syncChunk() {},
     },
   })
 
@@ -65,7 +65,7 @@ export async function initApp({
     },
   })
 
-  simulator.addSyncChunksListener(graphics.syncChunks)
+  simulator.addSyncChunkListener(graphics.syncChunk)
 
   initCanvasEventListeners({
     camera,

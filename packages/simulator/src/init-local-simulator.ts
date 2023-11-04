@@ -3,7 +3,7 @@ import {
   InitSimulatorArgs,
   InitSimulatorFn,
   Simulator,
-  SyncChunksFn,
+  SyncChunkFn,
 } from '@sim-v2/types'
 import {
   Chunk,
@@ -26,7 +26,7 @@ export const initLocalSimulator: InitSimulatorFn<
   const world = generateWorld({ id, seed, generator })
   const { chunkSize } = world
 
-  const syncChunksListeners: SyncChunksFn[] = []
+  const syncChunkListeners: SyncChunkFn[] = []
 
   const controller = new AbortController()
   const { signal } = controller
@@ -75,11 +75,12 @@ export const initLocalSimulator: InitSimulatorFn<
     }
 
     if (sync.size) {
-      const args = { chunks: sync }
-      for (const syncChunks of syncChunksListeners) {
-        syncChunks(args)
+      for (const chunk of sync) {
+        for (const syncChunk of syncChunkListeners) {
+          syncChunk(chunk)
+        }
+        callbacks.syncChunk(chunk)
       }
-      callbacks.syncChunks(args)
     }
   }
 
@@ -119,8 +120,8 @@ export const initLocalSimulator: InitSimulatorFn<
     logWorld() {
       console.log(world)
     },
-    addSyncChunksListener(listener) {
-      syncChunksListeners.push(listener)
+    addSyncChunkListener(listener) {
+      syncChunkListeners.push(listener)
     },
   }
 }

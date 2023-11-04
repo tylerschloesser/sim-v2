@@ -11,7 +11,7 @@ import {
   MessageType,
   SetCameraMessage,
   SetViewportMessage,
-  SyncChunksMessage,
+  SyncChunkMessage,
 } from './web-worker-message.js'
 
 export function initWebWorkerGraphics({
@@ -75,10 +75,10 @@ export function initWebWorkerGraphics({
       }
       worker.postMessage(message)
     },
-    syncChunks({ chunks }): void {
-      const message: SyncChunksMessage = {
-        type: MessageType.SyncChunks,
-        chunks,
+    syncChunk(chunk): void {
+      const message: SyncChunkMessage = {
+        type: MessageType.SyncChunk,
+        chunk,
       }
       worker.postMessage(message)
     },
