@@ -1,4 +1,4 @@
-import { easeIn, easeOut } from '@sim-v2/math'
+import { easeOut } from '@sim-v2/math'
 import {
   Camera,
   InitGraphicsArgs,
@@ -194,8 +194,8 @@ export const initGpuGraphics: InitGraphicsFn<
     setViewport(_next: Viewport): void {
       invariant(false, 'TODO')
     },
-    syncChunks(chunks: Record<ChunkId, Chunk>): void {
-      for (const chunk of Object.values(chunks)) {
+    syncChunks({ show }): void {
+      for (const chunk of show) {
         addChunk(chunk)
       }
     },

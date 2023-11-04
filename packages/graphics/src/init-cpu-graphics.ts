@@ -92,12 +92,10 @@ export const initCpuGraphics: InitGraphicsFn<
     setViewport(_next: Viewport): void {
       invariant(false, 'TODO')
     },
-    syncChunks(chunks: Record<ChunkId, Chunk>): void {
-      for (const [chunkId, chunk] of Object.entries(
-        chunks,
-      )) {
-        if (!world.chunks[chunkId]) {
-          world.chunks[chunkId] = chunk
+    syncChunks({ show }): void {
+      for (const chunk of show) {
+        if (!world.chunks[chunk.id]) {
+          world.chunks[chunk.id] = chunk
         }
       }
     },

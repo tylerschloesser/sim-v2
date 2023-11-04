@@ -54,7 +54,8 @@ self.addEventListener('message', (e) => {
     }
     case MessageType.SyncChunks: {
       invariant(graphics)
-      graphics.syncChunks(message.chunks)
+      const { show, hide } = message
+      graphics.syncChunks({ show, hide })
       break
     }
     default: {

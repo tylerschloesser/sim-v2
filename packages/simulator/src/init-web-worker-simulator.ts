@@ -2,9 +2,10 @@ import {
   Camera,
   InitSimulatorArgs,
   InitSimulatorFn,
+  SyncChunksFn,
   Viewport,
 } from '@sim-v2/types'
-import { Chunk, ChunkId, World } from '@sim-v2/world'
+import { World } from '@sim-v2/world'
 import invariant from 'tiny-invariant'
 import {
   InitRequestMessage,
@@ -23,9 +24,7 @@ export const initWebWorkerSimulator: InitSimulatorFn<
     new URL('./web-worker-entry.js', import.meta.url),
   )
 
-  const syncChunksListeners: ((
-    chunks: Record<ChunkId, Chunk>,
-  ) => void)[] = []
+  const syncChunksListeners: SyncChunksFn[] = []
 
   const controller = new AbortController()
   const { signal } = controller
@@ -63,10 +62,12 @@ export const initWebWorkerSimulator: InitSimulatorFn<
     const message = e.data as Message
     switch (message.type) {
       case MessageType.SyncChunksCallback: {
+        const { show, hide } = message
+        const args = { show, hide }
         for (const syncChunks of syncChunksListeners) {
-          syncChunks(message.chunks)
+          syncChunks(args)
         }
-        callbacks.syncChunks(message.chunks)
+        callbacks.syncChunks(args)
         break
       }
       default: {

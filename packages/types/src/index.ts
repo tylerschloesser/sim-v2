@@ -24,9 +24,10 @@ export enum Executor {
   WebWorker = 'web-worker',
 }
 
-export type SyncChunksFn = (
-  chunks: Record<ChunkId, Chunk>,
-) => void
+export type SyncChunksFn = (args: {
+  show: Set<Chunk>
+  hide: Set<ChunkId>
+}) => void
 
 export interface InitSimulatorArgs<V = Vec2> {
   executor: Executor

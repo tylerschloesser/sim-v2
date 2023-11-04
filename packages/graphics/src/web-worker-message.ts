@@ -35,7 +35,8 @@ export interface SetViewportMessage {
 
 export interface SyncChunksMessage {
   type: MessageType.SyncChunks
-  chunks: Record<ChunkId, Chunk>
+  show: Set<Chunk>
+  hide: Set<ChunkId>
 }
 
 export interface ReportStatCallbackMessage {

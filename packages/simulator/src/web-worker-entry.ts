@@ -74,10 +74,11 @@ self.addEventListener('message', async (e) => {
 
 function initCallbacks(): InitSimulatorArgs['callbacks'] {
   return {
-    syncChunks(chunks) {
+    syncChunks({ show, hide }) {
       const message: SyncChunksCallbackMessage = {
         type: MessageType.SyncChunksCallback,
-        chunks,
+        show,
+        hide,
       }
       self.postMessage(message)
     },

@@ -76,10 +76,11 @@ export function initWebWorkerGraphics({
       }
       worker.postMessage(message)
     },
-    syncChunks(chunks: Record<ChunkId, Chunk>): void {
+    syncChunks({ show, hide }): void {
       const message: SyncChunksMessage = {
         type: MessageType.SyncChunks,
-        chunks,
+        show,
+        hide,
       }
       worker.postMessage(message)
     },
