@@ -87,3 +87,7 @@ export function clampTileSize(
     getMinMaxTileSize(viewport)
   return clamp(tileSize, minTileSize, maxTileSize)
 }
+
+export function clampZoom(zoom: number) {
+  return clamp(zoom, MIN_ZOOM, MAX_ZOOM)
+}

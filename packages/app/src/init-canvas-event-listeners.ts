@@ -1,5 +1,6 @@
 import {
   clampTileSize,
+  clampZoom,
   tileSizeToZoom,
   zoomToTileSize,
 } from '@sim-v2/camera'
@@ -187,11 +188,15 @@ export function initCanvasEventListeners({
   canvas.addEventListener(
     'wheel',
     (e) => {
-      camera.zoom = clamp(
-        camera.zoom + -e.deltaY / getViewport().size.y,
-        0,
-        1,
-      )
+      const zoom = {
+        prev: camera.zoom,
+        next: clampZoom(
+          camera.zoom + -e.deltaY / getViewport().size.y,
+        ),
+      }
+
+      camera.zoom = zoom.next
+
       setCamera(
         camera,
         performance.timeOrigin + e.timeStamp,
