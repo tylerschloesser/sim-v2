@@ -56,9 +56,7 @@ export async function initApp({
     viewport,
     camera,
     callbacks: {
-      reportStat(stat) {
-        console.log('TODO report', stat)
-      },
+      reportStat: config.reportStat,
       reportFps: config.reportFps,
       reportInputLatency(inputLatency) {
         config.reportInputLatency?.(

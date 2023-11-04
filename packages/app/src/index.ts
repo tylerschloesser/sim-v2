@@ -18,6 +18,7 @@ const elements = {
   fps: getSpan('.fps .value'),
   dpr: getSpan('.dpr .value'),
   inputLatency: getSpan('.input-latency .value'),
+  renderedChunks: getSpan('.rendered-chunks .value'),
   logWorld: getButton('button.log-world'),
   camera: {
     x: getSpan('.camera .x .value'),
@@ -55,6 +56,14 @@ const reportCamera: ReportCameraFn = (camera) => {
 
 const config: AppConfig = {
   pixelRatio,
+  reportStat(stat) {
+    switch (stat.key) {
+      case 'rendered-chunks': {
+        elements.renderedChunks.innerText = `${stat.value}`
+        break
+      }
+    }
+  },
   reportFps,
   reportInputLatency,
   reportCamera,

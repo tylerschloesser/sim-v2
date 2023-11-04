@@ -5,6 +5,7 @@ import {
   GraphicsStrategy,
   ReportFpsFn,
   ReportInputLatencyFn,
+  ReportStatFn,
   Viewport,
 } from '@sim-v2/types'
 import { z } from 'zod'
@@ -24,6 +25,7 @@ export type AppSettings = z.infer<typeof AppSettings>
 
 export interface AppConfig {
   pixelRatio: number
+  reportStat: ReportStatFn
   reportFps: ReportFpsFn
   reportInputLatency: ReportInputLatencyFn
   reportCamera: ReportCameraFn
