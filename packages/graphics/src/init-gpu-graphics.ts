@@ -107,6 +107,11 @@ export const initGpuGraphics: InitGraphicsFn<
     }
   }
 
+  function removeChunk(chunkId: ChunkId): void {
+    invariant(world.chunks[chunkId])
+    delete world.chunks[chunkId]
+  }
+
   const render = measureFps(
     callbacks.reportStat,
     (time: number) => {
@@ -194,9 +199,12 @@ export const initGpuGraphics: InitGraphicsFn<
     setViewport(_next: Viewport): void {
       invariant(false, 'TODO')
     },
-    syncChunks({ show }): void {
+    syncChunks({ show, hide }): void {
       for (const chunk of show) {
         addChunk(chunk)
+      }
+      for (const chunkId of hide) {
+        removeChunk(chunkId)
       }
     },
   }
