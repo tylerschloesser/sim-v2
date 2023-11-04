@@ -1,6 +1,5 @@
 import { SimpleVec2, Vec2 } from '@sim-v2/math'
 import { Chunk, ChunkId, World } from '@sim-v2/world'
-import { Statement } from 'typescript'
 import * as z from 'zod'
 
 export interface Viewport<V = Vec2> {
