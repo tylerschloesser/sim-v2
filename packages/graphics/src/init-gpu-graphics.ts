@@ -20,6 +20,7 @@ export const initGpuGraphics: InitGraphicsFn<
 > = ({ canvas, world, callbacks, ...args }) => {
   let { viewport, camera } = args
   const { chunkSize } = world
+  invariant(Object.keys(world.chunks).length === 0)
 
   const controller = new AbortController()
 
@@ -27,11 +28,6 @@ export const initGpuGraphics: InitGraphicsFn<
   invariant(gl)
 
   const state = initWebGL({ gl, chunkSize })
-
-  for (const chunk of Object.values(world.chunks)) {
-    const buffer = initColorBuffer({ gl, chunkSize, chunk })
-    state.buffers.color[chunk.id] = buffer
-  }
 
   const reportRenderedChunks = (() => {
     let value: number | undefined
@@ -101,18 +97,28 @@ export const initGpuGraphics: InitGraphicsFn<
     invariant(!state.buffers.color[chunk.id])
     invariant(!animate[chunk.id])
 
-    world.chunks[chunk.id] = chunk
+    function callback() {
+      state.buffers.color[chunk.id] = initColorBuffer({
+        gl,
+        chunkSize,
+        chunk,
+      })
 
-    state.buffers.color[chunk.id] = initColorBuffer({
-      gl,
-      chunkSize,
-      chunk,
-    })
+      // assume that if we're adding a chunk, we're showing it immediately
+      animate[chunk.id] = {
+        start: performance.now(),
+        duration: 250,
+      }
 
-    // assume that if we're adding a chunk, we're showing it immediately
-    animate[chunk.id] = {
-      start: performance.now(),
-      duration: 250,
+      world.chunks[chunk.id] = chunk
+    }
+
+    // jueue creating the chunk because it takes a while
+    if (typeof self.requestIdleCallback === 'function') {
+      self.requestIdleCallback(callback)
+    } else {
+      // not available on web workers, not documented...
+      callback()
     }
   }
 
