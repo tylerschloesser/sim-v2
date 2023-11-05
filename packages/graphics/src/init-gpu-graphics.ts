@@ -44,13 +44,10 @@ export const initGpuGraphics: InitGraphicsFn<
 
   gl.useProgram(state.programs.main.program)
 
-  const {
-    model,
-    view,
-    projection,
-    updateModel,
-    updateView,
-  } = initMatrices({ camera, viewport })
+  const { view, projection, updateView } = initMatrices({
+    camera,
+    viewport,
+  })
 
   gl.uniformMatrix4fv(
     state.programs.main.uniforms.projection,
@@ -113,7 +110,7 @@ export const initGpuGraphics: InitGraphicsFn<
       world.chunks[chunk.id] = chunk
     }
 
-    // queue creating the chunk because it takes a while
+    // jueue creating the chunk because it takes a while
     if (typeof self.requestIdleCallback === 'function') {
       self.requestIdleCallback(callback)
     } else {
@@ -169,11 +166,11 @@ export const initGpuGraphics: InitGraphicsFn<
         4, gl.FLOAT, false, 0, 0,
       )
 
-        updateModel(getPosition(chunk.id, chunkSize))
-        gl.uniformMatrix4fv(
-          state.programs.main.uniforms.model,
-          false,
-          model,
+        const position = getPosition(chunk.id, chunkSize)
+        gl.uniform2f(
+          state.programs.main.uniforms.position,
+          position.x,
+          position.y,
         )
 
         gl.drawElements(

@@ -27,7 +27,7 @@ export interface WebGLState {
         color: WebGLAttributeLocation
       }
       uniforms: {
-        model: WebGLUniformLocation
+        position: WebGLUniformLocation
         view: WebGLUniformLocation
         projection: WebGLUniformLocation
         alpha: WebGLUniformLocation
@@ -66,7 +66,11 @@ export function initWebGL({
           color: getAttribLocation(gl, program, 'aColor'),
         },
         uniforms: {
-          model: getUniformLocation(gl, program, 'uModel'),
+          position: getUniformLocation(
+            gl,
+            program,
+            'uPosition',
+          ),
           view: getUniformLocation(gl, program, 'uView'),
           projection: getUniformLocation(
             gl,
@@ -208,8 +212,13 @@ function initProgram(
   gl.attachShader(program, shaders.vert)
   gl.attachShader(program, shaders.frag)
   gl.linkProgram(program)
+  console.log(
+    'link status',
+    gl.getProgramParameter(program, gl.LINK_STATUS),
+  )
   if (
-    gl.getProgramParameter(program, gl.LINK_STATUS) === 0
+    gl.getProgramParameter(program, gl.LINK_STATUS) ===
+    false
   ) {
     invariant(
       false,
@@ -231,7 +240,8 @@ function initShader(
   gl.shaderSource(shader, source)
   gl.compileShader(shader)
   if (
-    gl.getShaderParameter(shader, gl.COMPILE_STATUS) === 0
+    gl.getShaderParameter(shader, gl.COMPILE_STATUS) ===
+    false
   ) {
     invariant(
       false,

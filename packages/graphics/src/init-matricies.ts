@@ -1,5 +1,4 @@
 import { zoomToTileSize } from '@sim-v2/camera'
-import { Vec2 } from '@sim-v2/math'
 import { Camera, Viewport } from '@sim-v2/types'
 import { mat4, vec3 } from 'gl-matrix'
 import invariant from 'tiny-invariant'
@@ -11,32 +10,20 @@ export function initMatrices({
   camera: Camera
   viewport: Viewport
 }): {
-  model: mat4
   view: mat4
   projection: mat4
-  updateModel(position: Vec2): void
   updateView(camera: Camera, viewport: Viewport): void
   updateProjection(viewport: Viewport): void
 } {
-  const model = mat4.create()
   const view = mat4.create()
   const projection = mat4.create()
 
   updateView(view, camera, viewport)
   updateProjection(projection, viewport)
 
-  const translate = vec3.create()
-
   return {
-    model,
     view,
     projection,
-    updateModel(position) {
-      translate[0] = position.x
-      translate[1] = position.y
-      mat4.identity(model)
-      mat4.translate(model, model, translate)
-    },
     updateView(camera, viewport) {
       updateView(view, camera, viewport)
     },
