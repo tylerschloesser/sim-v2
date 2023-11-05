@@ -23,7 +23,7 @@ export function generateChunk({
   let i = 0
   for (let y = 0; y < chunkSize; y++) {
     for (let x = 0; x < chunkSize; x++) {
-      const scale = 0.05
+      const scale = 0.01
       const noise = generator.noise(
         (position.x + x) * scale,
         (position.y + y) * scale,
