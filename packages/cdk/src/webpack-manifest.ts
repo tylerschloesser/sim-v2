@@ -13,7 +13,7 @@ export const WEBPACK_MANIFEST_FILE_NAME: string =
 export function getWebpackDistPath(): string {
   return path.join(
     path.dirname(fileURLToPath(import.meta.url)),
-    '../../web/dist',
+    '../../app/dist',
   )
 }
 

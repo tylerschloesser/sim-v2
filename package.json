@@ -3,6 +3,8 @@
   "scripts": {
     "test": "npm run lint",
     "lint": "prettier --check . --log-level warn",
+    "build": "npm run build -w packages/app",
+    "deploy": "npm run deploy -w packages/cdk",
     "prepare": "husky install",
     "postinstall": "patch-package"
   },
