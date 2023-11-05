@@ -1,4 +1,12 @@
 {
   "name": "@sim-v2/cdk",
-  "type": "module"
+  "type": "module",
+  "scripts": {
+    "deploy": "cdk deploy --all"
+  },
+  "dependencies": {
+    "aws-cdk": "^2.104.0",
+    "aws-cdk-lib": "^2.104.0",
+    "constructs": "^10.3.0"
+  }
 }
