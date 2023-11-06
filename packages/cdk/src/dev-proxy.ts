@@ -83,6 +83,8 @@ class CertificateStack extends Stack {
   ) {
     super(scope, id, props)
 
+    invariant(props.env?.region === Region.US_EAST_1)
+
     this.certificate = new Certificate(
       this,
       'Certificate',
@@ -117,6 +119,7 @@ class ProxyStack extends Stack {
         defaultBehavior: {
           origin: new HttpOrigin(TARGET_DOMAIN_NAME, {
             protocolPolicy: OriginProtocolPolicy.HTTP_ONLY,
+            httpPort: 8080,
           }),
         },
         domainNames: [SOURCE_DOMAIN_NAME],
@@ -138,7 +141,7 @@ const app = new App()
 const dnsStack = new DnsStack(app, stackId('DNS'), {
   env: {
     account: ACCOUNT_ID,
-    region: Region.US_EAST_1,
+    region: Region.US_WEST_2,
   },
   crossRegionReferences: true,
 })
@@ -149,7 +152,7 @@ const certificateStack = new CertificateStack(
   {
     env: {
       account: ACCOUNT_ID,
-      region: Region.US_WEST_2,
+      region: Region.US_EAST_1,
     },
     crossRegionReferences: true,
     hostedZone: dnsStack.hostedZone,
