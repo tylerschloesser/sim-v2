@@ -99,7 +99,7 @@ export default (
       hot: false,
       watchFiles: ['./src/index.html'],
       historyApiFallback: true,
-      allowedHosts: ['.amazonaws.com'],
+      allowedHosts: ['.amazonaws.com', '.slg.dev'],
     },
     optimization: {
       //
