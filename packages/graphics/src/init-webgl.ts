@@ -35,6 +35,7 @@ export interface WebGLState {
     }
   }
   buffers: {
+    square: WebGLBuffer
     chunk: {
       vertex: WebGLBuffer
       index: WebGLBuffer
@@ -82,12 +83,33 @@ export function initWebGL({
       },
     },
     buffers: {
+      square: initSquareBuffer(gl),
       chunk: initChunkBuffer(gl, chunkSize),
       color: {},
     },
   }
 
   return state
+}
+
+function initSquareBuffer(
+  gl: WebGL2RenderingContext,
+): WebGLBuffer {
+  const buffer = gl.createBuffer()
+  invariant(buffer)
+  gl.bindBuffer(gl.ARRAY_BUFFER, buffer)
+  gl.bufferData(
+    gl.ARRAY_BUFFER,
+    // prettier-ignore
+    new Float32Array([
+      -1.0, -1.0, 
+      -1.0, 1.0, 
+      1.0, -1.0, 
+      1.0, 1.0,
+    ]),
+    gl.STATIC_DRAW,
+  )
+  return buffer
 }
 
 function initChunkBuffer(
