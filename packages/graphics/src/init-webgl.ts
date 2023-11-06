@@ -1,3 +1,4 @@
+import { Viewport } from '@sim-v2/types'
 import {
   Chunk,
   ChunkId,
@@ -9,7 +10,6 @@ import mainFrag from './shaders/main.frag.glsl'
 import mainVert from './shaders/main.vert.glsl'
 import postFrag from './shaders/post.frag.glsl'
 import postVert from './shaders/post.vert.glsl'
-import {Viewport} from '@sim-v2/types'
 
 type ShaderType = number
 type ShaderSource = string
@@ -43,6 +43,9 @@ export interface WebGLState {
     }
     color: Record<ChunkId, WebGLBuffer>
   }
+  textures: {
+    post: WebGLTexture
+  }
 }
 
 export function initWebGL({
@@ -63,6 +66,9 @@ export function initWebGL({
       square: initSquareBuffer(gl),
       chunk: initChunkBuffer(gl, chunkSize),
       color: {},
+    },
+    textures: {
+      post: initPostTexture(gl, viewport),
     },
   }
 
@@ -243,6 +249,28 @@ function initProgram(
   return program
 }
 
+function initPostTexture(
+  gl: WebGL2RenderingContext,
+  viewport: Viewport,
+): WebGLTexture {
+  const texture = gl.createTexture()
+  invariant(texture)
+  gl.bindTexture(gl.TEXTURE_2D, texture)
+
+  gl.texImage2D(
+    gl.TEXTURE_2D,
+    0,
+    gl.RGBA,
+    viewport.size.x * viewport.pixelRatio,
+    viewport.size.y * viewport.pixelRatio,
+    0,
+    gl.RGBA,
+    gl.UNSIGNED_BYTE,
+    null,
+  )
+  return texture
+}
+
 function initPostProgram(
   gl: WebGL2RenderingContext,
 ): WebGLState['programs']['post'] {
@@ -250,6 +278,7 @@ function initPostProgram(
     vert: postVert,
     frag: postFrag,
   })
+
   return {
     program,
   }
