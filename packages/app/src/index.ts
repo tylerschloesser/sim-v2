@@ -1,4 +1,5 @@
 import { Executor, GraphicsStrategy } from '@sim-v2/types'
+import { throttle } from '@sim-v2/util'
 import invariant from 'tiny-invariant'
 import { initApp } from './app.js'
 import './index.scss'
@@ -26,7 +27,7 @@ elements.dpr.innerText = `${pixelRatio}`
 
 const config: AppConfig = {
   pixelRatio,
-  reportStat({ type, value }) {
+  reportStat: throttle(({ type, value }) => {
     switch (type) {
       case 'rendered-chunks': {
         elements.renderedChunks.innerText = `${value}`
@@ -50,7 +51,7 @@ const config: AppConfig = {
         break
       }
     }
-  },
+  }, 100),
 }
 
 const DEFAULT_SETTINGS: AppSettings = {
