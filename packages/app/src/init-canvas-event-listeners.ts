@@ -118,6 +118,7 @@ export const initCanvasEventListeners: InitCanvasEventListenersFn =
     }
 
     canvas.addEventListener('pointerdown', () => {
+      motion.clear()
       cancelCameraMotion()
     })
 
@@ -148,11 +149,13 @@ export const initCanvasEventListeners: InitCanvasEventListenersFn =
     canvas.addEventListener(
       'pointerup',
       (e) => {
-        const duration = 500
         const v = motion.getVelocity(100)
-        const ax = -v.x / duration
-        const ay = -v.y / duration
-        setCameraMotion(v.x, v.y, ax, ay, duration)
+        if (v) {
+          const duration = 500
+          const ax = -v.x / duration
+          const ay = -v.y / duration
+          setCameraMotion(v.x, v.y, ax, ay, duration)
+        }
 
         pointerCache.delete(e.pointerId)
       },

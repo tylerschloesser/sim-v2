@@ -74,7 +74,6 @@ export async function initApp({
   simulator.addSyncChunkListener(graphics.syncChunk)
 
   const setCamera: SetCameraFn = (camera, time) => {
-    // TODO only do this if zoom/viewport changes?
     tileSize = zoomToTileSize(camera.zoom, viewport)
 
     graphics.setCamera(camera, time)

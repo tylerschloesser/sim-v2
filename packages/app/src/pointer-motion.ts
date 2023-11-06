@@ -41,7 +41,7 @@ export class PointerMotion {
     this.i = (this.i + 1) % this.size
   }
 
-  getVelocity(window: number): Vec2 {
+  getVelocity(window: number): Vec2 | null {
     this.velocity.x = 0
     this.velocity.y = 0
 
@@ -65,6 +65,15 @@ export class PointerMotion {
       this.velocity.y /= dt
     }
 
+    if (this.velocity.x === 0 && this.velocity.y === 0) {
+      return null
+    }
+
     return this.velocity
+  }
+
+  clear(): void {
+    this.i = 0
+    this.queue = new Array(this.size).fill(null)
   }
 }
