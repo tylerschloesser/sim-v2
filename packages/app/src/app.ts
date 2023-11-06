@@ -12,6 +12,7 @@ import {
   AppConfig,
   AppSettings,
   SetCameraFn,
+  SetCameraMotionFn,
 } from './types.js'
 
 export async function initApp({
@@ -87,12 +88,17 @@ export async function initApp({
     })
   }
 
+  const setCameraMotion: SetCameraMotionFn = () => {
+    console.log('todo set camera motion')
+  }
+
   initCanvasEventListeners({
     camera,
     canvas,
     getTileSize: () => tileSize,
     getViewport: () => viewport,
     setCamera,
+    setCameraMotion,
     signal,
   })
 

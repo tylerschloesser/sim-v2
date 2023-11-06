@@ -34,5 +34,23 @@ export type SetCameraFn = (
   time: number,
 ) => void
 
+export type SetCameraMotionFn = (
+  vx: number,
+  vy: number,
+  ax: number,
+  ay: number,
+  duration: number,
+) => void
+
+export type InitCanvasEventListenersFn = (args: {
+  canvas: HTMLCanvasElement
+  camera: Camera
+  setCamera: SetCameraFn
+  setCameraMotion: SetCameraMotionFn
+  getViewport: GetViewportFn
+  getTileSize: GetTileSizeFn
+  signal: AbortSignal
+}) => void
+
 export type GetViewportFn = () => Viewport
 export type GetTileSizeFn = () => number
