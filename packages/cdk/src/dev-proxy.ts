@@ -4,6 +4,7 @@ import {
   CertificateValidation,
 } from 'aws-cdk-lib/aws-certificatemanager'
 import {
+  CachePolicy,
   Distribution,
   OriginProtocolPolicy,
   OriginRequestHeaderBehavior,
@@ -123,6 +124,7 @@ class ProxyStack extends Stack {
             protocolPolicy: OriginProtocolPolicy.HTTP_ONLY,
             httpPort: 8080,
           }),
+          cachePolicy: CachePolicy.CACHING_DISABLED,
           originRequestPolicy: new OriginRequestPolicy(
             this,
             'OriginRequestPolicy',

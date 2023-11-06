@@ -100,6 +100,9 @@ export default (
       watchFiles: ['./src/index.html'],
       historyApiFallback: true,
       allowedHosts: ['.amazonaws.com', '.slg.dev'],
+      client: {
+        webSocketURL: 'auto://0.0.0.0:0/ws',
+      },
     },
     optimization: {
       //
