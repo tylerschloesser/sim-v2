@@ -1,7 +1,11 @@
 import { Camera, Viewport } from '@sim-v2/types'
 import { clamp } from '@sim-v2/util'
 import { ChunkId } from '@sim-v2/world'
-import invariant from 'tiny-invariant'
+import { MAX_ZOOM, MIN_ZOOM } from './const.js'
+import { getMinMaxTileSize } from './util.js'
+import { zoomToTileSize } from './zoom-to-tile-size.js'
+
+export { zoomToTileSize } from './zoom-to-tile-size.js'
 
 export function getVisibleChunkIds({
   camera,
@@ -36,27 +40,6 @@ export function getVisibleChunkIds({
   return chunkIds
 }
 
-// as a function of the smallest viewport dimension
-//
-const MIN_TILE_SIZE_FACTOR = 1 / 256
-const MAX_TILE_SIZE_FACTOR = 1 / 8
-
-const MIN_ZOOM = 0
-const MAX_ZOOM = 1
-
-export function zoomToTileSize(
-  zoom: number,
-  viewport: Viewport,
-): number {
-  const { minTileSize, maxTileSize } =
-    getMinMaxTileSize(viewport)
-
-  invariant(zoom >= MIN_ZOOM)
-  invariant(zoom <= MAX_ZOOM)
-
-  return minTileSize + (maxTileSize - minTileSize) * zoom
-}
-
 export function tileSizeToZoom(
   tileSize: number,
   viewport: Viewport,
@@ -66,17 +49,6 @@ export function tileSizeToZoom(
   const zoom =
     (tileSize - minTileSize) / (maxTileSize - minTileSize)
   return clamp(zoom, MIN_ZOOM, MAX_ZOOM)
-}
-
-function getMinMaxTileSize(viewport: Viewport) {
-  return {
-    minTileSize:
-      Math.min(viewport.size.x, viewport.size.y) *
-      MIN_TILE_SIZE_FACTOR,
-    maxTileSize:
-      Math.min(viewport.size.x, viewport.size.y) *
-      MAX_TILE_SIZE_FACTOR,
-  }
 }
 
 export function clampTileSize(
