@@ -6,7 +6,6 @@ import {
 } from '@sim-v2/camera'
 import { Vec2 } from '@sim-v2/math'
 import { Camera } from '@sim-v2/types'
-import { clamp } from '@sim-v2/util'
 import invariant from 'tiny-invariant'
 import {
   GetTileSizeFn,
@@ -148,6 +147,7 @@ export function initCanvasEventListeners({
   canvas.addEventListener(
     'pointerup',
     (e) => {
+      console.log('todo set camera motion')
       pointerCache.delete(e.pointerId)
     },
     { signal },
