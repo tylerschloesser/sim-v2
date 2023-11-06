@@ -21,6 +21,8 @@ import {
   Source,
 } from 'aws-cdk-lib/aws-s3-deployment'
 import { Construct } from 'constructs'
+import { DefaultToIndexHtmlFunction } from './default-to-index-html-function.js'
+import { IndexHtmlFunction } from './index-html-function.js'
 import { CommonStackProps } from './types.js'
 import {
   WEBPACK_MANIFEST_FILE_NAME,
@@ -56,35 +58,6 @@ export class CdnStack extends Stack {
       'OriginAccessIdentity',
     )
 
-    // If the request doesn't match a list of extensions we
-    // get from the webpack manifest, assume it's a client
-    // side route and return the index.html
-    //
-    const defaultToIndexHtmlFunction = new Function(
-      this,
-      'DefaultToIndexHtmlFunction',
-      {
-        // prettier-ignore
-        code: FunctionCode.fromInline(`
-          function handler(event) {
-            var request = event.request
-            var uri = request.uri
-            if (uri.match(/\.(${getExtensions().join('|')})$/)) {
-              return request
-            }
-            request.uri = '/'
-
-            var response = event.response
-            response.headers = response.headers || {}
-            response.headers['Cross-Origin-Opener-Policy'] = 'same-origin'
-            response.headers['Cross-Origin-Embedder-Policy'] = 'require-corp'
-
-            return request
-          }
-        `),
-      },
-    )
-
     const distribution = new Distribution(
       this,
       'Distribution',
@@ -97,7 +70,10 @@ export class CdnStack extends Stack {
             ViewerProtocolPolicy.REDIRECT_TO_HTTPS,
           functionAssociations: [
             {
-              function: defaultToIndexHtmlFunction,
+              function: new IndexHtmlFunction(
+                this,
+                'IndexHtmlFunction',
+              ),
               eventType: FunctionEventType.VIEWER_REQUEST,
             },
           ],
