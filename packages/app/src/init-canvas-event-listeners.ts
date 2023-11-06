@@ -183,13 +183,14 @@ export function initCanvasEventListeners({
     { signal },
   )
 
-  canvas.addEventListener(
-    'touchstart',
-    (e) => {
-      e.preventDefault()
-    },
-    { signal },
-  )
+  // TODO why did I need this?
+  // canvas.addEventListener(
+  //   'touchstart',
+  //   (e) => {
+  //     e.preventDefault()
+  //   },
+  //   { passive: false, signal },
+  // )
 
   canvas.addEventListener(
     'wheel',
