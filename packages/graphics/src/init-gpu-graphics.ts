@@ -65,6 +65,7 @@ export const initGpuGraphics: InitGraphicsFn<
     ChunkId,
     {
       start: number
+      elapsed: number
       duration: number
     }
   > = {}
@@ -74,6 +75,8 @@ export const initGpuGraphics: InitGraphicsFn<
     chunkSize,
     viewport,
   })
+
+  let dirty: boolean = true
 
   const syncChunk: SyncChunkFn = (chunk) => {
     invariant(!world.chunks[chunk.id])
@@ -90,10 +93,13 @@ export const initGpuGraphics: InitGraphicsFn<
       // assume that if we're adding a chunk, we're showing it immediately
       animate[chunk.id] = {
         start: performance.now(),
+        elapsed: 0,
         duration: 250,
       }
 
       world.chunks[chunk.id] = chunk
+
+      dirty = true
     }
 
     // queue creating the chunk because it takes a while
@@ -145,6 +151,15 @@ export const initGpuGraphics: InitGraphicsFn<
 
     let renderedChunkCount = 0
 
+    for (const [chunkId, animation] of Object.entries(
+      animate,
+    )) {
+      animation.elapsed = time - animation.start
+      if (animation.elapsed >= animation.duration) {
+        delete animate[chunkId]
+      }
+    }
+
     for (const chunkId of visibleChunkIds) {
       const chunk = world.chunks[chunkId]
       if (!chunk) {
@@ -157,12 +172,9 @@ export const initGpuGraphics: InitGraphicsFn<
       let alpha: number = 1.0
       const animation = animate[chunk.id]
       if (animation) {
-        const elapsed = time - animation.start
-        if (elapsed >= animation.duration) {
-          delete animate[chunk.id]
-        } else {
-          alpha = easeOut(elapsed / animation.duration)
-        }
+        alpha = easeOut(
+          animation.elapsed / animation.duration,
+        )
       }
 
       gl.uniform1f(
@@ -236,7 +248,13 @@ export const initGpuGraphics: InitGraphicsFn<
       if (controller.signal.aborted) {
         return
       }
-      renderMain(time)
+      if (dirty) {
+        renderMain(time)
+        if (Object.keys(animate).length === 0) {
+          dirty = false
+        }
+      }
+
       renderPost()
 
       requestAnimationFrame(render)
@@ -262,6 +280,7 @@ export const initGpuGraphics: InitGraphicsFn<
         viewport,
         chunkIds: visibleChunkIds,
       })
+      dirty = true
     },
     setViewport(_next: Viewport): void {
       invariant(false, 'TODO')
