@@ -46,6 +46,9 @@ export interface WebGLState {
   textures: {
     post: WebGLTexture
   }
+  framebuffers: {
+    post: WebGLFramebuffer
+  }
 }
 
 export function initWebGL({
@@ -70,9 +73,20 @@ export function initWebGL({
     textures: {
       post: initPostTexture(gl, viewport),
     },
+    framebuffers: {
+      post: initPostFramebuffer(gl),
+    },
   }
 
   return state
+}
+
+function initPostFramebuffer(
+  gl: WebGL2RenderingContext,
+): WebGLFramebuffer {
+  const framebuffer = gl.createFramebuffer()
+  invariant(framebuffer)
+  return framebuffer
 }
 
 function initSquareBuffer(
