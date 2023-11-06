@@ -110,7 +110,7 @@ export const initGpuGraphics: InitGraphicsFn<
       world.chunks[chunk.id] = chunk
     }
 
-    // jueue creating the chunk because it takes a while
+    // queue creating the chunk because it takes a while
     if (typeof self.requestIdleCallback === 'function') {
       self.requestIdleCallback(callback)
     } else {
