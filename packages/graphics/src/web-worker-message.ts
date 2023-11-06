@@ -10,6 +10,7 @@ import { Chunk } from '@sim-v2/world'
 export enum MessageType {
   Init = 'init',
   SetCamera = 'set-camera',
+  SetCameraMotion = 'set-camera-motion',
   SetViewport = 'set-viewport',
   SyncChunk = 'sync-chunk',
   ReportStatCallback = 'report-stat-callback',
@@ -26,6 +27,10 @@ export interface SetCameraMessage {
   type: MessageType.SetCamera
   camera: Camera<SimpleVec2>
   time: number
+}
+
+export interface SetCameraMotionMessage {
+  type: MessageType.SetCameraMotion
 }
 
 export interface SetViewportMessage {
@@ -46,6 +51,7 @@ export interface ReportStatCallbackMessage {
 export type Message =
   | InitMessage
   | SetCameraMessage
+  | SetCameraMotionMessage
   | SetViewportMessage
   | SyncChunkMessage
   | ReportStatCallbackMessage

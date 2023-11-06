@@ -2,7 +2,8 @@
   "name": "@sim-v2/cdk",
   "type": "module",
   "scripts": {
-    "deploy": "cdk deploy --all"
+    "deploy": "cdk deploy --all",
+    "deploy-dev-proxy": "cdk --app \"npx ts-node src/dev-proxy.ts\" deploy --all --require-approval never"
   },
   "dependencies": {
     "aws-cdk": "^2.104.0",

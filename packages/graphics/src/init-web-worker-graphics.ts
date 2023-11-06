@@ -10,6 +10,7 @@ import {
   Message,
   MessageType,
   SetCameraMessage,
+  SetCameraMotionMessage,
   SetViewportMessage,
   SyncChunkMessage,
 } from './web-worker-message.js'
@@ -65,6 +66,12 @@ export function initWebWorkerGraphics({
         type: MessageType.SetCamera,
         camera,
         time,
+      }
+      worker.postMessage(message)
+    },
+    setCameraMotion() {
+      const message: SetCameraMotionMessage = {
+        type: MessageType.SetCameraMotion,
       }
       worker.postMessage(message)
     },

@@ -77,8 +77,8 @@ export async function initApp({
       tileSize = zoomToTileSize(camera.zoom, viewport)
 
       graphics.setCamera(camera, time)
-      throttle(simulator.setCamera, 200)(camera)
 
+      throttle(simulator.setCamera, 200)(camera)
       throttle(saveCamera, 1000)(camera)
 
       config.reportStat({

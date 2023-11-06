@@ -95,6 +95,7 @@ export type InitGraphicsFn<T = InitGraphicsArgs> = (
 export interface Graphics {
   setViewport(viewport: Viewport): void
   setCamera(camera: Camera, time: number): void
+  setCameraMotion(): void
   syncChunk: SyncChunkFn
   stop(): void
 }

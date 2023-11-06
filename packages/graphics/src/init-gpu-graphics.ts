@@ -282,6 +282,7 @@ export const initGpuGraphics: InitGraphicsFn<
       })
       dirty = true
     },
+    setCameraMotion() {},
     setViewport(_next: Viewport): void {
       invariant(false, 'TODO')
     },

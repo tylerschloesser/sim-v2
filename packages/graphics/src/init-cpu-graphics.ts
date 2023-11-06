@@ -88,6 +88,7 @@ export const initCpuGraphics: InitGraphicsFn<
       camera = next
       tileSize = zoomToTileSize(camera.zoom, viewport)
     },
+    setCameraMotion() {},
     setViewport(_next: Viewport): void {
       invariant(false, 'TODO')
     },

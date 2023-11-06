@@ -44,6 +44,11 @@ self.addEventListener('message', (e) => {
       )
       break
     }
+    case MessageType.SetCameraMotion: {
+      invariant(graphics)
+      graphics.setCameraMotion()
+      break
+    }
     case MessageType.SetViewport: {
       invariant(graphics)
       graphics.setViewport({
