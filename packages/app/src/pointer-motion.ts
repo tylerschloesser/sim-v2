@@ -36,8 +36,6 @@ export class PointerMotion {
       val.t0 = t0
     }
 
-    invariant(val.t1 > val.t0)
-
     this.i = (this.i + 1) % this.size
   }
 
@@ -60,14 +58,15 @@ export class PointerMotion {
       }
     }
 
-    if (dt > 0) {
-      this.velocity.x /= dt
-      this.velocity.y /= dt
-    }
-
-    if (this.velocity.x === 0 && this.velocity.y === 0) {
+    if (
+      dt === 0 ||
+      (this.velocity.x === 0 && this.velocity.y === 0)
+    ) {
       return null
     }
+
+    this.velocity.x /= dt
+    this.velocity.y /= dt
 
     return this.velocity
   }
