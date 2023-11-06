@@ -36,6 +36,7 @@ export const initCanvasEventListeners: InitCanvasEventListenersFn =
     camera,
     setCamera,
     setCameraMotion,
+    cancelCameraMotion,
     getViewport,
     getTileSize,
     signal,
@@ -116,6 +117,10 @@ export const initCanvasEventListeners: InitCanvasEventListenersFn =
       )
     }
 
+    canvas.addEventListener('pointerdown', () => {
+      cancelCameraMotion()
+    })
+
     canvas.addEventListener(
       'pointermove',
       (e) => {
@@ -182,6 +187,8 @@ export const initCanvasEventListeners: InitCanvasEventListenersFn =
       'wheel',
       (e) => {
         e.preventDefault()
+
+        cancelCameraMotion()
 
         const viewport = getViewport()
         const scale =

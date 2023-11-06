@@ -88,6 +88,8 @@ export async function initApp({
     })
   }
 
+  let cameraMotionInterval: number | undefined
+
   const setCameraMotion: SetCameraMotionFn = (
     vx,
     vy,
@@ -98,7 +100,8 @@ export async function initApp({
     let x = camera.position.x
     let y = camera.position.y
     const start = performance.now()
-    let interval = self.setInterval(() => {
+    invariant(cameraMotionInterval === undefined)
+    cameraMotionInterval = self.setInterval(() => {
       const now = performance.now()
 
       const dt = Math.min(now - start, duration)
@@ -110,7 +113,8 @@ export async function initApp({
       setCamera(camera, now)
 
       if (dt === duration) {
-        self.clearInterval(interval)
+        self.clearInterval(cameraMotionInterval)
+        cameraMotionInterval = undefined
       }
     }, 50)
   }
@@ -122,6 +126,10 @@ export async function initApp({
     getViewport: () => viewport,
     setCamera,
     setCameraMotion,
+    cancelCameraMotion() {
+      self.clearInterval(cameraMotionInterval)
+      cameraMotionInterval = undefined
+    },
     signal,
   })
 

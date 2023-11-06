@@ -47,6 +47,7 @@ export type InitCanvasEventListenersFn = (args: {
   camera: Camera
   setCamera: SetCameraFn
   setCameraMotion: SetCameraMotionFn
+  cancelCameraMotion(): void
   getViewport: GetViewportFn
   getTileSize: GetTileSizeFn
   signal: AbortSignal
