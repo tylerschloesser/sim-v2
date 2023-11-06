@@ -6,6 +6,7 @@ import { getMinMaxTileSize } from './util.js'
 import { zoomToTileSize } from './zoom-to-tile-size.js'
 
 export { zoomToTileSize } from './zoom-to-tile-size.js'
+export { tileSizeToZoom } from './tile-size-to-zoom.js'
 
 export function getVisibleChunkIds({
   camera,
@@ -38,17 +39,6 @@ export function getVisibleChunkIds({
     }
   }
   return chunkIds
-}
-
-export function tileSizeToZoom(
-  tileSize: number,
-  viewport: Viewport,
-): number {
-  const { minTileSize, maxTileSize } =
-    getMinMaxTileSize(viewport)
-  const zoom =
-    (tileSize - minTileSize) / (maxTileSize - minTileSize)
-  return clamp(zoom, MIN_ZOOM, MAX_ZOOM)
 }
 
 export function clampTileSize(
