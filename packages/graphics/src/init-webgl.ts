@@ -7,6 +7,8 @@ import invariant from 'tiny-invariant'
 import { colorStringToArray } from './color.js'
 import mainFrag from './shaders/main.frag.glsl'
 import mainVert from './shaders/main.vert.glsl'
+import postFrag from './shaders/post.frag.glsl'
+import postVert from './shaders/post.vert.glsl'
 
 type ShaderType = number
 type ShaderSource = string
@@ -28,9 +30,9 @@ export interface WebGLState {
         alpha: WebGLUniformLocation
       }
     }
-    // post: {
-    //   program: WebGLProgram
-    // }
+    post: {
+      program: WebGLProgram
+    }
   }
   buffers: {
     square: WebGLBuffer
@@ -51,10 +53,8 @@ export function initWebGL({
 }): WebGLState {
   const state: WebGLState = {
     programs: {
-      main: initMainProgram(gl, {
-        vert: mainVert,
-        frag: mainFrag,
-      }),
+      main: initMainProgram(gl),
+      post: initPostProgram(gl),
     },
     buffers: {
       square: initSquareBuffer(gl),
@@ -199,13 +199,10 @@ export function initColorBuffer({
   return buffer
 }
 
-function initMainProgram(
+function initProgram(
   gl: WebGL2RenderingContext,
-  shaders: {
-    vert: string
-    frag: string
-  },
-): WebGLState['programs']['main'] {
+  shaders: { vert: string; frag: string },
+): WebGLProgram {
   const program = gl.createProgram()
   invariant(program)
 
@@ -240,6 +237,28 @@ function initMainProgram(
     )
   }
 
+  return program
+}
+
+function initPostProgram(
+  gl: WebGL2RenderingContext,
+): WebGLState['programs']['post'] {
+  const program = initProgram(gl, {
+    vert: postVert,
+    frag: postFrag,
+  })
+  return {
+    program,
+  }
+}
+
+function initMainProgram(
+  gl: WebGL2RenderingContext,
+): WebGLState['programs']['main'] {
+  const program = initProgram(gl, {
+    vert: mainVert,
+    frag: mainFrag,
+  })
   return {
     program,
     attributes: {
