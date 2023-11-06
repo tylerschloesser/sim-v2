@@ -6,6 +6,8 @@ import {
 import {
   Distribution,
   OriginProtocolPolicy,
+  OriginRequestHeaderBehavior,
+  OriginRequestPolicy,
 } from 'aws-cdk-lib/aws-cloudfront'
 import { HttpOrigin } from 'aws-cdk-lib/aws-cloudfront-origins'
 import {
@@ -21,11 +23,11 @@ import { Construct } from 'constructs'
 import invariant from 'tiny-invariant'
 import { Region } from './types.js'
 
-const STACK_ID_PREFIX: string = 'SimV2DevProxy'
+const STACK_ID_PREFIX: string = 'DevProxy'
 const ACCOUNT_ID: string = '063257577013'
 
 const ROOT_DOMAIN_NAME: string = 'slg.dev'
-const SOURCE_DOMAIN_NAME: string = 'dev-proxy.slg.dev'
+const SOURCE_DOMAIN_NAME: string = 'proxy.slg.dev'
 const TARGET_DOMAIN_NAME: string =
   'ec2-34-218-222-50.us-west-2.compute.amazonaws.com'
 
@@ -121,6 +123,21 @@ class ProxyStack extends Stack {
             protocolPolicy: OriginProtocolPolicy.HTTP_ONLY,
             httpPort: 8080,
           }),
+          originRequestPolicy: new OriginRequestPolicy(
+            this,
+            'OriginRequestPolicy',
+            {
+              // https://docs.aws.amazon.com/AmazonCloudFront/latest/DeveloperGuide/distribution-working-with.websockets.html
+              headerBehavior:
+                OriginRequestHeaderBehavior.allowList(
+                  'Sec-WebSocket-Key',
+                  'Sec-WebSocket-Version',
+                  'Sec-WebSocket-Protocol',
+                  'Sec-WebSocket-Accept',
+                  'Sec-WebSocket-Extensions',
+                ),
+            },
+          ),
         },
         domainNames: [SOURCE_DOMAIN_NAME],
         certificate,
