@@ -27,7 +27,7 @@ export const initGpuGraphics: InitGraphicsFn<
   const gl = getGpuContext(canvas)
   invariant(gl)
 
-  const state = initWebGL({ gl, chunkSize })
+  const state = initWebGL({ gl, chunkSize, viewport })
 
   const reportRenderedChunks = (() => {
     let value: number | undefined

@@ -9,6 +9,7 @@ import mainFrag from './shaders/main.frag.glsl'
 import mainVert from './shaders/main.vert.glsl'
 import postFrag from './shaders/post.frag.glsl'
 import postVert from './shaders/post.vert.glsl'
+import {Viewport} from '@sim-v2/types'
 
 type ShaderType = number
 type ShaderSource = string
@@ -47,9 +48,11 @@ export interface WebGLState {
 export function initWebGL({
   gl,
   chunkSize,
+  viewport,
 }: {
   gl: WebGL2RenderingContext
   chunkSize: number
+  viewport: Viewport
 }): WebGLState {
   const state: WebGLState = {
     programs: {
