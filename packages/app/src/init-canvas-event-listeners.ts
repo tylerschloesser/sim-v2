@@ -7,6 +7,7 @@ import {
 import { Vec2 } from '@sim-v2/math'
 import { Camera } from '@sim-v2/types'
 import invariant from 'tiny-invariant'
+import { PointerMotion } from './pointer-motion.js'
 import {
   GetTileSizeFn,
   GetViewportFn,
@@ -16,6 +17,8 @@ import {
 type PointerId = number
 
 const pointerCache = new Map<PointerId, PointerEvent>()
+
+const motion = new PointerMotion(10)
 
 function getOtherPointer(e: PointerEvent) {
   invariant(pointerCache.size === 2)
@@ -53,10 +56,13 @@ export function initCanvasEventListeners({
   }) => {
     const tileSize = getTileSize()
 
-    camera.position.x +=
-      (prev.clientX - next.clientX) / tileSize
-    camera.position.y +=
-      (prev.clientY - next.clientY) / tileSize
+    const dx = (prev.clientX - next.clientX) / tileSize
+    const dy = (prev.clientY - next.clientY) / tileSize
+
+    camera.position.x += dx
+    camera.position.y += dy
+
+    motion.push(dx, dy, next.timeStamp)
 
     setCamera(
       camera,
@@ -147,7 +153,7 @@ export function initCanvasEventListeners({
   canvas.addEventListener(
     'pointerup',
     (e) => {
-      console.log('todo set camera motion')
+      console.log('velocity?', motion.getVelocity(100))
       pointerCache.delete(e.pointerId)
     },
     { signal },
