@@ -73,6 +73,12 @@ export class CdnStack extends Stack {
               return request
             }
             request.uri = '/'
+
+            var response = event.response
+            response.headers = response.headers || {}
+            response.headers['Cross-Origin-Opener-Policy'] = 'same-origin'
+            response.headers['Cross-Origin-Embedder-Policy'] = 'require-corp'
+
             return request
           }
         `),
