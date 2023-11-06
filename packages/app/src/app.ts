@@ -88,7 +88,7 @@ export async function initApp({
     })
   }
 
-  let cameraMotionInterval: number | undefined
+  let cameraMotionActive: boolean = false
 
   const setCameraMotion: SetCameraMotionFn = (
     vx,
@@ -99,24 +99,29 @@ export async function initApp({
   ) => {
     let x = camera.position.x
     let y = camera.position.y
-    const start = performance.now()
-    invariant(cameraMotionInterval === undefined)
-    cameraMotionInterval = self.setInterval(() => {
-      const now = performance.now()
+    invariant(cameraMotionActive === false)
+    cameraMotionActive = true
 
-      const dt = Math.min(now - start, duration)
+    const start = performance.now()
+    function handleCameraMotion(time: number) {
+      if (cameraMotionActive === false) {
+        return
+      }
+
+      const dt = Math.min(time - start, duration)
 
       camera.position.x = x + vx * dt + 0.5 * ax * dt ** 2
       camera.position.y = y + vy * dt + 0.5 * ay * dt ** 2
 
-      // TODO
-      setCamera(camera, now)
+      setCamera(camera, null)
 
       if (dt === duration) {
-        self.clearInterval(cameraMotionInterval)
-        cameraMotionInterval = undefined
+        cameraMotionActive = false
+      } else {
+        requestAnimationFrame(handleCameraMotion)
       }
-    }, 50)
+    }
+    requestAnimationFrame(handleCameraMotion)
   }
 
   initCanvasEventListeners({
@@ -127,8 +132,7 @@ export async function initApp({
     setCamera,
     setCameraMotion,
     cancelCameraMotion() {
-      self.clearInterval(cameraMotionInterval)
-      cameraMotionInterval = undefined
+      cameraMotionActive = false
     },
     signal,
   })

@@ -94,7 +94,11 @@ export type InitGraphicsFn<T = InitGraphicsArgs> = (
 
 export interface Graphics {
   setViewport(viewport: Viewport): void
-  setCamera(camera: Camera, time: number): void
+
+  /**
+   * @param {number | null} time Time in ms if triggered by an input event, otherwise null.
+   */
+  setCamera(camera: Camera, time: number | null): void
   setCameraMotion(): void
   syncChunk: SyncChunkFn
   stop(): void

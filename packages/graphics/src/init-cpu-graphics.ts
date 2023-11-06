@@ -79,12 +79,15 @@ export const initCpuGraphics: InitGraphicsFn<
     stop() {
       controller.abort()
     },
-    setCamera(next: Camera, time: number): void {
-      const now = performance.timeOrigin + performance.now()
-      callbacks.reportStat({
-        type: StatType.InputLatency,
-        value: now - time,
-      })
+    setCamera(next, time): void {
+      if (time !== null) {
+        const now =
+          performance.timeOrigin + performance.now()
+        callbacks.reportStat({
+          type: StatType.InputLatency,
+          value: now - time,
+        })
+      }
       camera = next
       tileSize = zoomToTileSize(camera.zoom, viewport)
     },

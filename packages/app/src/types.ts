@@ -31,7 +31,7 @@ export interface App {
 
 export type SetCameraFn = (
   camera: Camera<Vec2>,
-  time: number,
+  time: number | null,
 ) => void
 
 export type SetCameraMotionFn = (

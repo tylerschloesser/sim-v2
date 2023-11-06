@@ -1,7 +1,6 @@
 import { getVisibleChunkIds } from '@sim-v2/camera'
 import { easeOut } from '@sim-v2/math'
 import {
-  Camera,
   InitGraphicsArgs,
   InitGraphicsFn,
   StatType,
@@ -266,13 +265,17 @@ export const initGpuGraphics: InitGraphicsFn<
     stop() {
       controller.abort()
     },
-    setCamera(next: Camera, time: number): void {
-      const now = performance.timeOrigin + performance.now()
-      callbacks.reportStat({
-        type: StatType.InputLatency,
-        value: now - time,
-      })
+    setCamera(next, time): void {
+      if (time !== null) {
+        const now =
+          performance.timeOrigin + performance.now()
+        callbacks.reportStat({
+          type: StatType.InputLatency,
+          value: now - time,
+        })
+      }
       camera = next
+      // TODO don't update tileSize unless needed
       updateView(camera, viewport)
       getVisibleChunkIds({
         camera,
