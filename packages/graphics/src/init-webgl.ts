@@ -44,7 +44,11 @@ export interface WebGLState {
     color: Record<ChunkId, WebGLBuffer>
   }
   textures: {
-    post: WebGLTexture
+    post: {
+      value: WebGLTexture
+      width: number
+      height: number
+    }
   }
   framebuffers: {
     post: WebGLFramebuffer
@@ -266,23 +270,30 @@ function initProgram(
 function initPostTexture(
   gl: WebGL2RenderingContext,
   viewport: Viewport,
-): WebGLTexture {
+) {
   const texture = gl.createTexture()
   invariant(texture)
   gl.bindTexture(gl.TEXTURE_2D, texture)
+
+  const width = viewport.size.x * viewport.pixelRatio
+  const height = viewport.size.y * viewport.pixelRatio
 
   gl.texImage2D(
     gl.TEXTURE_2D,
     0,
     gl.RGBA,
-    viewport.size.x * viewport.pixelRatio,
-    viewport.size.y * viewport.pixelRatio,
+    width,
+    height,
     0,
     gl.RGBA,
     gl.UNSIGNED_BYTE,
     null,
   )
-  return texture
+  return {
+    value: texture,
+    width,
+    height,
+  }
 }
 
 function initPostProgram(

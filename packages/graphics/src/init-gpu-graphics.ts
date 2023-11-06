@@ -178,6 +178,8 @@ export const initGpuGraphics: InitGraphicsFn<
     reportRenderedChunks(renderedChunkCount)
   }
 
+  function renderPost() {}
+
   const render = measureFps(
     callbacks.reportStat,
     (time: number) => {
@@ -185,6 +187,7 @@ export const initGpuGraphics: InitGraphicsFn<
         return
       }
       renderMain(time)
+      renderPost()
 
       requestAnimationFrame(render)
     },
