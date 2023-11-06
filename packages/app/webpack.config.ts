@@ -103,6 +103,10 @@ export default (
       client: {
         webSocketURL: 'auto://0.0.0.0:0/ws',
       },
+      headers: {
+        'Cross-Origin-Opener-Policy': 'same-origin',
+        'Cross-Origin-Embedder-Policy': 'require-corp',
+      },
     },
     optimization: {
       //
