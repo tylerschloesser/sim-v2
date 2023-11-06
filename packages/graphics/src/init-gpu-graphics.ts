@@ -105,8 +105,8 @@ export const initGpuGraphics: InitGraphicsFn<
     if (typeof self.requestIdleCallback === 'function') {
       self.requestIdleCallback(callback)
     } else {
-      // not available on web workers, not documented...
-      callback()
+      // requestIdleCallback not available on web workers or safari
+      self.setTimeout(callback, 0)
     }
   }
 
