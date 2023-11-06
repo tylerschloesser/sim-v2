@@ -119,69 +119,72 @@ export const initGpuGraphics: InitGraphicsFn<
     }
   }
 
+  function renderMain(time: number) {
+    gl.clearColor(1, 1, 1, 1)
+    gl.clear(gl.COLOR_BUFFER_BIT)
+
+    let renderedChunkCount = 0
+
+    for (const chunkId of visibleChunkIds) {
+      const chunk = world.chunks[chunkId]
+      if (!chunk) {
+        continue
+      }
+      const color = state.buffers.color[chunk.id]
+      invariant(color)
+      renderedChunkCount += 1
+
+      let alpha: number = 1.0
+      const animation = animate[chunk.id]
+      if (animation) {
+        const elapsed = time - animation.start
+        if (elapsed >= animation.duration) {
+          delete animate[chunk.id]
+        } else {
+          alpha = easeOut(elapsed / animation.duration)
+        }
+      }
+
+      gl.uniform1f(
+        state.programs.main.uniforms.alpha,
+        alpha,
+      )
+
+      gl.bindBuffer(gl.ARRAY_BUFFER, color)
+      gl.enableVertexAttribArray(
+        state.programs.main.attributes.color,
+      )
+      // prettier-ignore
+      gl.vertexAttribPointer(
+        state.programs.main.attributes.color,
+        4, gl.FLOAT, false, 0, 0,
+      )
+
+      const position = getPosition(chunk.id, chunkSize)
+      gl.uniform2f(
+        state.programs.main.uniforms.position,
+        position.x,
+        position.y,
+      )
+
+      gl.drawElements(
+        gl.TRIANGLES,
+        chunkSize ** 2 * 6,
+        gl.UNSIGNED_SHORT,
+        0,
+      )
+    }
+
+    reportRenderedChunks(renderedChunkCount)
+  }
+
   const render = measureFps(
     callbacks.reportStat,
     (time: number) => {
       if (controller.signal.aborted) {
         return
       }
-
-      gl.clearColor(1, 1, 1, 1)
-      gl.clear(gl.COLOR_BUFFER_BIT)
-
-      let renderedChunkCount = 0
-
-      for (const chunkId of visibleChunkIds) {
-        const chunk = world.chunks[chunkId]
-        if (!chunk) {
-          continue
-        }
-        const color = state.buffers.color[chunk.id]
-        invariant(color)
-        renderedChunkCount += 1
-
-        let alpha: number = 1.0
-        const animation = animate[chunk.id]
-        if (animation) {
-          const elapsed = time - animation.start
-          if (elapsed >= animation.duration) {
-            delete animate[chunk.id]
-          } else {
-            alpha = easeOut(elapsed / animation.duration)
-          }
-        }
-
-        gl.uniform1f(
-          state.programs.main.uniforms.alpha,
-          alpha,
-        )
-
-        gl.bindBuffer(gl.ARRAY_BUFFER, color)
-        gl.enableVertexAttribArray(
-          state.programs.main.attributes.color,
-        )
-        // prettier-ignore
-        gl.vertexAttribPointer(
-        state.programs.main.attributes.color,
-        4, gl.FLOAT, false, 0, 0,
-      )
-
-        const position = getPosition(chunk.id, chunkSize)
-        gl.uniform2f(
-          state.programs.main.uniforms.position,
-          position.x,
-          position.y,
-        )
-
-        gl.drawElements(
-          gl.TRIANGLES,
-          chunkSize ** 2 * 6,
-          gl.UNSIGNED_SHORT,
-          0,
-        )
-      }
-
-      reportRenderedChunks(renderedChunkCount)
+      renderMain(time)
 
       requestAnimationFrame(render)
     },
