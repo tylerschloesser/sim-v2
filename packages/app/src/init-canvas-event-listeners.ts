@@ -35,6 +35,7 @@ export const initCanvasEventListeners: InitCanvasEventListenersFn =
     canvas,
     camera,
     setCamera,
+    setCameraMotion,
     getViewport,
     getTileSize,
     signal,
@@ -51,7 +52,7 @@ export const initCanvasEventListeners: InitCanvasEventListenersFn =
       camera.position.x += dx
       camera.position.y += dy
 
-      motion.push(dx, dy, next.timeStamp)
+      motion.push(dx, dy, prev.timeStamp, next.timeStamp)
 
       setCamera(
         camera,
@@ -142,7 +143,12 @@ export const initCanvasEventListeners: InitCanvasEventListenersFn =
     canvas.addEventListener(
       'pointerup',
       (e) => {
-        console.log('velocity?', motion.getVelocity(100))
+        const duration = 500
+        const v = motion.getVelocity(100)
+        const ax = -v.x / duration
+        const ay = -v.y / duration
+        setCameraMotion(v.x, v.y, ax, ay, duration)
+
         pointerCache.delete(e.pointerId)
       },
       { signal },

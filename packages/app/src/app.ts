@@ -88,8 +88,31 @@ export async function initApp({
     })
   }
 
-  const setCameraMotion: SetCameraMotionFn = () => {
-    console.log('todo set camera motion')
+  const setCameraMotion: SetCameraMotionFn = (
+    vx,
+    vy,
+    ax,
+    ay,
+    duration,
+  ) => {
+    let x = camera.position.x
+    let y = camera.position.y
+    const start = performance.now()
+    let interval = self.setInterval(() => {
+      const now = performance.now()
+
+      const dt = Math.min(now - start, duration)
+
+      camera.position.x = x + vx * dt + 0.5 * ax * dt ** 2
+      camera.position.y = y + vy * dt + 0.5 * ay * dt ** 2
+
+      // TODO
+      setCamera(camera, now)
+
+      if (dt === duration) {
+        self.clearInterval(interval)
+      }
+    }, 50)
   }
 
   initCanvasEventListeners({

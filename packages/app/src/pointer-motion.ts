@@ -6,9 +6,10 @@ export class PointerMotion {
   size: number
 
   queue: ({
-    x: number
-    y: number
-    time: number
+    dx: number
+    dy: number
+    t0: number
+    t1: number
   } | null)[]
 
   velocity = new Vec2(0, 0)
@@ -18,55 +19,50 @@ export class PointerMotion {
     this.queue = new Array(size).fill(null)
   }
 
-  push(x: number, y: number, time: number): void {
+  push(
+    dx: number,
+    dy: number,
+    t0: number,
+    t1: number,
+  ): void {
     let val = this.queue[this.i]
     invariant(val !== undefined)
     if (val === null) {
-      val = this.queue[this.i] = { x, y, time }
+      val = this.queue[this.i] = { dx, dy, t0, t1 }
     } else {
-      val.x = x
-      val.y = y
-      val.time = time
+      val.dx = dx
+      val.dy = dy
+      val.t1 = t1
+      val.t0 = t0
     }
+
+    invariant(val.t1 > val.t0)
 
     this.i = (this.i + 1) % this.size
   }
 
   getVelocity(window: number): Vec2 {
-    let count = 0
     this.velocity.x = 0
     this.velocity.y = 0
 
     const now = performance.now()
 
-    let start = now
-    let end = 0
+    let dt = 0
 
-    for (const { x, y, time } of this.queue.filter(
+    for (const { dx, dy, t0, t1 } of this.queue.filter(
       (v): v is NonNullable<(typeof this.queue)[0]> =>
         v !== null,
     )) {
-      if (now - time < window) {
-        count += 1
-        this.velocity.x += x
-        this.velocity.y += y
-
-        if (time < start) {
-          start = time
-        }
-        if (time > end) {
-          end = time
-        }
+      if (now - t0 < window) {
+        this.velocity.x += dx
+        this.velocity.y += dy
+        dt += t1 - t0
       }
     }
 
-    if (count > 1) {
-      invariant(start < end)
-      invariant(start !== end)
-      const dt = start - end
-
-      this.velocity.x /= count / dt
-      this.velocity.y /= count / dt
+    if (dt > 0) {
+      this.velocity.x /= dt
+      this.velocity.y /= dt
     }
 
     return this.velocity
