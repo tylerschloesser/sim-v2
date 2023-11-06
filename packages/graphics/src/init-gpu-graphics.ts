@@ -108,15 +108,18 @@ export const initGpuGraphics: InitGraphicsFn<
   function renderMain(time: number) {
     gl.useProgram(state.programs.main.program)
 
+    gl.bindFramebuffer(
+      gl.FRAMEBUFFER,
+      state.framebuffers.post,
+    )
+
+    gl.clearColor(1, 1, 1, 1)
+    gl.clear(gl.COLOR_BUFFER_BIT)
+
     gl.uniformMatrix4fv(
       state.programs.main.uniforms.view,
       false,
       view,
-    )
-
-    gl.bindFramebuffer(
-      gl.FRAMEBUFFER,
-      state.framebuffers.post,
     )
 
     gl.bindBuffer(
@@ -139,9 +142,6 @@ export const initGpuGraphics: InitGraphicsFn<
       0,
       0,
     )
-
-    gl.clearColor(1, 1, 1, 1)
-    gl.clear(gl.COLOR_BUFFER_BIT)
 
     let renderedChunkCount = 0
 
