@@ -7,7 +7,12 @@ import { throttle } from '@sim-v2/util'
 import invariant from 'tiny-invariant'
 import { loadCamera, saveCamera } from './camera.js'
 import { initCanvasEventListeners } from './init-canvas-event-listeners.js'
-import { App, AppConfig, AppSettings } from './types.js'
+import {
+  App,
+  AppConfig,
+  AppSettings,
+  SetCameraFn,
+} from './types.js'
 
 export async function initApp({
   settings,
@@ -67,25 +72,27 @@ export async function initApp({
 
   simulator.addSyncChunkListener(graphics.syncChunk)
 
+  const setCamera: SetCameraFn = (camera, time) => {
+    // TODO only do this if zoom/viewport changes?
+    tileSize = zoomToTileSize(camera.zoom, viewport)
+
+    graphics.setCamera(camera, time)
+
+    throttle(simulator.setCamera, 200)(camera)
+    throttle(saveCamera, 1000)(camera)
+
+    config.reportStat({
+      type: StatType.Camera,
+      value: camera,
+    })
+  }
+
   initCanvasEventListeners({
     camera,
     canvas,
     getTileSize: () => tileSize,
     getViewport: () => viewport,
-    setCamera(camera, time) {
-      // TODO only do this if zoom/viewport changes?
-      tileSize = zoomToTileSize(camera.zoom, viewport)
-
-      graphics.setCamera(camera, time)
-
-      throttle(simulator.setCamera, 200)(camera)
-      throttle(saveCamera, 1000)(camera)
-
-      config.reportStat({
-        type: StatType.Camera,
-        value: camera,
-      })
-    },
+    setCamera,
     signal,
   })
 
