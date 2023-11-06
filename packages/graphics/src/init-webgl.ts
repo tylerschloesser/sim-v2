@@ -5,8 +5,8 @@ import {
 } from '@sim-v2/world'
 import invariant from 'tiny-invariant'
 import { colorStringToArray } from './color.js'
-import frag from './shaders/frag.glsl'
-import vert from './shaders/vert.glsl'
+import mainFrag from './shaders/main.frag.glsl'
+import mainVert from './shaders/main.vert.glsl'
 
 type ShaderType = number
 type ShaderSource = string
@@ -51,7 +51,10 @@ export function initWebGL({
 }): WebGLState {
   const state: WebGLState = {
     programs: {
-      main: initMainProgram(gl, { vert, frag }),
+      main: initMainProgram(gl, {
+        vert: mainVert,
+        frag: mainFrag,
+      }),
     },
     buffers: {
       square: initSquareBuffer(gl),
