@@ -2,8 +2,6 @@ import { Stack } from 'aws-cdk-lib'
 import { Certificate } from 'aws-cdk-lib/aws-certificatemanager'
 import {
   Distribution,
-  Function,
-  FunctionCode,
   FunctionEventType,
   OriginAccessIdentity,
   ViewerProtocolPolicy,
@@ -21,13 +19,12 @@ import {
   Source,
 } from 'aws-cdk-lib/aws-s3-deployment'
 import { Construct } from 'constructs'
-import { DefaultToIndexHtmlFunction } from './default-to-index-html-function.js'
-import { IndexHtmlFunction } from './index-html-function.js'
+import { DefaultToIndexHtmlFunction } from './functions/default-to-index-html.js'
+import { SetResponseHeadersFunction } from './functions/set-response-headers.js'
 import { CommonStackProps } from './types.js'
 import {
   WEBPACK_MANIFEST_FILE_NAME,
   getDefaultRootObject,
-  getExtensions,
   getWebpackDistPath,
 } from './webpack-manifest.js'
 
@@ -70,11 +67,18 @@ export class CdnStack extends Stack {
             ViewerProtocolPolicy.REDIRECT_TO_HTTPS,
           functionAssociations: [
             {
-              function: new IndexHtmlFunction(
+              function: new DefaultToIndexHtmlFunction(
                 this,
-                'IndexHtmlFunction',
+                'DefaultToIndexHtmlFunction',
               ),
               eventType: FunctionEventType.VIEWER_REQUEST,
+            },
+            {
+              function: new SetResponseHeadersFunction(
+                this,
+                'SetResponseHeadersFunction',
+              ),
+              eventType: FunctionEventType.VIEWER_RESPONSE,
             },
           ],
         },
