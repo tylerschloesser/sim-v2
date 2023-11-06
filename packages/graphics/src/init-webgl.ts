@@ -33,6 +33,12 @@ export interface WebGLState {
     }
     post: {
       program: WebGLProgram
+      attributes: {
+        vertex: WebGLAttributeLocation
+      }
+      uniforms: {
+        sampler: WebGLUniformLocation
+      }
     }
   }
   buffers: {
@@ -81,6 +87,19 @@ export function initWebGL({
       post: initPostFramebuffer(gl),
     },
   }
+
+  // TODO refactor this...
+  gl.bindFramebuffer(
+    gl.FRAMEBUFFER,
+    state.framebuffers.post,
+  )
+  gl.framebufferTexture2D(
+    gl.FRAMEBUFFER,
+    gl.COLOR_ATTACHMENT0,
+    gl.TEXTURE_2D,
+    state.textures.post.value,
+    0,
+  )
 
   return state
 }
@@ -248,14 +267,7 @@ function initProgram(
   gl.attachShader(program, frag)
 
   gl.linkProgram(program)
-  console.log(
-    'link status',
-    gl.getProgramParameter(program, gl.LINK_STATUS),
-  )
-  if (
-    gl.getProgramParameter(program, gl.LINK_STATUS) ===
-    false
-  ) {
+  if (!gl.getProgramParameter(program, gl.LINK_STATUS)) {
     invariant(
       false,
       `Error linking program: ${gl.getProgramInfoLog(
@@ -274,6 +286,27 @@ function initPostTexture(
   const texture = gl.createTexture()
   invariant(texture)
   gl.bindTexture(gl.TEXTURE_2D, texture)
+
+  gl.texParameteri(
+    gl.TEXTURE_2D,
+    gl.TEXTURE_MIN_FILTER,
+    gl.LINEAR,
+  )
+  gl.texParameteri(
+    gl.TEXTURE_2D,
+    gl.TEXTURE_MAG_FILTER,
+    gl.LINEAR,
+  )
+  // gl.texParameteri(
+  //   gl.TEXTURE_2D,
+  //   gl.TEXTURE_WRAP_S,
+  //   gl.CLAMP_TO_EDGE,
+  // )
+  // gl.texParameteri(
+  //   gl.TEXTURE_2D,
+  //   gl.TEXTURE_WRAP_T,
+  //   gl.CLAMP_TO_EDGE,
+  // )
 
   const width = viewport.size.x * viewport.pixelRatio
   const height = viewport.size.y * viewport.pixelRatio
@@ -306,6 +339,13 @@ function initPostProgram(
 
   return {
     program,
+    attributes: {
+      vertex: getAttribLocation(gl, program, 'aVertex'),
+    },
+    uniforms: {
+      // sampler: getUniformLocation(gl, program, 'uSampler'),
+      sampler: null!,
+    },
   }
 }
 
@@ -348,10 +388,7 @@ function initShader(
   invariant(shader)
   gl.shaderSource(shader, source)
   gl.compileShader(shader)
-  if (
-    gl.getShaderParameter(shader, gl.COMPILE_STATUS) ===
-    false
-  ) {
+  if (!gl.getShaderParameter(shader, gl.COMPILE_STATUS)) {
     invariant(
       false,
       `Error compiling shader: ${gl.getShaderInfoLog(

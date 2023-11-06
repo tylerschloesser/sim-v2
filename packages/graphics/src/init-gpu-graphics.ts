@@ -61,20 +61,6 @@ export const initGpuGraphics: InitGraphicsFn<
     view,
   )
 
-  gl.bindBuffer(gl.ARRAY_BUFFER, state.buffers.chunk.vertex)
-  gl.bindBuffer(
-    gl.ELEMENT_ARRAY_BUFFER,
-    state.buffers.chunk.index,
-  )
-  gl.enableVertexAttribArray(
-    state.programs.main.attributes.vertex,
-  )
-  // prettier-ignore
-  gl.vertexAttribPointer(
-    state.programs.main.attributes.vertex,
-    2, gl.FLOAT, false, 0, 0,
-  )
-
   const animate: Record<
     ChunkId,
     {
@@ -120,6 +106,40 @@ export const initGpuGraphics: InitGraphicsFn<
   }
 
   function renderMain(time: number) {
+    gl.useProgram(state.programs.main.program)
+
+    gl.uniformMatrix4fv(
+      state.programs.main.uniforms.view,
+      false,
+      view,
+    )
+
+    gl.bindFramebuffer(
+      gl.FRAMEBUFFER,
+      state.framebuffers.post,
+    )
+
+    gl.bindBuffer(
+      gl.ARRAY_BUFFER,
+      state.buffers.chunk.vertex,
+    )
+    gl.bindBuffer(
+      gl.ELEMENT_ARRAY_BUFFER,
+      state.buffers.chunk.index,
+    )
+    gl.enableVertexAttribArray(
+      state.programs.main.attributes.vertex,
+    )
+
+    gl.vertexAttribPointer(
+      state.programs.main.attributes.vertex,
+      2,
+      gl.FLOAT,
+      false,
+      0,
+      0,
+    )
+
     gl.clearColor(1, 1, 1, 1)
     gl.clear(gl.COLOR_BUFFER_BIT)
 
@@ -154,10 +174,14 @@ export const initGpuGraphics: InitGraphicsFn<
       gl.enableVertexAttribArray(
         state.programs.main.attributes.color,
       )
-      // prettier-ignore
+
       gl.vertexAttribPointer(
         state.programs.main.attributes.color,
-        4, gl.FLOAT, false, 0, 0,
+        4,
+        gl.FLOAT,
+        false,
+        0,
+        0,
       )
 
       const position = getPosition(chunk.id, chunkSize)
@@ -178,7 +202,33 @@ export const initGpuGraphics: InitGraphicsFn<
     reportRenderedChunks(renderedChunkCount)
   }
 
-  function renderPost() {}
+  function renderPost() {
+    gl.bindFramebuffer(gl.FRAMEBUFFER, null)
+
+    gl.useProgram(state.programs.post.program)
+
+    gl.activeTexture(gl.TEXTURE0)
+    gl.bindTexture(gl.TEXTURE_2D, state.textures.post.value)
+    gl.uniform1i(state.programs.post.uniforms.sampler, 0)
+
+    gl.clearColor(1.0, 1.0, 1.0, 1.0)
+    gl.clear(gl.COLOR_BUFFER_BIT)
+
+    gl.bindBuffer(gl.ARRAY_BUFFER, state.buffers.square)
+    gl.vertexAttribPointer(
+      state.programs.post.attributes.vertex,
+      2,
+      gl.FLOAT,
+      false,
+      0,
+      0,
+    )
+    gl.enableVertexAttribArray(
+      state.programs.post.attributes.vertex,
+    )
+
+    gl.drawArrays(gl.TRIANGLE_STRIP, 0, 4)
+  }
 
   const render = measureFps(
     callbacks.reportStat,
@@ -206,11 +256,6 @@ export const initGpuGraphics: InitGraphicsFn<
       })
       camera = next
       updateView(camera, viewport)
-      gl.uniformMatrix4fv(
-        state.programs.main.uniforms.view,
-        false,
-        view,
-      )
       getVisibleChunkIds({
         camera,
         chunkSize,

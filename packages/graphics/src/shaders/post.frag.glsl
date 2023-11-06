@@ -2,9 +2,12 @@
 
 precision mediump float;
 
-flat in vec4 vColor;
+in vec2 vTextureCoord;
+
+uniform sampler2D uSampler;
+
 out vec4 color;
 
 void main() {
-  color = vColor;
+  color = texture(uSampler, (vTextureCoord.xy + vec2(1,1)) / vec2(2,2));
 }
