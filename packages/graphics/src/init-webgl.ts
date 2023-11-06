@@ -11,11 +11,6 @@ import vert from './shaders/vert.glsl'
 type ShaderType = number
 type ShaderSource = string
 
-type Shaders = {
-  vert: WebGLShader
-  frag: WebGLShader
-}
-
 type WebGLAttributeLocation = number
 
 export interface WebGLState {
@@ -33,6 +28,9 @@ export interface WebGLState {
         alpha: WebGLUniformLocation
       }
     }
+    // post: {
+    //   program: WebGLProgram
+    // }
   }
   buffers: {
     square: WebGLBuffer
@@ -51,36 +49,9 @@ export function initWebGL({
   gl: WebGL2RenderingContext
   chunkSize: number
 }): WebGLState {
-  const shaders: Shaders = {
-    vert: initShader(gl, gl.VERTEX_SHADER, vert),
-    frag: initShader(gl, gl.FRAGMENT_SHADER, frag),
-  }
-
-  const program = initProgram(gl, shaders)
-
   const state: WebGLState = {
     programs: {
-      main: {
-        program,
-        attributes: {
-          vertex: getAttribLocation(gl, program, 'aVertex'),
-          color: getAttribLocation(gl, program, 'aColor'),
-        },
-        uniforms: {
-          position: getUniformLocation(
-            gl,
-            program,
-            'uPosition',
-          ),
-          view: getUniformLocation(gl, program, 'uView'),
-          projection: getUniformLocation(
-            gl,
-            program,
-            'uProjection',
-          ),
-          alpha: getUniformLocation(gl, program, 'uAlpha'),
-        },
-      },
+      main: initMainProgram(gl, { vert, frag }),
     },
     buffers: {
       square: initSquareBuffer(gl),
@@ -225,14 +196,30 @@ export function initColorBuffer({
   return buffer
 }
 
-function initProgram(
+function initMainProgram(
   gl: WebGL2RenderingContext,
-  shaders: Shaders,
-): WebGLProgram {
+  shaders: {
+    vert: string
+    frag: string
+  },
+): WebGLState['programs']['main'] {
   const program = gl.createProgram()
   invariant(program)
-  gl.attachShader(program, shaders.vert)
-  gl.attachShader(program, shaders.frag)
+
+  const vert = initShader(
+    gl,
+    gl.VERTEX_SHADER,
+    shaders.vert,
+  )
+  gl.attachShader(program, vert)
+
+  const frag = initShader(
+    gl,
+    gl.FRAGMENT_SHADER,
+    shaders.frag,
+  )
+  gl.attachShader(program, frag)
+
   gl.linkProgram(program)
   console.log(
     'link status',
@@ -249,7 +236,28 @@ function initProgram(
       )}`,
     )
   }
-  return program
+
+  return {
+    program,
+    attributes: {
+      vertex: getAttribLocation(gl, program, 'aVertex'),
+      color: getAttribLocation(gl, program, 'aColor'),
+    },
+    uniforms: {
+      position: getUniformLocation(
+        gl,
+        program,
+        'uPosition',
+      ),
+      view: getUniformLocation(gl, program, 'uView'),
+      projection: getUniformLocation(
+        gl,
+        program,
+        'uProjection',
+      ),
+      alpha: getUniformLocation(gl, program, 'uAlpha'),
+    },
+  }
 }
 
 function initShader(
