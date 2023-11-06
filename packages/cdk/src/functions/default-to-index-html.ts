@@ -21,11 +21,6 @@ export class DefaultToIndexHtmlFunction extends Function {
             return request
           }
           request.uri = '/'
-
-          var headers = event.response.headers
-          headers['Cross-Origin-Opener-Policy'] = 'same-origin'
-          headers['Cross-Origin-Embedder-Policy'] = 'require-corp'
-
           return request
         }
       `),
