@@ -81,7 +81,7 @@ export const initCanvasEventListeners: InitCanvasEventListenersFn =
         next: v.other.add(v.next.sub(v.other).div(2)),
       }
 
-      // TODO switch to squared distances to avoid sqrt in lne
+      // TODO switch to squared distances to avoid sqrt in len?
       const dist = {
         prev: v.other.sub(v.prev).len(),
         next: v.other.sub(v.next).len(),
