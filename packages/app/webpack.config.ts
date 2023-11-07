@@ -34,7 +34,7 @@ export default async (
   const config: webpack.Configuration = {
     stats: 'minimal',
     mode,
-    entry: './src/index.ts',
+    entry: './src/index.tsx',
     devtool: prod ? 'source-map' : 'eval-source-map',
     output: {
       filename: '[name].[contenthash].js',
