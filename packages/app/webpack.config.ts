@@ -1,26 +1,37 @@
 import CopyWebpackPlugin from 'copy-webpack-plugin'
 import HtmlWebpackPlugin from 'html-webpack-plugin'
 import MiniCssExtractPlugin from 'mini-css-extract-plugin'
+import * as childProcess from 'node:child_process'
+import { promisify } from 'node:util'
 import invariant from 'tiny-invariant'
-import { Configuration } from 'webpack'
+import webpack from 'webpack'
 import { BundleAnalyzerPlugin } from 'webpack-bundle-analyzer'
 import 'webpack-dev-server'
 import { WebpackManifestPlugin } from 'webpack-manifest-plugin'
 
-export default (
-  env: {
-    analyze?: boolean
-  },
-  argv: { mode: Configuration['mode'] },
+const exec = promisify(childProcess.exec)
+
+const { DefinePlugin } = webpack
+
+interface WebpackEnv {
+  analyze?: boolean
+  WEBPACK_SERVE?: true
+}
+
+interface WebpackArgv {
+  mode: webpack.Configuration['mode']
+}
+
+export default async (
+  env: WebpackEnv,
+  argv: WebpackArgv,
 ) => {
   const prod = argv.mode !== 'development'
   const mode = prod ? 'production' : 'development'
 
-  console.info(`mode: ${mode}`)
-
   invariant(!env.analyze || mode === 'production')
 
-  const config: Configuration = {
+  const config: webpack.Configuration = {
     stats: 'minimal',
     mode,
     entry: './src/index.ts',
@@ -94,6 +105,11 @@ export default (
       prod && new MiniCssExtractPlugin(),
       prod && new WebpackManifestPlugin({}),
       env.analyze && new BundleAnalyzerPlugin(),
+      new DefinePlugin({
+        __APP_VERSION__: JSON.stringify(
+          await getAppVersion(env),
+        ),
+      }),
     ],
     devServer: {
       hot: false,
@@ -118,4 +134,37 @@ export default (
     },
   }
   return config
+}
+
+async function getAppVersion(
+  env: WebpackEnv,
+): Promise<string> {
+  if (env.WEBPACK_SERVE) {
+    return 'dev-server'
+  }
+  return [
+    new Date().toISOString().split('T')[0],
+    (
+      await Promise.all([
+        getCommitCount().then((count) => `${count}`),
+        getCommitHash(),
+      ])
+    ).join('-'),
+  ].join('.')
+}
+
+async function getCommitCount(): Promise<number> {
+  const { stdout, stderr } = await exec(
+    'git rev-list HEAD --count',
+  )
+  invariant(!stderr)
+  return parseInt(stdout)
+}
+
+async function getCommitHash(): Promise<string> {
+  const { stdout, stderr } = await exec(
+    'git rev-parse --short HEAD',
+  )
+  invariant(!stderr)
+  return stdout
 }

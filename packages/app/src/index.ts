@@ -9,6 +9,8 @@ import {
   getPixelRatio,
 } from './util.js'
 
+declare var __APP_VERSION__: string
+
 const elements = {
   fps: getSpan('.fps .value'),
   dpr: getSpan('.dpr .value'),
@@ -20,7 +22,11 @@ const elements = {
     y: getSpan('.camera .y .value'),
     zoom: getSpan('.camera .zoom .value'),
   },
+  version: getSpan('.version .value'),
 }
+
+console.debug('version', __APP_VERSION__)
+elements.version.innerText = __APP_VERSION__
 
 const pixelRatio = getPixelRatio()
 elements.dpr.innerText = `${pixelRatio}`

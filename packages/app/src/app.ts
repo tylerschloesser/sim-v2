@@ -1,6 +1,6 @@
 import { zoomToTileSize } from '@sim-v2/camera'
 import { initGraphics } from '@sim-v2/graphics'
-import { Vec2, easeIn, easeOut, linear } from '@sim-v2/math'
+import { Vec2, easeOut } from '@sim-v2/math'
 import { initSimulator } from '@sim-v2/simulator'
 import { StatType, Viewport } from '@sim-v2/types'
 import { throttle } from '@sim-v2/util'
