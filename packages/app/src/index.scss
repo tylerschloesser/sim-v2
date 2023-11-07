@@ -41,7 +41,7 @@ body {
   padding: 0.5em;
   bottom: env(safe-area-inset-bottom);
   pointer-events: none;
-  font-size: 1.5vmax;
+  font-size: 1vmax;
 }
 
 .camera {
@@ -54,7 +54,7 @@ body {
 }
 
 .controls {
-  font-size: 1.5vmax;
+  font-size: 1vmax;
   position: fixed;
   bottom: env(safe-area-inset-bottom);
   right: 0;
