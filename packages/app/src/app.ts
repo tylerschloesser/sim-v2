@@ -119,7 +119,7 @@ export async function initApp({
         requestAnimationFrame(handleCameraMotion)
       }
     }
-    requestAnimationFrame(handleCameraMotion)
+    handleCameraMotion(performance.now())
   }
 
   initCanvasEventListeners({
