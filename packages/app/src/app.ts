@@ -97,7 +97,7 @@ export async function initApp({
     let x = camera.position.x
     let y = camera.position.y
 
-    const duration = 500
+    const duration = 333
     const ax = -vx / duration
     const ay = -vy / duration
 
