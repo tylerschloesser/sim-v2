@@ -13,8 +13,8 @@ import {
 
 declare var __APP_VERSION__: string
 
-const root = createRoot(document.getElementById('v2')!)
-root.render(<Root />)
+// const root = createRoot(document.getElementById('v2')!)
+// root.render(<Root />)
 
 const elements = {
   fps: getSpan('.fps .value'),
