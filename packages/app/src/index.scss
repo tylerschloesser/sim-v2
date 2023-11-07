@@ -10,6 +10,9 @@ body {
   margin: 0;
 
   touch-action: none;
+
+  // TODO move this down the tree?
+  user-select: none;
 }
 
 .canvas-container {
