@@ -17,8 +17,8 @@ export class SetResponseHeadersFunction extends Function {
           }
 
           var headers = response.headers
-          headers['Cross-Origin-Opener-Policy'] = 'same-origin'
-          headers['Cross-Origin-Embedder-Policy'] = 'require-corp'
+          headers['cross-origin-opener-policy'] = 'same-origin'
+          headers['cross-origin-embedder-policy'] = 'require-corp'
 
           return response
         }
