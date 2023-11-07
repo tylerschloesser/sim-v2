@@ -1,4 +1,7 @@
 {
   "extends": "../../tsconfig.json",
-  "include": ["**/*", "../graphics/src/shaders/glsl.d.ts"]
+  "include": ["**/*", "../graphics/src/shaders/glsl.d.ts"],
+  "compilerOptions": {
+    "jsx": "react-jsx"
+  }
 }

@@ -20,7 +20,7 @@ import {
   Source,
 } from 'aws-cdk-lib/aws-s3-deployment'
 import { Construct } from 'constructs'
-import { DefaultToIndexHtmlFunction } from './functions/default-to-index-html.js'
+import { DefaultToIndexHtmlFunction } from './default-to-index-html-function.js'
 import { CommonStackProps } from './types.js'
 import {
   WEBPACK_MANIFEST_FILE_NAME,
