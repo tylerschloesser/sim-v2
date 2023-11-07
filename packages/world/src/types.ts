@@ -13,6 +13,7 @@ export type Resource = TreeResource
 export enum TileType {
   WaterDeep = 'water-deep',
   WaterShallow = 'water-shallow',
+  Sand = 'sand',
   GrassDark = 'grass-dark',
   GrassMedium = 'grass-medium',
   GrassLight = 'grass-light',
