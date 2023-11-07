@@ -89,15 +89,14 @@ export async function initApp({
 
   let cameraMotionActive: boolean = false
 
-  const setCameraMotion: SetCameraMotionFn = (
-    vx,
-    vy,
-    ax,
-    ay,
-    duration,
-  ) => {
+  const setCameraMotion: SetCameraMotionFn = (vx, vy) => {
     let x = camera.position.x
     let y = camera.position.y
+
+    const duration = 500
+    const ax = -vx / duration
+    const ay = -vy / duration
+
     invariant(cameraMotionActive === false)
     cameraMotionActive = true
 
