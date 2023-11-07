@@ -98,7 +98,7 @@ export function Root() {
   useEffect(() => {
     ;(async () => {
       app?.destroy()
-      setApp(await initApp({ settings, config }))
+      // setApp(await initApp({ settings, config }))
     })()
   }, [settings])
 

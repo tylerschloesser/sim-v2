@@ -18,13 +18,12 @@ import {
 export async function initApp({
   settings,
   config,
+  canvas,
 }: {
   settings: AppSettings
   config: AppConfig
+  canvas: HTMLCanvasElement
 }): Promise<App> {
-  const canvas = document.createElement('canvas')
-  document.body.appendChild(canvas)
-
   const controller = new AbortController()
   const { signal } = controller
 
@@ -145,7 +144,6 @@ export async function initApp({
   signal.addEventListener('abort', () => {
     graphics.stop()
     simulator.stop()
-    canvas.remove()
   })
 
   return {

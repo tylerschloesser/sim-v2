@@ -1,9 +1,7 @@
 import { Executor, GraphicsStrategy } from '@sim-v2/types'
 import { throttle } from '@sim-v2/util'
-import { createRoot } from 'react-dom/client'
 import invariant from 'tiny-invariant'
 import { initApp } from './app.js'
-import { Root } from './component/root.js'
 import './index.scss'
 import { AppConfig, AppSettings } from './types.js'
 import {
@@ -83,13 +81,18 @@ let settings: AppSettings = (() => {
   return DEFAULT_SETTINGS
 })()
 
-let app = await initApp({ settings, config })
+let canvas = document.createElement('canvas')
+document.body.appendChild(canvas)
+
+let app = await initApp({ settings, config, canvas })
 elements.logWorld.onclick = () => {
   app.logWorld()
 }
 
 async function updateApp() {
   app.destroy()
+  canvas.remove()
+
   elements.fps.innerText = ''
   elements.inputLatency.innerText = ''
   localStorage.setItem(
@@ -97,7 +100,11 @@ async function updateApp() {
     JSON.stringify(settings, null, 2),
   )
   console.log('reloading app with', settings)
-  app = await initApp({ settings, config })
+
+  canvas = document.createElement('canvas')
+  document.body.appendChild(canvas)
+
+  app = await initApp({ settings, config, canvas })
   elements.logWorld.onclick = () => {
     app.logWorld()
   }
