@@ -1,7 +1,9 @@
 import { Executor, GraphicsStrategy } from '@sim-v2/types'
 import { throttle } from '@sim-v2/util'
+import { createRoot } from 'react-dom/client'
 import invariant from 'tiny-invariant'
 import { initApp } from './app.js'
+import { Root } from './component/root.js'
 import './index.scss'
 import { AppConfig, AppSettings } from './types.js'
 import {
@@ -10,6 +12,9 @@ import {
 } from './util.js'
 
 declare var __APP_VERSION__: string
+
+const root = createRoot(document.getElementById('v2')!)
+root.render(<Root />)
 
 const elements = {
   fps: getSpan('.fps .value'),
