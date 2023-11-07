@@ -1,4 +1,5 @@
 import { Executor, GraphicsStrategy } from '@sim-v2/types'
+import { throttle } from '@sim-v2/util'
 import { useEffect, useMemo, useState } from 'react'
 import invariant from 'tiny-invariant'
 import { initApp } from '../app.js'
@@ -157,17 +158,60 @@ export function Root() {
     })(),
   )
 
+  const pixelRatio = window.devicePixelRatio
+
   const [stats, setStats] = useState<AppStats>({
     fps: null,
-    dpr: null,
+    dpr: pixelRatio,
     inputLatency: null,
     renderedChunks: null,
     camera: null,
     version: __APP_VERSION__,
   })
 
+  const reportInputLatency = useMemo(
+    () =>
+      throttle((inputLatency: number) => {
+        setStats((prev) =>
+          inputLatency === prev.inputLatency
+            ? prev
+            : {
+                ...prev,
+                inputLatency,
+              },
+        )
+      }, 100),
+    [setStats],
+  )
+
+  const reportRenderedChunks = useMemo(
+    () =>
+      throttle((renderedChunks: number) => {
+        setStats((prev) =>
+          renderedChunks === prev.renderedChunks
+            ? prev
+            : {
+                ...prev,
+                renderedChunks,
+              },
+        )
+      }, 100),
+    [setStats],
+  )
+
+  const reportCamera = useMemo(
+    () =>
+      throttle((x: number, y: number, zoom: number) => {
+        setStats((prev) => ({
+          ...prev,
+          camera: { x, y, zoom },
+        }))
+      }, 100),
+    [setStats],
+  )
+
   const config: AppConfig = {
-    pixelRatio: window.devicePixelRatio,
+    pixelRatio,
     reportStat: ({ type, value }) => {
       switch (type) {
         case 'fps': {
@@ -178,28 +222,19 @@ export function Root() {
           break
         }
         case 'input-latency': {
-          setStats((prev) => ({
-            ...prev,
-            inputLatency: value,
-          }))
+          reportInputLatency(value)
           break
         }
         case 'rendered-chunks': {
-          setStats((prev) => ({
-            ...prev,
-            renderedChunks: value,
-          }))
+          reportRenderedChunks(value)
           break
         }
         case 'camera': {
-          setStats((prev) => ({
-            ...prev,
-            camera: {
-              x: value.position.x,
-              y: value.position.y,
-              zoom: value.zoom,
-            },
-          }))
+          reportCamera(
+            value.position.x,
+            value.position.y,
+            value.zoom,
+          )
           break
         }
         default: {
@@ -251,6 +286,47 @@ export function Root() {
             )}
           </fieldset>
         ))}
+      </div>
+      <div className="info">
+        <div className="dpr">
+          DPR: <span className="value">{stats.dpr}</span>
+        </div>
+        <div className="fps">
+          FPS: <span className="value">{stats.fps}</span>
+        </div>
+        <div className="input-latency">
+          Input Latency:{' '}
+          <span className="value">
+            {stats.inputLatency &&
+              `${stats.inputLatency.toFixed(2)}ms`}
+          </span>
+        </div>
+        <div className="rendered-chunks">
+          Rendered Chunks:
+          <span className="value">
+            {stats.renderedChunks}
+          </span>
+        </div>
+        <div className="camera">
+          <div className="x">
+            x:
+            <span className="value">
+              {stats.camera?.x.toFixed(2)}
+            </span>
+          </div>
+          <div className="y">
+            y:
+            <span className="value">
+              {stats.camera?.y.toFixed(2)}
+            </span>
+          </div>
+          <div className="zoom">
+            zoom:
+            <span className="value">
+              {stats.camera?.zoom.toFixed(2)}
+            </span>
+          </div>
+        </div>
       </div>
       <div
         className="canvas-container"
