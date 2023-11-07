@@ -1,9 +1,11 @@
 export * from './vec2.js'
 
-export function easeOut(k: number): number {
+export type TimingFn = (k: number) => number
+
+export const easeOut: TimingFn = (k) => {
   return 1 - (1 - k) ** 4
 }
 
-export function easeIn(k: number): number {
+export const easeIn: TimingFn = (k) => {
   return k ** 4
 }

@@ -4,6 +4,7 @@ import {
   Distribution,
   FunctionEventType,
   OriginAccessIdentity,
+  ResponseHeadersPolicy,
   ViewerProtocolPolicy,
 } from 'aws-cdk-lib/aws-cloudfront'
 import { S3Origin } from 'aws-cdk-lib/aws-cloudfront-origins'
@@ -20,7 +21,6 @@ import {
 } from 'aws-cdk-lib/aws-s3-deployment'
 import { Construct } from 'constructs'
 import { DefaultToIndexHtmlFunction } from './functions/default-to-index-html.js'
-import { SetResponseHeadersFunction } from './functions/set-response-headers.js'
 import { CommonStackProps } from './types.js'
 import {
   WEBPACK_MANIFEST_FILE_NAME,
@@ -73,14 +73,27 @@ export class CdnStack extends Stack {
               ),
               eventType: FunctionEventType.VIEWER_REQUEST,
             },
-            {
-              function: new SetResponseHeadersFunction(
-                this,
-                'SetResponseHeadersFunction',
-              ),
-              eventType: FunctionEventType.VIEWER_RESPONSE,
-            },
           ],
+          responseHeadersPolicy: new ResponseHeadersPolicy(
+            this,
+            'ResponseHeadersPolicy',
+            {
+              customHeadersBehavior: {
+                customHeaders: [
+                  {
+                    header: 'Cross-Origin-Opener-Policy',
+                    value: 'same-origin',
+                    override: false,
+                  },
+                  {
+                    header: 'Cross-Origin-Embedder-Policy',
+                    value: 'require-corp',
+                    override: false,
+                  },
+                ],
+              },
+            },
+          ),
         },
         defaultRootObject: getDefaultRootObject(),
         domainNames: [domain.demo],

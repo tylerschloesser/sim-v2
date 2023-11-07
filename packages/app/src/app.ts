@@ -109,7 +109,7 @@ export async function initApp({
         return
       }
 
-      const dt = Math.min(time - start, duration)
+      let dt = Math.min(time - start, duration)
 
       camera.position.x = x + vx * dt + 0.5 * ax * dt ** 2
       camera.position.y = y + vy * dt + 0.5 * ay * dt ** 2
