@@ -1,6 +1,5 @@
 import { zoomToTileSize } from '@sim-v2/camera'
 import {
-  Camera,
   InitGraphicsArgs,
   InitGraphicsFn,
   StatType,
