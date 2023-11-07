@@ -275,27 +275,32 @@ export function Root() {
     initApp({ settings, config, container }).then(setApp)
   }, [settings, container])
 
+  const [showToggles, setShowToggles] =
+    useState<boolean>(true)
+
   return (
     <>
-      <div className="toggles">
-        {toggles.map(({ legend, values }, i) => (
-          <fieldset key={i}>
-            <legend>{legend}</legend>
-            {values.map(
-              ({ label, checked, onChange }, j) => (
-                <label key={j}>
-                  <input
-                    type="radio"
-                    onChange={onChange}
-                    checked={checked}
-                  />
-                  {label}
-                </label>
-              ),
-            )}
-          </fieldset>
-        ))}
-      </div>
+      {showToggles && (
+        <div className="toggles">
+          {toggles.map(({ legend, values }, i) => (
+            <fieldset key={i}>
+              <legend>{legend}</legend>
+              {values.map(
+                ({ label, checked, onChange }, j) => (
+                  <label key={j}>
+                    <input
+                      type="radio"
+                      onChange={onChange}
+                      checked={checked}
+                    />
+                    {label}
+                  </label>
+                ),
+              )}
+            </fieldset>
+          ))}
+        </div>
+      )}
       <div className="info">
         <div className="dpr">
           DPR: <span className="value">{stats.dpr}</span>
@@ -341,6 +346,18 @@ export function Root() {
             </span>
           </div>
         </div>
+      </div>
+      <div className="controls">
+        <label>
+          <input
+            type="checkbox"
+            checked={showToggles}
+            onChange={() => {
+              setShowToggles((prev) => !prev)
+            }}
+          />
+          Show Toggles
+        </label>
       </div>
       <div
         className="canvas-container"

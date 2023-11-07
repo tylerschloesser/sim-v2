@@ -52,3 +52,16 @@ body {
     padding-left: 1em;
   }
 }
+
+.controls {
+  font-size: 1.5vmax;
+  position: fixed;
+  bottom: env(safe-area-inset-bottom);
+  right: 0;
+  padding: 0.5em;
+
+  label {
+    display: flex;
+    align-items: center;
+  }
+}
