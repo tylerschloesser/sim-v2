@@ -6,11 +6,10 @@ import {
 import { initCpuGraphics } from './init-cpu-graphics.js'
 import { initGpuGraphics } from './init-gpu-graphics.js'
 
-export function initLocalGraphics({
-  strategy,
-  ...args
-}: Omit<InitGraphicsArgs, 'executor'>): Graphics {
-  switch (strategy) {
+export function initLocalGraphics(
+  args: InitGraphicsArgs,
+): Graphics {
+  switch (args.settings.strategy) {
     case GraphicsStrategy.Cpu:
       return initCpuGraphics(args)
     case GraphicsStrategy.Gpu:

@@ -1,23 +1,9 @@
 import { Vec2 } from '@sim-v2/math'
 import {
   Camera,
-  Executor,
-  GraphicsStrategy,
   ReportStatFn,
   Viewport,
 } from '@sim-v2/types'
-import { z } from 'zod'
-
-export const AppSettings = z.object({
-  executor: z.object({
-    simulator: z.nativeEnum(Executor),
-    graphics: z.nativeEnum(Executor),
-  }),
-  strategy: z.object({
-    graphics: z.nativeEnum(GraphicsStrategy),
-  }),
-})
-export type AppSettings = z.infer<typeof AppSettings>
 
 export interface AppConfig {
   pixelRatio: number

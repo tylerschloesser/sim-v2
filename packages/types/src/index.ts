@@ -1,6 +1,12 @@
 import { SimpleVec2, Vec2 } from '@sim-v2/math'
 import { Chunk, World } from '@sim-v2/world'
 import * as z from 'zod'
+import {
+  GraphicsSettings,
+  SimulatorSettings,
+} from './settings.js'
+
+export * from './settings.js'
 
 export interface Viewport<V = Vec2> {
   size: V
@@ -19,15 +25,10 @@ export const SimpleCamera = z.object({
 
 export type SimpleCamera = z.infer<typeof SimpleCamera>
 
-export enum Executor {
-  Local = 'main',
-  WebWorker = 'web-worker',
-}
-
 export type SyncChunkFn = (chunk: Chunk) => void
 
 export interface InitSimulatorArgs<V = Vec2> {
-  executor: Executor
+  settings: SimulatorSettings
   viewport: Viewport<V>
   camera: Camera<V>
   callbacks: {
@@ -47,10 +48,6 @@ export interface Simulator {
   logWorld(): void
   stop(): void
   addSyncChunkListener(listener: SyncChunkFn): void
-}
-export enum GraphicsStrategy {
-  Cpu = 'cpu',
-  Gpu = 'gpu',
 }
 
 export enum StatType {
@@ -79,8 +76,7 @@ export interface InitGraphicsArgs<
   C = HTMLCanvasElement | OffscreenCanvas,
   V = Vec2,
 > {
-  executor: Executor
-  strategy: GraphicsStrategy
+  settings: GraphicsSettings
   world: World
   canvas: C
   viewport: Viewport<V>

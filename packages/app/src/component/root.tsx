@@ -1,19 +1,26 @@
-import { Executor, GraphicsStrategy } from '@sim-v2/types'
+import {
+  Executor,
+  GraphicsStrategy,
+  Settings,
+} from '@sim-v2/types'
 import { throttle } from '@sim-v2/util'
 import { useEffect, useMemo, useState } from 'react'
 import invariant from 'tiny-invariant'
 import { initApp } from '../app.js'
-import { App, AppConfig, AppSettings } from '../types.js'
+import { App, AppConfig } from '../types.js'
 
 declare var __APP_VERSION__: string
 
-const DEFAULT_SETTINGS: AppSettings = {
-  executor: {
-    simulator: Executor.Local,
-    graphics: Executor.Local,
+const DEFAULT_SETTINGS: Settings = {
+  simulator: {
+    executor: Executor.Local,
   },
-  strategy: {
-    graphics: GraphicsStrategy.Cpu,
+  graphics: {
+    executor: Executor.Local,
+    strategy: GraphicsStrategy.Gpu,
+  },
+  app: {
+    showToggles: true,
   },
 }
 
@@ -32,45 +39,43 @@ interface AppStats {
 }
 
 function useToggles(
-  settings: AppSettings,
+  settings: Settings,
   setSettings: React.Dispatch<
-    React.SetStateAction<AppSettings>
+    React.SetStateAction<Settings>
   >,
 ) {
   return useMemo(() => {
-    function onChangeSimulatorExecutor(
-      simulator: Executor,
-    ) {
+    function onChangeSimulatorExecutor(executor: Executor) {
       return () => {
         setSettings((prev) => ({
           ...prev,
-          executor: {
-            ...prev.executor,
-            simulator,
+          simulator: {
+            ...prev.simulator,
+            executor,
           },
         }))
       }
     }
 
-    function onChangeGraphicsExecutor(graphics: Executor) {
+    function onChangeGraphicsExecutor(executor: Executor) {
       return () => {
         setSettings((prev) => ({
           ...prev,
-          executor: {
-            ...prev.executor,
-            graphics,
+          graphics: {
+            ...prev.graphics,
+            executor,
           },
         }))
       }
     }
 
     function onChangeGraphicsStrategy(
-      graphics: GraphicsStrategy,
+      strategy: GraphicsStrategy,
     ) {
       return () => {
         setSettings((prev) => ({
           ...prev,
-          strategy: { ...prev.strategy, graphics },
+          graphics: { ...prev.graphics, strategy },
         }))
       }
     }
@@ -82,7 +87,7 @@ function useToggles(
           {
             label: 'Main',
             checked:
-              settings.executor.simulator ===
+              settings.simulator.executor ===
               Executor.Local,
             onChange: onChangeSimulatorExecutor(
               Executor.Local,
@@ -91,7 +96,7 @@ function useToggles(
           {
             label: 'Web Worker',
             checked:
-              settings.executor.simulator ===
+              settings.simulator.executor ===
               Executor.WebWorker,
             onChange: onChangeSimulatorExecutor(
               Executor.WebWorker,
@@ -105,7 +110,7 @@ function useToggles(
           {
             label: 'Main',
             checked:
-              settings.executor.graphics === Executor.Local,
+              settings.graphics.executor === Executor.Local,
             onChange: onChangeGraphicsExecutor(
               Executor.Local,
             ),
@@ -113,7 +118,7 @@ function useToggles(
           {
             label: 'Web Worker',
             checked:
-              settings.executor.graphics ===
+              settings.graphics.executor ===
               Executor.WebWorker,
             onChange: onChangeGraphicsExecutor(
               Executor.WebWorker,
@@ -127,7 +132,7 @@ function useToggles(
           {
             label: 'CPU',
             checked:
-              settings.strategy.graphics ===
+              settings.graphics.strategy ===
               GraphicsStrategy.Cpu,
             onChange: onChangeGraphicsStrategy(
               GraphicsStrategy.Cpu,
@@ -136,7 +141,7 @@ function useToggles(
           {
             label: 'GPU',
             checked:
-              settings.strategy.graphics ===
+              settings.graphics.strategy ===
               GraphicsStrategy.Gpu,
             onChange: onChangeGraphicsStrategy(
               GraphicsStrategy.Gpu,
@@ -149,15 +154,34 @@ function useToggles(
 }
 
 export function Root() {
-  const [settings, setSettings] = useState<AppSettings>(
+  const [settings, setSettings] = useState<Settings>(
     (() => {
       const json = localStorage.getItem('settings')
       if (json) {
-        return AppSettings.parse(JSON.parse(json))
+        try {
+          return Settings.parse(JSON.parse(json))
+        } catch (e) {
+          console.error(e)
+          if (
+            self.confirm(
+              'Failed to parse settings. Clear and reload?',
+            )
+          ) {
+            localStorage.removeItem('settings')
+            self.location.reload()
+          }
+        }
       }
       return DEFAULT_SETTINGS
     })(),
   )
+
+  useEffect(() => {
+    localStorage.setItem(
+      'settings',
+      JSON.stringify(settings, null, 2),
+    )
+  }, [settings])
 
   const pixelRatio = window.devicePixelRatio
 
@@ -273,14 +297,14 @@ export function Root() {
       return
     }
     initApp({ settings, config, container }).then(setApp)
-  }, [settings, container])
 
-  const [showToggles, setShowToggles] =
-    useState<boolean>(true)
+    // TODO clean this up. only restart the app if graphics or simulator
+    // settings change (i.e. not app settings)
+  }, [settings.graphics, settings.simulator, container])
 
   return (
     <>
-      {showToggles && (
+      {settings.app.showToggles && (
         <div className="toggles">
           {toggles.map(({ legend, values }, i) => (
             <fieldset key={i}>
@@ -351,9 +375,15 @@ export function Root() {
         <label>
           <input
             type="checkbox"
-            checked={showToggles}
+            checked={settings.app.showToggles}
             onChange={() => {
-              setShowToggles((prev) => !prev)
+              setSettings((prev) => ({
+                ...prev,
+                app: {
+                  ...prev.app,
+                  showToggles: !prev.app.showToggles,
+                },
+              }))
             }}
           />
           Show Toggles

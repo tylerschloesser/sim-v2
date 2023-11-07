@@ -2,7 +2,7 @@ import { zoomToTileSize } from '@sim-v2/camera'
 import { initGraphics } from '@sim-v2/graphics'
 import { Vec2, easeOut } from '@sim-v2/math'
 import { initSimulator } from '@sim-v2/simulator'
-import { StatType, Viewport } from '@sim-v2/types'
+import { Settings, StatType, Viewport } from '@sim-v2/types'
 import { throttle } from '@sim-v2/util'
 import invariant from 'tiny-invariant'
 import { loadCamera, saveCamera } from './camera.js'
@@ -10,7 +10,6 @@ import { initCanvasEventListeners } from './init-canvas-event-listeners.js'
 import {
   App,
   AppConfig,
-  AppSettings,
   SetCameraFn,
   SetCameraMotionFn,
 } from './types.js'
@@ -20,7 +19,7 @@ export async function initApp({
   config,
   container,
 }: {
-  settings: AppSettings
+  settings: Settings
   config: AppConfig
   container: HTMLElement
 }): Promise<App> {
@@ -51,7 +50,7 @@ export async function initApp({
   let tileSize = zoomToTileSize(camera.zoom, viewport)
 
   const simulator = await initSimulator({
-    executor: settings.executor.simulator,
+    settings: settings.simulator,
     viewport,
     camera,
     callbacks: {
@@ -63,8 +62,7 @@ export async function initApp({
   invariant(Object.keys(world.chunks).length === 0)
 
   const graphics = initGraphics({
-    executor: settings.executor.graphics,
-    strategy: settings.strategy.graphics,
+    settings: settings.graphics,
     // shallow copy so that graphics can maintain its own chunks
     world: { ...world, chunks: {} },
     canvas,

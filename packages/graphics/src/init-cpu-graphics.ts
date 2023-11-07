@@ -15,7 +15,7 @@ import { measureFps } from './measure-fps.js'
 import { getCpuContext } from './util.js'
 
 export const initCpuGraphics: InitGraphicsFn<
-  Omit<InitGraphicsArgs, 'executor' | 'strategy'>
+  InitGraphicsArgs
 > = ({ canvas, world, callbacks, ...args }) => {
   let { viewport, camera } = args
   let tileSize = zoomToTileSize(camera.zoom, viewport)

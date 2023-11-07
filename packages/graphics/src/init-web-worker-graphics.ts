@@ -18,10 +18,7 @@ import {
 export function initWebWorkerGraphics({
   callbacks,
   ...args
-}: Omit<
-  InitGraphicsArgs<OffscreenCanvas>,
-  'executor'
->): Graphics {
+}: InitGraphicsArgs<OffscreenCanvas>): Graphics {
   const worker = new Worker(
     new URL('./web-worker-entry.js', import.meta.url),
   )

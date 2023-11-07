@@ -15,7 +15,7 @@ import { measureFps } from './measure-fps.js'
 import { getGpuContext } from './util.js'
 
 export const initGpuGraphics: InitGraphicsFn<
-  Omit<InitGraphicsArgs, 'executor' | 'strategy'>
+  InitGraphicsArgs
 > = ({ canvas, world, callbacks, ...args }) => {
   let { viewport, camera } = args
   const { chunkSize } = world

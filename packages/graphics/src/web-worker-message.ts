@@ -20,7 +20,7 @@ export type InitMessage = {
   type: MessageType.Init
 } & Omit<
   InitGraphicsArgs<OffscreenCanvas, SimpleVec2>,
-  'executor' | 'callbacks'
+  'callbacks'
 >
 
 export interface SetCameraMessage {
