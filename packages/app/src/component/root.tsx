@@ -267,7 +267,7 @@ export function Root() {
   }, [settings, container])
 
   return (
-    <div>
+    <>
       <div className="toggles">
         {toggles.map(({ legend, values }, i) => (
           <fieldset key={i}>
@@ -332,6 +332,6 @@ export function Root() {
         className="canvas-container"
         ref={setContainer}
       />
-    </div>
+    </>
   )
 }
