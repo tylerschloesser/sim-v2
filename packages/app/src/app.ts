@@ -142,6 +142,7 @@ export async function initApp({
       cameraMotionActive = false
     },
     signal,
+    reportStat: config.reportStat,
   })
 
   simulator.start()

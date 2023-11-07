@@ -49,6 +49,7 @@ export type InitCanvasEventListenersFn = (args: {
   getViewport: GetViewportFn
   getTileSize: GetTileSizeFn
   signal: AbortSignal
+  reportStat: ReportStatFn
 }) => void
 
 export type GetViewportFn = () => Viewport

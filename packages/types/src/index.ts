@@ -57,6 +57,7 @@ export enum StatType {
   RenderedChunks = 'rendered-chunks',
   Fps = 'fps',
   InputLatency = 'input-latency',
+  PointerFrequency = 'pointer-frequency',
   Camera = 'camera',
 }
 
@@ -69,6 +70,7 @@ export type Stat =
   | StatUtil<StatType.RenderedChunks, number>
   | StatUtil<StatType.Fps, number>
   | StatUtil<StatType.InputLatency, number>
+  | StatUtil<StatType.PointerFrequency, number>
   | StatUtil<StatType.Camera, SimpleCamera>
 
 export type ReportStatFn = (stat: Stat) => void

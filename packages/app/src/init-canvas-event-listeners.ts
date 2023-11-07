@@ -5,6 +5,7 @@ import {
   zoomToTileSize,
 } from '@sim-v2/camera'
 import { Vec2 } from '@sim-v2/math'
+import { StatType } from '@sim-v2/types'
 import invariant from 'tiny-invariant'
 import { PointerMotion } from './pointer-motion.js'
 import { InitCanvasEventListenersFn } from './types.js'
@@ -40,11 +41,18 @@ export const initCanvasEventListeners: InitCanvasEventListenersFn =
     getViewport,
     getTileSize,
     signal,
+    reportStat,
   }) => {
     const handlePointerOne: HandlePointerFn = ({
       prev,
       next,
     }) => {
+      reportStat({
+        type: StatType.PointerFrequency,
+        value:
+          1 / ((next.timeStamp - prev.timeStamp) / 1000),
+      })
+
       const tileSize = getTileSize()
 
       const dx = (prev.clientX - next.clientX) / tileSize

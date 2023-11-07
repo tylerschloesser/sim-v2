@@ -21,6 +21,7 @@ interface AppStats {
   fps: number | null
   dpr: number | null
   inputLatency: number | null
+  pointerFrequency: number | null
   renderedChunks: number | null
   camera: {
     x: number
@@ -164,6 +165,7 @@ export function Root() {
     fps: null,
     dpr: pixelRatio,
     inputLatency: null,
+    pointerFrequency: null,
     renderedChunks: null,
     camera: null,
     version: __APP_VERSION__,
@@ -223,6 +225,13 @@ export function Root() {
         }
         case 'input-latency': {
           reportInputLatency(value)
+          break
+        }
+        case 'pointer-frequency': {
+          setStats((prev) => ({
+            ...prev,
+            pointerFrequency: value,
+          }))
           break
         }
         case 'rendered-chunks': {
@@ -300,6 +309,10 @@ export function Root() {
             {stats.inputLatency &&
               `${stats.inputLatency.toFixed(2)}ms`}
           </span>
+        </div>
+        <div>
+          Pointer Frequency:{' '}
+          {stats.pointerFrequency?.toFixed(2)}
         </div>
         <div className="rendered-chunks">
           Rendered Chunks:
