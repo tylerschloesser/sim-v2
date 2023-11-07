@@ -37,7 +37,7 @@ export type SetCameraFn = (
 export type SetCameraMotionFn = (
   vx: number,
   vy: number,
-  start: number
+  start: number,
 ) => void
 
 export type InitCanvasEventListenersFn = (args: {
