@@ -1,6 +1,6 @@
 import { zoomToTileSize } from '@sim-v2/camera'
 import { initGraphics } from '@sim-v2/graphics'
-import { Vec2 } from '@sim-v2/math'
+import { Vec2, easeIn, easeOut, linear } from '@sim-v2/math'
 import { initSimulator } from '@sim-v2/simulator'
 import { StatType, Viewport } from '@sim-v2/types'
 import { throttle } from '@sim-v2/util'
@@ -110,6 +110,8 @@ export async function initApp({
       }
 
       let dt = Math.min(time - start, duration)
+
+      dt = easeOut(dt / duration) * duration
 
       camera.position.x = x + vx * dt + 0.5 * ax * dt ** 2
       camera.position.y = y + vy * dt + 0.5 * ay * dt ** 2
