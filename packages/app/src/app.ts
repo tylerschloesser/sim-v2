@@ -89,7 +89,11 @@ export async function initApp({
 
   let cameraMotionActive: boolean = false
 
-  const setCameraMotion: SetCameraMotionFn = (vx, vy) => {
+  const setCameraMotion: SetCameraMotionFn = (
+    vx,
+    vy,
+    start,
+  ) => {
     let x = camera.position.x
     let y = camera.position.y
 
@@ -100,7 +104,6 @@ export async function initApp({
     invariant(cameraMotionActive === false)
     cameraMotionActive = true
 
-    const start = performance.now()
     function handleCameraMotion(time: number) {
       if (cameraMotionActive === false) {
         return

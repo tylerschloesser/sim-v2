@@ -151,7 +151,7 @@ export const initCanvasEventListeners: InitCanvasEventListenersFn =
       (e) => {
         const v = motion.getVelocity(100)
         if (v) {
-          setCameraMotion(v.x, v.y)
+          setCameraMotion(v.x, v.y, e.timeStamp)
         }
 
         pointerCache.delete(e.pointerId)
