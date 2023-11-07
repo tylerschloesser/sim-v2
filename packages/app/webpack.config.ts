@@ -142,23 +142,17 @@ async function getAppVersion(
   if (env.WEBPACK_SERVE) {
     return 'dev-server'
   }
-  return [
-    new Date().toISOString().split('T')[0],
-    (
-      await Promise.all([
-        getCommitCount().then((count) => `${count}`),
-        getCommitHash(),
-      ])
-    ).join('-'),
-  ].join('.')
+  return (
+    await Promise.all([getCommitDate(), getCommitHash()])
+  ).join('.')
 }
 
-async function getCommitCount(): Promise<number> {
+async function getCommitDate(): Promise<string> {
   const { stdout, stderr } = await exec(
-    'git rev-list HEAD --count',
+    'git log -1 --format="%aI"',
   )
   invariant(!stderr)
-  return parseInt(stdout)
+  return stdout
 }
 
 async function getCommitHash(): Promise<string> {
