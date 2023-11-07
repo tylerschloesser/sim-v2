@@ -1,5 +1,4 @@
 import { Executor, GraphicsStrategy } from '@sim-v2/types'
-import { throttle } from '@sim-v2/util'
 import { useEffect, useMemo, useState } from 'react'
 import invariant from 'tiny-invariant'
 import { initApp } from '../app.js'
@@ -30,8 +29,125 @@ interface AppStats {
   version: string
 }
 
+function useToggles(
+  settings: AppSettings,
+  setSettings: React.Dispatch<
+    React.SetStateAction<AppSettings>
+  >,
+) {
+  return useMemo(() => {
+    function onChangeSimulatorExecutor(
+      simulator: Executor,
+    ) {
+      return () => {
+        setSettings((prev) => ({
+          ...prev,
+          executor: {
+            ...prev.executor,
+            simulator,
+          },
+        }))
+      }
+    }
+
+    function onChangeGraphicsExecutor(graphics: Executor) {
+      return () => {
+        setSettings((prev) => ({
+          ...prev,
+          executor: {
+            ...prev.executor,
+            graphics,
+          },
+        }))
+      }
+    }
+
+    function onChangeGraphicsStrategy(
+      graphics: GraphicsStrategy,
+    ) {
+      return () => {
+        setSettings((prev) => ({
+          ...prev,
+          strategy: { ...prev.strategy, graphics },
+        }))
+      }
+    }
+
+    return [
+      {
+        legend: 'Simulator Executor',
+        values: [
+          {
+            label: 'Main',
+            checked:
+              settings.executor.simulator ===
+              Executor.Local,
+            onChange: onChangeSimulatorExecutor(
+              Executor.Local,
+            ),
+          },
+          {
+            label: 'Web Worker',
+            checked:
+              settings.executor.simulator ===
+              Executor.WebWorker,
+            onChange: onChangeSimulatorExecutor(
+              Executor.WebWorker,
+            ),
+          },
+        ],
+      },
+      {
+        legend: 'Graphics Executor',
+        values: [
+          {
+            label: 'Main',
+            checked:
+              settings.executor.graphics === Executor.Local,
+            onChange: onChangeGraphicsExecutor(
+              Executor.Local,
+            ),
+          },
+          {
+            label: 'Web Worker',
+            checked:
+              settings.executor.graphics ===
+              Executor.WebWorker,
+            onChange: onChangeGraphicsExecutor(
+              Executor.WebWorker,
+            ),
+          },
+        ],
+      },
+      {
+        legend: 'Graphics Strategy',
+        values: [
+          {
+            label: 'CPU',
+            checked:
+              settings.strategy.graphics ===
+              GraphicsStrategy.Cpu,
+            onChange: onChangeGraphicsStrategy(
+              GraphicsStrategy.Cpu,
+            ),
+          },
+          {
+            label: 'GPU',
+            checked:
+              settings.strategy.graphics ===
+              GraphicsStrategy.Gpu,
+            onChange: onChangeGraphicsStrategy(
+              GraphicsStrategy.Gpu,
+            ),
+          },
+        ],
+      },
+    ]
+  }, [settings, setSettings])
+}
+
 export function Root() {
-  const [settings] = useState<AppSettings>(
+  const [settings, setSettings] = useState<AppSettings>(
     (() => {
       const json = localStorage.getItem('settings')
       if (json) {
@@ -93,14 +209,53 @@ export function Root() {
     },
   }
 
+  const toggles = useToggles(settings, setSettings)
+
+  const [container, setContainer] =
+    useState<HTMLDivElement | null>(null)
+
   const [app, setApp] = useState<App | null>()
 
   useEffect(() => {
-    ;(async () => {
-      app?.destroy()
-      // setApp(await initApp({ settings, config }))
-    })()
-  }, [settings])
+    if (app) {
+      return () => {
+        app.destroy()
+      }
+    }
+  }, [app])
 
-  return <pre>{JSON.stringify(settings, null, 2)}</pre>
+  useEffect(() => {
+    if (!container) {
+      return
+    }
+    initApp({ settings, config, container }).then(setApp)
+  }, [settings, container])
+
+  return (
+    <div>
+      <div className="toggles">
+        {toggles.map(({ legend, values }, i) => (
+          <fieldset key={i}>
+            <legend>{legend}</legend>
+            {values.map(
+              ({ label, checked, onChange }, j) => (
+                <label key={j}>
+                  <input
+                    type="radio"
+                    onChange={onChange}
+                    checked={checked}
+                  />
+                  {label}
+                </label>
+              ),
+            )}
+          </fieldset>
+        ))}
+      </div>
+      <div
+        className="canvas-container"
+        ref={setContainer}
+      />
+    </div>
+  )
 }

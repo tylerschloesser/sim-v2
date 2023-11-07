@@ -18,16 +18,21 @@ import {
 export async function initApp({
   settings,
   config,
-  canvas,
+  container,
 }: {
   settings: AppSettings
   config: AppConfig
-  canvas: HTMLCanvasElement
+  container: HTMLElement
 }): Promise<App> {
   const controller = new AbortController()
   const { signal } = controller
 
-  const rect = document.body.getBoundingClientRect()
+  const rect = container.getBoundingClientRect()
+  invariant(rect.width > 0)
+  invariant(rect.height > 0)
+
+  const canvas = document.createElement('canvas')
+  container.appendChild(canvas)
 
   canvas.width = rect.width * config.pixelRatio
   canvas.height = rect.height * config.pixelRatio
@@ -144,6 +149,7 @@ export async function initApp({
   signal.addEventListener('abort', () => {
     graphics.stop()
     simulator.stop()
+    canvas.remove()
   })
 
   return {
