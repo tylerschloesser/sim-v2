@@ -321,6 +321,7 @@ export function Root() {
           </span>
         </div>
         <div className="camera">
+          Camera:
           <div className="x">
             x:
             <span className="value">
