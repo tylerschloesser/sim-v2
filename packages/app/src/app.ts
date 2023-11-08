@@ -109,24 +109,26 @@ export async function initApp({
     const smooth = (k: number) => {
       invariant(k >= 0)
       invariant(k <= 1)
-      return (1 - (1 - k) ** 5) / 4
+      // scale so that the velocity starts slowing
+      // roughly linearly and then tapers off
+      return (1 - (1 - k) ** 5) / 5
     }
 
-    // for (let i = 0; i <= 20; i++) {
-    //   let k = i / 20
-    //   console.log(
-    //     `smooth(${k.toFixed(2)})`,
-    //     smooth(k).toFixed(2),
-    //   )
-    // }
+    for (let i = 0; i <= 20; i++) {
+      let k = i / 20
+      console.log(
+        `smooth(${k.toFixed(2)})`,
+        smooth(k).toFixed(2),
+      )
+    }
 
     function handleCameraMotion(time: number) {
       if (cameraMotionActive === false) {
+        console.debug('camera motion canceled')
         return
       }
 
       let dt = Math.min(time - start, duration)
-
       dt = smooth(dt / duration) * duration
 
       camera.position.x = x + vx * dt + 0.5 * ax * dt ** 2
@@ -134,8 +136,9 @@ export async function initApp({
 
       setCamera(camera, null)
 
-      if (dt === duration) {
+      if (time - start >= duration) {
         cameraMotionActive = false
+        console.debug('camera motion complete')
       } else {
         requestAnimationFrame(handleCameraMotion)
       }
