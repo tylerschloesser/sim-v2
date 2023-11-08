@@ -1,6 +1,11 @@
 import { zoomToTileSize } from '@sim-v2/camera'
 import { initGraphics } from '@sim-v2/graphics'
-import { Vec2, easeOut } from '@sim-v2/math'
+import {
+  Vec2,
+  easeIn,
+  easeInOut,
+  easeOut,
+} from '@sim-v2/math'
 import { initSimulator } from '@sim-v2/simulator'
 import { Settings, StatType, Viewport } from '@sim-v2/types'
 import { throttle } from '@sim-v2/util'
@@ -99,12 +104,26 @@ export async function initApp({
     let x = camera.position.x
     let y = camera.position.y
 
-    const duration = 333
+    const duration = 1000
     const ax = -vx / duration
     const ay = -vy / duration
 
     invariant(cameraMotionActive === false)
     cameraMotionActive = true
+
+    const smooth = (k: number) => {
+      invariant(k >= 0)
+      invariant(k <= 1)
+      return (1 - (1 - k) ** 5) / 4
+    }
+
+    // for (let i = 0; i <= 20; i++) {
+    //   let k = i / 20
+    //   console.log(
+    //     `smooth(${k.toFixed(2)})`,
+    //     smooth(k).toFixed(2),
+    //   )
+    // }
 
     function handleCameraMotion(time: number) {
       if (cameraMotionActive === false) {
@@ -113,7 +132,7 @@ export async function initApp({
 
       let dt = Math.min(time - start, duration)
 
-      dt = easeOut(dt / duration) * duration
+      dt = smooth(dt / duration) * duration
 
       camera.position.x = x + vx * dt + 0.5 * ax * dt ** 2
       camera.position.y = y + vy * dt + 0.5 * ay * dt ** 2

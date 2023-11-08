@@ -1,5 +1,6 @@
 import { Vec2 } from '@sim-v2/math'
 import { Camera, SimpleCamera } from '@sim-v2/types'
+import invariant from 'tiny-invariant'
 
 const KEY = 'camera'
 
@@ -15,7 +16,21 @@ export function loadCamera(): Camera<Vec2> {
 
   console.debug('loading existing camera')
 
-  const simple = SimpleCamera.parse(JSON.parse(json))
+  let simple: SimpleCamera
+  try {
+    simple = SimpleCamera.parse(JSON.parse(json))
+  } catch (e) {
+    console.error(e)
+    if (
+      self.confirm(
+        'Failed to parse camera. Clear and reload?',
+      )
+    ) {
+      self.localStorage.removeItem(KEY)
+      self.location.reload()
+    }
+    invariant(false)
+  }
 
   return {
     position: new Vec2(simple.position),
