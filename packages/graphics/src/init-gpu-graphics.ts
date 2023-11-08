@@ -77,7 +77,7 @@ export const initGpuGraphics: InitGraphicsFn<
 
   let dirty: boolean = true
 
-  const syncChunk: SyncChunkFn = (chunk) => {
+  const syncChunk: SyncChunkFn = (chunk, index) => {
     invariant(!world.chunks[chunk.id])
     invariant(!state.buffers.color[chunk.id])
     invariant(!animate[chunk.id])
@@ -106,7 +106,8 @@ export const initGpuGraphics: InitGraphicsFn<
       self.requestIdleCallback(callback)
     } else {
       // requestIdleCallback not available on web workers or safari
-      self.setTimeout(callback, 0)
+      self.setTimeout(callback, index * 1)
+      // TODO not sure if index helps here at all...
     }
   }
 
