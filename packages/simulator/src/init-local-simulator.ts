@@ -75,11 +75,13 @@ export const initLocalSimulator: InitSimulatorFn<
     }
 
     if (sync.size) {
+      let index = 0
       for (const chunk of sync) {
         for (const syncChunk of syncChunkListeners) {
-          syncChunk(chunk)
+          syncChunk(chunk, index)
         }
-        callbacks.syncChunk(chunk)
+        callbacks.syncChunk(chunk, index)
+        index += 1
       }
     }
   }

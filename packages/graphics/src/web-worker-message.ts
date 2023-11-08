@@ -41,6 +41,7 @@ export interface SetViewportMessage {
 export interface SyncChunkMessage {
   type: MessageType.SyncChunk
   chunk: Chunk
+  index: number
 }
 
 export interface ReportStatCallbackMessage {

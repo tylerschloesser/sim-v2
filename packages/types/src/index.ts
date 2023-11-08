@@ -25,7 +25,10 @@ export const SimpleCamera = z.object({
 
 export type SimpleCamera = z.infer<typeof SimpleCamera>
 
-export type SyncChunkFn = (chunk: Chunk) => void
+export type SyncChunkFn = (
+  chunk: Chunk,
+  index: number,
+) => void
 
 export interface InitSimulatorArgs<V = Vec2> {
   settings: SimulatorSettings

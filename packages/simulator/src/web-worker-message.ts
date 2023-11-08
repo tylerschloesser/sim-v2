@@ -49,6 +49,7 @@ export interface LogWorldMessage {
 export interface SyncChunkCallbackMessage {
   type: MessageType.SyncChunkCallback
   chunk: Chunk
+  index: number
 }
 
 export type Message =

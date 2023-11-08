@@ -114,13 +114,13 @@ export async function initApp({
       return (1 - (1 - k) ** 5) / 5
     }
 
-    // jfor (let i = 0; i <= 20; i++) {
-    // j  let k = i / 20
-    // j  console.log(
-    // j    `smooth(${k.toFixed(2)})`,
-    // j    smooth(k).toFixed(2),
-    // j  )
-    // j}
+    // for (let i = 0; i <= 20; i++) {
+    //   let k = i / 20
+    //   console.log(
+    //     `smooth(${k.toFixed(2)})`,
+    //     smooth(k).toFixed(2),
+    //   )
+    // }
 
     function handleCameraMotion(time: number) {
       if (cameraMotionActive === false) {
