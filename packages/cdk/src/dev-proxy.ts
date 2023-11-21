@@ -6,6 +6,7 @@ import {
 import {
   CachePolicy,
   Distribution,
+  FunctionEventType,
   OriginProtocolPolicy,
   OriginRequestHeaderBehavior,
   OriginRequestPolicy,
@@ -22,6 +23,7 @@ import {
 import { CloudFrontTarget } from 'aws-cdk-lib/aws-route53-targets'
 import { Construct } from 'constructs'
 import invariant from 'tiny-invariant'
+import { DefaultToIndexHtmlFunction } from './default-to-index-html-function.js'
 import { Region } from './types.js'
 
 const STACK_ID_PREFIX: string = 'DevProxy'
@@ -140,6 +142,15 @@ class ProxyStack extends Stack {
                 ),
             },
           ),
+          functionAssociations: [
+            {
+              function: new DefaultToIndexHtmlFunction(
+                this,
+                'DefaultToIndexHtmlFunction',
+              ),
+              eventType: FunctionEventType.VIEWER_REQUEST,
+            },
+          ],
         },
         domainNames: [SOURCE_DOMAIN_NAME],
         certificate,
