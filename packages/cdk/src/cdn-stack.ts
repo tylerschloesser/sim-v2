@@ -2,6 +2,7 @@ import { Stack } from 'aws-cdk-lib'
 import { Certificate } from 'aws-cdk-lib/aws-certificatemanager'
 import {
   Distribution,
+  FunctionAssociation,
   FunctionEventType,
   OriginAccessIdentity,
   ResponseHeadersPolicy,
@@ -25,6 +26,7 @@ import { CommonStackProps } from './types.js'
 import {
   WEBPACK_MANIFEST_FILE_NAME,
   getDefaultRootObject,
+  getExtensions,
   getWebpackDistPath,
 } from './webpack-manifest.js'
 
@@ -65,15 +67,7 @@ export class CdnStack extends Stack {
           }),
           viewerProtocolPolicy:
             ViewerProtocolPolicy.REDIRECT_TO_HTTPS,
-          functionAssociations: [
-            {
-              function: new DefaultToIndexHtmlFunction(
-                this,
-                'DefaultToIndexHtmlFunction',
-              ),
-              eventType: FunctionEventType.VIEWER_REQUEST,
-            },
-          ],
+          functionAssociations: [defaultToIndexHtml(this)],
           responseHeadersPolicy: new ResponseHeadersPolicy(
             this,
             'ResponseHeadersPolicy',
@@ -117,5 +111,20 @@ export class CdnStack extends Stack {
         new CloudFrontTarget(distribution),
       ),
     })
+  }
+}
+
+function defaultToIndexHtml(
+  scope: Construct,
+): FunctionAssociation {
+  // prettier-ignore
+  const ignoreRegex = `/\.(${getExtensions().join('|')})$/`
+  return {
+    function: new DefaultToIndexHtmlFunction(
+      scope,
+      'DefaultToIndexHtmlFunction',
+      { ignoreRegex },
+    ),
+    eventType: FunctionEventType.VIEWER_REQUEST,
   }
 }

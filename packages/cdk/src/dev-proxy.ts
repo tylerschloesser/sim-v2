@@ -6,6 +6,7 @@ import {
 import {
   CachePolicy,
   Distribution,
+  FunctionAssociation,
   FunctionEventType,
   OriginProtocolPolicy,
   OriginRequestHeaderBehavior,
@@ -25,6 +26,7 @@ import { Construct } from 'constructs'
 import invariant from 'tiny-invariant'
 import { DefaultToIndexHtmlFunction } from './default-to-index-html-function.js'
 import { Region } from './types.js'
+import { getExtensions } from './webpack-manifest.js'
 
 const STACK_ID_PREFIX: string = 'DevProxy'
 const ACCOUNT_ID: string = '063257577013'
@@ -142,15 +144,7 @@ class ProxyStack extends Stack {
                 ),
             },
           ),
-          functionAssociations: [
-            {
-              function: new DefaultToIndexHtmlFunction(
-                this,
-                'DefaultToIndexHtmlFunction',
-              ),
-              eventType: FunctionEventType.VIEWER_REQUEST,
-            },
-          ],
+          functionAssociations: [defaultToIndexHtml(this)],
         },
         domainNames: [SOURCE_DOMAIN_NAME],
         certificate,
@@ -163,6 +157,21 @@ class ProxyStack extends Stack {
         new CloudFrontTarget(distribution),
       ),
     })
+  }
+}
+
+function defaultToIndexHtml(
+  scope: Construct,
+): FunctionAssociation {
+  // prettier-ignore
+  const ignoreRegex = `/(^\\/ws$|\.(${getExtensions().join('|')})$)/`
+  return {
+    function: new DefaultToIndexHtmlFunction(
+      scope,
+      'DefaultToIndexHtmlFunction',
+      { ignoreRegex },
+    ),
+    eventType: FunctionEventType.VIEWER_REQUEST,
   }
 }
 
